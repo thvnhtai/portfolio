@@ -1,0 +1,8 @@
+# Example: If your repository name is different from 'portfolio'
+# Update the base path in vite.config.js:
+#
+# base: process.env.GITHUB_PAGES ? '/your-repo-name/' : '/',
+#
+# Or set it manually:
+#
+# base: '/your-repo-name/',

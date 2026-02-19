@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import './Experience.css'
 
 const experiences = [
@@ -50,6 +51,8 @@ const experiences = [
 ]
 
 function Experience() {
+  const [expandedId, setExpandedId] = useState(null)
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -70,6 +73,10 @@ function Experience() {
         ease: [0.22, 1, 0.36, 1],
       },
     },
+  }
+
+  const toggleExpand = (id) => {
+    setExpandedId(expandedId === id ? null : id)
   }
 
   return (
@@ -105,12 +112,12 @@ function Experience() {
             {experiences.map((exp, index) => (
               <motion.div
                 key={exp.id}
-                className="experience-item"
+                className={`experience-item ${expandedId === exp.id ? 'expanded' : ''}`}
                 variants={itemVariants}
               >
-                <div className="experience-dot" />
+                <div className="experience-dot" onClick={() => toggleExpand(exp.id)} />
                 <div className="experience-content">
-                  <div className="experience-header">
+                  <div className="experience-header" onClick={() => toggleExpand(exp.id)}>
                     <div>
                       <h3 className="experience-role">{exp.role}</h3>
                       <h4 className="experience-company">{exp.company}</h4>
@@ -120,18 +127,30 @@ function Experience() {
                       <span className="experience-location">{exp.location}</span>
                     </div>
                   </div>
-                  <ul className="experience-description">
-                    {exp.description.map((item, itemIndex) => (
-                      <li key={itemIndex}>{item}</li>
-                    ))}
-                  </ul>
-                  <div className="experience-technologies">
-                    {exp.technologies.map((tech, techIndex) => (
-                      <span key={techIndex} className="tech-badge">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                  <AnimatePresence>
+                    {expandedId === exp.id && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        style={{ overflow: 'hidden' }}
+                      >
+                        <ul className="experience-description">
+                          {exp.description.map((item, itemIndex) => (
+                            <li key={itemIndex}>{item}</li>
+                          ))}
+                        </ul>
+                        <div className="experience-technologies">
+                          {exp.technologies.map((tech, techIndex) => (
+                            <span key={techIndex} className="tech-badge">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </motion.div>
             ))}

@@ -46,6 +46,18 @@
   border: 3px solid var(--color-bg);
   box-shadow: 0 0 0 2px var(--color-accent);
   z-index: 1;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.experience-dot:hover {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 4px var(--color-accent);
+}
+
+.experience-item.expanded .experience-dot {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 3px var(--color-accent), 0 0 20px rgba(0, 217, 255, 0.5);
 }
 
 .experience-content {
@@ -70,6 +82,12 @@
   margin-bottom: var(--spacing-md);
   gap: var(--spacing-md);
   flex-wrap: wrap;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.experience-header:hover {
+  color: var(--color-accent);
 }
 
 .experience-role {

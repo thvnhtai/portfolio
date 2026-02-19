@@ -1,0 +1,131 @@
+/* Enhanced Micro-interactions */
+
+/* Button ripple effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.btn,
+.filter-btn,
+.project-tag,
+.carousel-btn,
+.form-submit {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after,
+.filter-btn::after,
+.project-tag::after,
+.carousel-btn::after,
+.form-submit::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::after,
+.filter-btn:active::after,
+.project-tag:active::after,
+.carousel-btn:active::after,
+.form-submit:active::after {
+  width: 300px;
+  height: 300px;
+  animation: ripple 0.6s ease-out;
+}
+
+/* Icon animations */
+.social-link svg,
+.project-link svg {
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.social-link:hover svg {
+  transform: translateY(-3px) scale(1.1);
+  filter: drop-shadow(0 4px 8px rgba(0, 217, 255, 0.4));
+}
+
+/* Input focus animations */
+.form-input:focus,
+.form-textarea:focus,
+.project-search:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 217, 255, 0.2);
+}
+
+/* Card hover enhancements */
+.project-card,
+.highlight-item,
+.experience-content {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover,
+.highlight-item:hover {
+  transform: translateY(-8px);
+}
+
+/* Loading spinner */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(0, 217, 255, 0.3);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Shake animation */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}

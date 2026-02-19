@@ -1,17 +1,20 @@
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import './Hero.css'
+import { useEffect, useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { TypeAnimation } from "react-type-animation";
+import { personalInfo } from "../config/personalInfo";
+import AnimatedCounter from "./AnimatedCounter";
+import "./Hero.css";
 
 function Hero() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -22,7 +25,7 @@ function Hero() {
         delayChildren: 0.3,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -34,7 +37,7 @@ function Hero() {
         ease: [0.22, 1, 0.36, 1],
       },
     },
-  }
+  };
 
   return (
     <section id="hero" className="hero">
@@ -44,7 +47,7 @@ function Hero() {
           x: mousePosition.x - 300,
           y: mousePosition.y - 300,
         }}
-        transition={{ type: 'spring', stiffness: 50, damping: 20 }}
+        transition={{ type: "spring", stiffness: 50, damping: 20 }}
       />
 
       <div className="hero-container">
@@ -55,21 +58,36 @@ function Hero() {
           animate="visible"
         >
           <motion.div className="hero-badge" variants={itemVariants}>
-            <span className="badge-text">Senior Frontend Engineer</span>
+            <span className="badge-text">{personalInfo.hero.badge}</span>
           </motion.div>
 
           <motion.h1 className="hero-title" variants={itemVariants}>
-            Building Digital
+            {personalInfo.hero.title}
             <br />
-            <span className="gradient-text">Experiences</span>
+            <span className="gradient-text">
+              <TypeAnimation
+                sequence={[
+                  personalInfo.hero.titleHighlight,
+                  2000,
+                  "Creative Developer",
+                  2000,
+                  "Problem Solver",
+                  2000,
+                  personalInfo.hero.titleHighlight,
+                  2000,
+                ]}
+                wrapper="span"
+                speed={50}
+                repeat={Infinity}
+                cursor={true}
+              />
+            </span>
             <br />
-            That Matter
+            {personalInfo.hero.titleEnd}
           </motion.h1>
 
           <motion.p className="hero-description" variants={itemVariants}>
-            I specialize in building modern web applications with a focus on
-            <br />
-            performance, accessibility, and exceptional user experience.
+            {personalInfo.hero.description}
           </motion.p>
 
           <motion.div className="hero-actions" variants={itemVariants}>
@@ -89,21 +107,28 @@ function Hero() {
             >
               Get In Touch
             </motion.a>
+            {personalInfo.resume.downloadUrl && (
+              <motion.a
+                href={personalInfo.resume.downloadUrl}
+                download={personalInfo.resume.fileName}
+                className="btn btn-secondary"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Download Resume
+              </motion.a>
+            )}
           </motion.div>
 
           <motion.div className="hero-stats" variants={itemVariants}>
-            <div className="stat-item">
-              <div className="stat-number">5+</div>
-              <div className="stat-label">Years of Experience</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">50+</div>
-              <div className="stat-label">Projects Completed</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">100%</div>
-              <div className="stat-label">Client satisfaction</div>
-            </div>
+            {personalInfo.hero.stats.map((stat, index) => (
+              <div key={index} className="stat-item">
+                <div className="stat-number">
+                  <AnimatedCounter value={stat.number} />
+                </div>
+                <div className="stat-label">{stat.label}</div>
+              </div>
+            ))}
           </motion.div>
         </motion.div>
 
@@ -122,7 +147,7 @@ function Hero() {
             <div className="code-content">
               <pre>
                 <code>
-{`const engineer = {
+                  {`const engineer = {
   name: 'Senior Frontend Engineer',
   skills: ['React', 'TypeScript', 'Next.js'],
   passion: 'Building amazing UIs',
@@ -156,7 +181,7 @@ function create() {
         </svg>
       </motion.div>
     </section>
-  )
+  );
 }
 
-export default Hero
+export default Hero;

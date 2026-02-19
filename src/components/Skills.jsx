@@ -1,4 +1,6 @@
-import { motion } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
+import SkillsRadar from './SkillsRadar'
 import './Skills.css'
 
 const skillCategories = [
@@ -40,6 +42,58 @@ const skillCategories = [
   },
 ]
 
+function SkillItem({ skill, index }) {
+  const [count, setCount] = useState(0)
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: '-50px' })
+
+  useEffect(() => {
+    if (isInView) {
+      const duration = 1500
+      const steps = 60
+      const increment = skill.level / steps
+      const stepDuration = duration / steps
+      
+      let currentStep = 0
+      const timer = setInterval(() => {
+        currentStep++
+        const newCount = Math.min(Math.round(increment * currentStep), skill.level)
+        setCount(newCount)
+        
+        if (currentStep >= steps) {
+          clearInterval(timer)
+          setCount(skill.level)
+        }
+      }, stepDuration)
+
+      return () => clearInterval(timer)
+    }
+  }, [isInView, skill.level])
+
+  return (
+    <motion.div
+      ref={ref}
+      className="skill-item"
+      initial={{ opacity: 0, x: -20 }}
+      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+      transition={{ duration: 0.4, delay: index * 0.1 }}
+    >
+      <div className="skill-header">
+        <span className="skill-name">{skill.name}</span>
+        <span className="skill-percentage">{count}%</span>
+      </div>
+      <div className="skill-bar">
+        <motion.div
+          className="skill-bar-fill"
+          initial={{ width: 0 }}
+          animate={isInView ? { width: `${skill.level}%` } : { width: 0 }}
+          transition={{ duration: 1.5, delay: index * 0.1, ease: 'easeOut' }}
+        />
+      </div>
+    </motion.div>
+  )
+}
+
 function Skills() {
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -78,6 +132,16 @@ function Skills() {
         </motion.div>
 
         <motion.div
+          className="skills-visualization"
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6 }}
+        >
+          <SkillsRadar />
+        </motion.div>
+
+        <motion.div
           className="skills-grid"
           variants={containerVariants}
           initial="hidden"
@@ -93,28 +157,11 @@ function Skills() {
               <h3 className="category-title">{category.title}</h3>
               <div className="skills-list">
                 {category.skills.map((skill, skillIndex) => (
-                  <motion.div
+                  <SkillItem
                     key={skillIndex}
-                    className="skill-item"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: skillIndex * 0.1 }}
-                  >
-                    <div className="skill-header">
-                      <span className="skill-name">{skill.name}</span>
-                      <span className="skill-percentage">{skill.level}%</span>
-                    </div>
-                    <div className="skill-bar">
-                      <motion.div
-                        className="skill-bar-fill"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: skillIndex * 0.1, ease: 'easeOut' }}
-                      />
-                    </div>
-                  </motion.div>
+                    skill={skill}
+                    index={skillIndex}
+                  />
                 ))}
               </div>
             </motion.div>

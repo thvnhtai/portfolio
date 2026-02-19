@@ -1,26 +1,29 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import emailjs from '@emailjs/browser'
+import Toast from './Toast'
+import { personalInfo, emailConfig } from '../config/personalInfo'
 import './Contact.css'
 
 const socialLinks = [
   {
     name: 'GitHub',
-    url: 'https://github.com',
+    url: personalInfo.social.github,
     icon: 'github',
   },
   {
     name: 'LinkedIn',
-    url: 'https://linkedin.com',
+    url: personalInfo.social.linkedin,
     icon: 'linkedin',
   },
   {
     name: 'Email',
-    url: 'mailto:your.email@example.com',
+    url: personalInfo.social.email,
     icon: 'email',
   },
   {
     name: 'Twitter',
-    url: 'https://twitter.com',
+    url: personalInfo.social.twitter,
     icon: 'twitter',
   },
 ]
@@ -32,16 +35,70 @@ function Contact() {
     message: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' })
+
+  useEffect(() => {
+    // Initialize EmailJS if using emailjs provider
+    if (emailConfig.provider === 'emailjs' && emailConfig.emailjs.publicKey !== 'YOUR_PUBLIC_KEY') {
+      emailjs.init(emailConfig.emailjs.publicKey)
+    }
+  }, [])
+
+  const showToast = (message, type = 'success') => {
+    setToast({ isVisible: true, message, type })
+    setTimeout(() => {
+      setToast({ ...toast, isVisible: false })
+    }, 5000)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
-    // Simulate form submission
-      setTimeout(() => {
-        setIsSubmitting(false)
-        alert('Thank you for reaching out! I will get back to you as soon as possible.')
-        setFormData({ name: '', email: '', message: '' })
-      }, 1000)
+    
+    try {
+      if (emailConfig.provider === 'emailjs' && emailConfig.emailjs.publicKey !== 'YOUR_PUBLIC_KEY') {
+        // EmailJS integration
+        await emailjs.send(
+          emailConfig.emailjs.serviceId,
+          emailConfig.emailjs.templateId,
+          {
+            from_name: formData.name,
+            from_email: formData.email,
+            message: formData.message,
+            to_email: personalInfo.email,
+          },
+          emailConfig.emailjs.publicKey
+        )
+      } else if (emailConfig.provider === 'formspree' && emailConfig.formspree.formId !== 'YOUR_FORM_ID') {
+        // Formspree integration
+        const response = await fetch(`https://formspree.io/f/${emailConfig.formspree.formId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+          }),
+        })
+        
+        if (!response.ok) {
+          throw new Error('Failed to send message')
+        }
+      } else {
+        // Fallback: simulate API call (for development)
+        await new Promise(resolve => setTimeout(resolve, 1000))
+      }
+      
+      showToast('Thank you for reaching out! I will get back to you as soon as possible.', 'success')
+      setFormData({ name: '', email: '', message: '' })
+    } catch (error) {
+      console.error('Error sending message:', error)
+      showToast('Something went wrong. Please try again or email me directly.', 'error')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleChange = (e) => {
@@ -105,8 +162,8 @@ function Contact() {
 
             <motion.div variants={itemVariants} className="info-item">
               <h4 className="info-subtitle">Email</h4>
-              <a href="mailto:your.email@example.com" className="info-link">
-                your.email@example.com
+              <a href={personalInfo.social.email} className="info-link">
+                {personalInfo.email}
               </a>
             </motion.div>
 
@@ -227,6 +284,13 @@ function Contact() {
           </motion.form>
         </div>
       </div>
+
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={() => setToast({ ...toast, isVisible: false })}
+      />
     </section>
   )
 }

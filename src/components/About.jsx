@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { personalInfo } from '../config/personalInfo'
 import './About.css'
 
 function About() {
@@ -46,20 +47,11 @@ function About() {
             whileInView="visible"
             viewport={{ once: true, margin: '-100px' }}
           >
-            <motion.p variants={itemVariants} className="about-paragraph">
-              I'm a Senior Frontend Engineer with over 5 years of experience building
-              modern and scalable web applications. I'm passionate about creating exceptional
-              user experiences through clean code, solid architecture, and attention to detail.
-            </motion.p>
-            <motion.p variants={itemVariants} className="about-paragraph">
-              With a strong background in the React ecosystem, TypeScript, and modern web technologies,
-              I focus on building high-performance, accessible, and maintainable applications.
-              I also have experience mentoring junior developers and collaborating with cross-functional teams.
-            </motion.p>
-            <motion.p variants={itemVariants} className="about-paragraph">
-              Beyond coding, I enjoy exploring new technologies, contributing to open source projects,
-              and sharing knowledge through technical blogs and talks.
-            </motion.p>
+            {personalInfo.about.paragraphs.map((paragraph, index) => (
+              <motion.p key={index} variants={itemVariants} className="about-paragraph">
+                {paragraph}
+              </motion.p>
+            ))}
           </motion.div>
 
           <motion.div
@@ -69,42 +61,17 @@ function About() {
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="highlight-item">
-              <div className="highlight-icon">🎯</div>
-              <div className="highlight-content">
-                <h3 className="highlight-title">User-Centric</h3>
-                <p className="highlight-description">
-                  Always putting user experience at the center of every design and development decision
-                </p>
+            {personalInfo.about.highlights.map((highlight, index) => (
+              <div key={index} className="highlight-item">
+                <div className="highlight-icon">{highlight.icon}</div>
+                <div className="highlight-content">
+                  <h3 className="highlight-title">{highlight.title}</h3>
+                  <p className="highlight-description">
+                    {highlight.description}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="highlight-item">
-              <div className="highlight-icon">⚡</div>
-              <div className="highlight-content">
-                <h3 className="highlight-title">Performance First</h3>
-                <p className="highlight-description">
-                  Optimizing performance from code level to architecture level to ensure smooth experiences
-                </p>
-              </div>
-            </div>
-            <div className="highlight-item">
-              <div className="highlight-icon">🔧</div>
-              <div className="highlight-content">
-                <h3 className="highlight-title">Clean Code</h3>
-                <p className="highlight-description">
-                  Writing maintainable, testable, and scalable code with best practices and design patterns
-                </p>
-              </div>
-            </div>
-            <div className="highlight-item">
-              <div className="highlight-icon">🤝</div>
-              <div className="highlight-content">
-                <h3 className="highlight-title">Collaboration</h3>
-                <p className="highlight-description">
-                  Working effectively with teams, mentoring developers, and contributing to team growth
-                </p>
-              </div>
-            </div>
+            ))}
           </motion.div>
         </div>
       </div>

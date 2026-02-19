@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import './Navigation.css'
 
+let logoClickCount = 0
+
 const navItems = [
   { id: 'hero', label: 'Home' },
   { id: 'about', label: 'About' },
@@ -29,6 +31,16 @@ function Navigation({ activeSection, scrollY }) {
     setIsMobileMenuOpen(false)
   }
 
+  const handleLogoClick = () => {
+    logoClickCount++
+    if (logoClickCount === 5) {
+      const event = new CustomEvent('easterEggTrigger')
+      window.dispatchEvent(event)
+      logoClickCount = 0
+    }
+    scrollToSection('hero')
+  }
+
   return (
     <>
       <motion.nav
@@ -40,7 +52,7 @@ function Navigation({ activeSection, scrollY }) {
         <div className="nav-container">
           <motion.button
             className="nav-logo"
-            onClick={() => scrollToSection('hero')}
+            onClick={handleLogoClick}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

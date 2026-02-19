@@ -3,11 +3,137 @@
   position: relative;
 }
 
+.projects-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.search-container {
+  position: relative;
+  max-width: 400px;
+}
+
+.project-search {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-lg) var(--spacing-sm) 48px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 50px;
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  transition: all var(--transition-base);
+}
+
+.project-search:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+}
+
+.project-search::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--spacing-md);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-secondary);
+  pointer-events: none;
+}
+
 .filter-buttons {
   display: flex;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-2xl);
   flex-wrap: wrap;
+}
+
+.selected-tags {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background: rgba(0, 217, 255, 0.05);
+  border-radius: 8px;
+}
+
+.tags-label {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.selected-tag {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border: none;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-display);
+}
+
+.selected-tag:hover {
+  background: var(--color-accent-hover);
+  transform: scale(1.05);
+}
+
+.clear-tags {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-display);
+  margin-left: auto;
+}
+
+.clear-tags:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.project-tags {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-xl);
+}
+
+.project-tag {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-mono);
+}
+
+.project-tag:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.project-tag.active {
+  background: rgba(0, 217, 255, 0.2);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .filter-btn {
@@ -41,17 +167,22 @@
 }
 
 .project-card {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   overflow: hidden;
   transition: all var(--transition-base);
   cursor: pointer;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .project-card:hover {
-  border-color: var(--color-accent);
+  border-color: rgba(0, 217, 255, 0.5);
   box-shadow: 0 12px 40px rgba(0, 217, 255, 0.2);
+  background: rgba(20, 20, 20, 0.8);
+  transform: translateY(-4px);
 }
 
 .project-card.featured {
@@ -66,11 +197,26 @@
 .project-image {
   position: relative;
   height: 200px;
-  background: linear-gradient(135deg, var(--color-surface-elevated), var(--color-surface));
+  background: linear-gradient(
+    135deg,
+    var(--color-surface-elevated),
+    var(--color-surface)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+.project-image-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-base);
+}
+
+.project-card:hover .project-image-img {
+  transform: scale(1.05);
 }
 
 .project-emoji {
@@ -166,6 +312,11 @@
   text-decoration: none;
   font-size: 0.95rem;
   transition: color var(--transition-fast);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  padding: 0;
 }
 
 .project-link:hover {

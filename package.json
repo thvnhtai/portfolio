@@ -6,12 +6,22 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:email": "node test-email-setup.js"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.3.3",
+    "@tsparticles/engine": "^3.9.1",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.9.1",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "framer-motion": "^10.16.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "framer-motion": "^10.16.16"
+    "react-particles": "^2.12.2",
+    "react-syntax-highlighter": "^16.1.0",
+    "react-type-animation": "^3.2.0",
+    "tsparticles": "^3.9.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

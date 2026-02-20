@@ -65,7 +65,28 @@
   box-shadow: 0 8px 24px rgba(0, 217, 255, 0.3);
 }
 
-@media (max-width: 768px) {
+/* Tablet (iPad) */
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .github-stats {
+    padding: var(--spacing-3xl) var(--spacing-xl);
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-lg);
+  }
+  
+  .stat-card {
+    padding: var(--spacing-lg);
+  }
+  
+  .stat-value {
+    font-size: clamp(2rem, 4vw, 2.5rem);
+  }
+}
+
+/* Mobile */
+@media (max-width: 767.98px) {
   .github-stats {
     padding: var(--spacing-2xl) var(--spacing-md);
   }
@@ -73,5 +94,29 @@
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-md);
+  }
+  
+  .stat-card {
+    padding: var(--spacing-md);
+  }
+  
+  .stat-icon {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .stat-value {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+  
+  .stat-label {
+    font-size: clamp(0.8rem, 3vw, 0.95rem);
+  }
+  
+  .github-link {
+    width: 100%;
+    justify-content: center;
+    padding: var(--spacing-md);
+    min-height: var(--touch-target-min);
   }
 }

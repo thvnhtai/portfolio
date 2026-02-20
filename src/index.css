@@ -1,3 +1,10 @@
+/* Import styles first */
+@import './styles/micro-interactions.css';
+@import './styles/section-transitions.css';
+@import './styles/mobile-optimizations.css';
+@import './styles/responsive-system.css';
+@import './styles/responsive-components.css';
+
 :root {
   /* Dark theme (default) */
   --color-bg: #0a0a0a;
@@ -102,8 +109,3 @@ body {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
-
-/* Import micro-interactions */
-@import './styles/micro-interactions.css';
-@import './styles/section-transitions.css';
-@import './styles/mobile-optimizations.css';

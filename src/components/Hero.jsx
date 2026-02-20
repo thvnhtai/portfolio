@@ -3,6 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { personalInfo } from "../config/personalInfo";
 import AnimatedCounter from "./AnimatedCounter";
+import ResumeViewer from "./ResumeViewer";
 import "./Hero.css";
 
 function Hero() {
@@ -88,16 +89,25 @@ function Hero() {
 
           <motion.p className="hero-description" variants={itemVariants}>
             {personalInfo.hero.description}
+            {personalInfo.resume.downloadUrl && (
+              <>
+                {' '}
+                <ResumeViewer
+                  resumeUrl={personalInfo.resume.downloadUrl}
+                  fileName={personalInfo.resume.fileName}
+                />
+              </>
+            )}
           </motion.p>
 
           <motion.div className="hero-actions" variants={itemVariants}>
             <motion.a
               href="#projects"
-              className="btn btn-primary"
+              className="btn btn-primary btn-large"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
-              View Projects
+              View My Work
             </motion.a>
             <motion.a
               href="#contact"
@@ -107,17 +117,6 @@ function Hero() {
             >
               Get In Touch
             </motion.a>
-            {personalInfo.resume.downloadUrl && (
-              <motion.a
-                href={personalInfo.resume.downloadUrl}
-                download={personalInfo.resume.fileName}
-                className="btn btn-secondary"
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Download Resume
-              </motion.a>
-            )}
           </motion.div>
 
           <motion.div className="hero-stats" variants={itemVariants}>

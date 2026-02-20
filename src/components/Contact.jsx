@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import emailjs from '@emailjs/browser'
 import Toast from './Toast'
+import ResumeViewer from './ResumeViewer'
 import { personalInfo, emailConfig } from '../config/personalInfo'
 import './Contact.css'
 
@@ -166,6 +167,16 @@ function Contact() {
                 {personalInfo.email}
               </a>
             </motion.div>
+
+            {personalInfo.resume.downloadUrl && (
+              <motion.div variants={itemVariants} className="info-item">
+                <h4 className="info-subtitle">Resume</h4>
+                <ResumeViewer
+                  resumeUrl={personalInfo.resume.downloadUrl}
+                  fileName={personalInfo.resume.fileName}
+                />
+              </motion.div>
+            )}
 
             <motion.div variants={itemVariants} className="info-item">
               <h4 className="info-subtitle">Social Media</h4>

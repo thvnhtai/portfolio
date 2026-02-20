@@ -55,8 +55,26 @@ main {
   transition: opacity 0.3s ease;
 }
 
-@media (max-width: 768px) {
+/* Tablet & Mobile optimizations */
+@media (max-width: 1023.98px) {
   .cursor-trail {
     display: none;
+  }
+  
+  .bg-gradient {
+    animation: none; /* Reduce animation for better performance */
+  }
+}
+
+/* Mobile specific */
+@media (max-width: 767.98px) {
+  .app {
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height */
+  }
+  
+  /* Optimize particle background on mobile */
+  #tsparticles {
+    opacity: 0.5; /* Reduce particle density for performance */
   }
 }

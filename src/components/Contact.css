@@ -1,12 +1,12 @@
 .contact {
-  padding: var(--spacing-3xl) var(--spacing-lg);
+  padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 4vw, 2rem);
   position: relative;
 }
 
 .contact-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-3xl);
+  gap: clamp(2rem, 6vw, 6rem);
   align-items: start;
 }
 
@@ -23,15 +23,16 @@
 }
 
 .info-title {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw + 0.5rem, 2rem);
   font-weight: 600;
   color: var(--color-text-primary);
   margin: 0;
+  line-height: var(--line-height-tight);
 }
 
 .info-description {
-  font-size: 1.125rem;
-  line-height: 1.8;
+  font-size: clamp(1rem, 2vw + 0.5rem, 1.125rem);
+  line-height: var(--line-height-very-loose);
   color: var(--color-text-secondary);
   margin: 0;
 }
@@ -166,27 +167,81 @@
   cursor: not-allowed;
 }
 
-@media (max-width: 1024px) {
+/* Tablet (iPad) */
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .contact {
+    padding: var(--spacing-3xl) var(--spacing-xl);
+  }
+  
   .contact-content {
     grid-template-columns: 1fr;
-    gap: var(--spacing-xl);
+    gap: var(--spacing-2xl);
+  }
+  
+  .contact-form {
+    padding: var(--spacing-xl);
+  }
+  
+  .info-title {
+    font-size: 1.75rem;
   }
 }
 
-@media (max-width: 768px) {
+/* Mobile */
+@media (max-width: 767.98px) {
   .contact {
-    padding: var(--spacing-2xl) var(--spacing-md);
+    padding: clamp(2rem, 6vw, 4rem) clamp(1rem, 4vw, 1.5rem);
+  }
+
+  .contact-content {
+    gap: clamp(1.5rem, 4vw, 2rem);
   }
 
   .contact-form {
-    padding: var(--spacing-lg);
+    padding: clamp(1.25rem, 3vw, 1.5rem);
+    gap: clamp(1rem, 3vw, 1.5rem);
   }
 
   .info-title {
-    font-size: 1.5rem;
+    font-size: clamp(1.5rem, 4vw + 0.5rem, 2rem);
+    line-height: var(--line-height-tight);
   }
 
   .info-description {
-    font-size: 1rem;
+    font-size: clamp(1rem, 3vw + 0.5rem, 1.125rem);
+    line-height: var(--line-height-loose);
+  }
+  
+  .form-label {
+    font-size: clamp(0.9rem, 2vw + 0.5rem, 0.95rem);
+  }
+  
+  .form-input,
+  .form-textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: clamp(0.875rem, 2vw, 1rem);
+    min-height: var(--touch-target-comfortable);
+    line-height: var(--line-height-relaxed);
+  }
+  
+  .form-textarea {
+    min-height: clamp(120px, 25vw, 150px);
+  }
+  
+  .form-submit {
+    width: 100%;
+    padding: clamp(0.875rem, 2vw, 1rem) clamp(1.25rem, 3vw, 1.5rem);
+    font-size: clamp(0.95rem, 2vw, 1rem);
+    min-height: var(--touch-target-comfortable);
+  }
+  
+  .social-link {
+    min-height: var(--touch-target-comfortable);
+    padding: clamp(0.875rem, 2vw, 1rem);
+    gap: clamp(0.75rem, 2vw, 1rem);
+  }
+  
+  .social-link-label {
+    font-size: clamp(0.95rem, 2vw, 1rem);
   }
 }

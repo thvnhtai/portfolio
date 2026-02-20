@@ -1,0 +1,578 @@
+.btn-view-resume-inline {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+}
+
+.btn-view-resume-inline:hover {
+  color: var(--color-accent-hover);
+  text-decoration-color: var(--color-accent);
+}
+
+.resume-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh; /* Dynamic viewport height */
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 2rem);
+  overflow: hidden;
+}
+
+.resume-modal {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: clamp(0px, 2vw, 16px);
+  width: 100%;
+  max-width: min(900px, 100%);
+  max-height: 90vh;
+  max-height: 90dvh; /* Dynamic viewport height */
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  position: relative;
+}
+
+.resume-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+  gap: clamp(0.75rem, 2vw, 1rem);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.resume-modal-title {
+  font-size: clamp(1.125rem, 3vw, 1.5rem);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.resume-modal-controls {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.page-controls,
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.25rem, 1vw, 0.5rem);
+  padding: clamp(0.25rem, 1vw, 0.5rem) clamp(0.375rem, 1.25vw, 0.75rem);
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: clamp(6px, 1vw, 8px);
+  flex-shrink: 0;
+}
+
+.page-info,
+.zoom-info {
+  font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  min-width: clamp(50px, 10vw, 80px);
+  text-align: center;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.control-btn {
+  padding: clamp(0.375rem, 1vw, 0.5rem) clamp(0.5rem, 1.5vw, 0.75rem);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: clamp(4px, 1vw, 6px);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  min-width: clamp(36px, 7vw, 40px);
+  min-height: clamp(36px, 7vw, 40px);
+  height: clamp(36px, 7vw, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1;
+}
+
+.control-btn:hover:not(:disabled) {
+  background: rgba(0, 217, 255, 0.2);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.control-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.download-btn {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border-color: var(--color-accent);
+  font-weight: 600;
+  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+  padding: clamp(0.5rem, 1vw, 0.625rem) clamp(0.625rem, 1.5vw, 0.875rem);
+  min-width: auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.25rem, 0.75vw, 0.375rem);
+}
+
+.download-icon {
+  font-size: clamp(0.875rem, 1.75vw, 1rem);
+  line-height: 1;
+}
+
+.download-text {
+  white-space: nowrap;
+}
+
+@media (max-width: 360px) {
+  .download-text {
+    display: none; /* Hide text on very small screens, show only icon */
+  }
+  
+  .download-btn {
+    padding: clamp(0.5rem, 1vw, 0.625rem);
+    min-width: clamp(36px, 7vw, 40px);
+  }
+}
+
+.download-btn:hover {
+  background: var(--color-accent-hover);
+}
+
+.close-btn {
+  background: rgba(255, 0, 0, 0.2);
+  border-color: rgba(255, 0, 0, 0.3);
+}
+
+.close-btn:hover {
+  background: rgba(255, 0, 0, 0.3);
+  border-color: rgba(255, 0, 0, 0.5);
+}
+
+.resume-modal-body {
+  flex: 1;
+  overflow: auto;
+  overflow-x: hidden;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: #525252;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.pdf-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+}
+
+.pdf-page {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background: white;
+  max-width: 100%;
+  height: auto !important;
+}
+
+.pdf-loading,
+.pdf-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-2xl);
+  color: var(--color-text-primary);
+  min-height: 400px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 217, 255, 0.3);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.pdf-error p {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Tablet (iPad) */
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .resume-modal {
+    max-width: 90%;
+    max-height: 90vh;
+  }
+
+  .resume-modal-header {
+    padding: var(--spacing-lg);
+  }
+
+  .resume-modal-controls {
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+
+  .page-controls,
+  .zoom-controls {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .resume-modal-body {
+    padding: var(--spacing-lg);
+  }
+}
+
+/* Small Mobile (< 480px) */
+@media (max-width: 479.98px) {
+  .resume-modal-overlay {
+    padding: 0;
+  }
+
+  .resume-modal {
+    max-width: 100%;
+    max-height: 100vh;
+    max-height: 100dvh;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  .resume-modal-header {
+    padding: clamp(0.625rem, 2vw, 0.875rem);
+    padding-top: calc(clamp(0.625rem, 2vw, 0.875rem) + var(--safe-area-inset-top));
+    gap: clamp(0.375rem, 1.5vw, 0.625rem);
+  }
+
+  .resume-modal-title {
+    font-size: clamp(0.95rem, 2.5vw, 1.125rem);
+    font-weight: 600;
+  }
+
+  .resume-modal-controls {
+    width: 100%;
+    gap: clamp(0.375rem, 1.5vw, 0.625rem);
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .page-controls,
+  .zoom-controls {
+    flex: 1;
+    min-width: 0;
+    padding: clamp(0.25rem, 1vw, 0.375rem) clamp(0.375rem, 1.25vw, 0.5rem);
+    gap: clamp(0.125rem, 0.75vw, 0.25rem);
+  }
+
+  .page-info,
+  .zoom-info {
+    font-size: clamp(0.65rem, 1.5vw, 0.7rem);
+    min-width: clamp(45px, 9vw, 55px);
+    padding: 0 clamp(0.125rem, 0.5vw, 0.25rem);
+  }
+
+  .control-btn {
+    min-width: clamp(32px, 6.5vw, 36px);
+    min-height: clamp(32px, 6.5vw, 36px);
+    height: clamp(32px, 6.5vw, 36px);
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    padding: clamp(0.25rem, 0.75vw, 0.375rem) clamp(0.375rem, 1vw, 0.5rem);
+  }
+
+  .download-btn {
+    flex: 0 0 auto;
+    padding: clamp(0.375rem, 1vw, 0.5rem) clamp(0.5rem, 1.5vw, 0.625rem);
+    font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+    white-space: nowrap;
+    min-width: auto;
+    min-height: clamp(32px, 6.5vw, 36px);
+    height: clamp(32px, 6.5vw, 36px);
+  }
+
+  .close-btn {
+    position: absolute;
+    top: calc(clamp(0.625rem, 2vw, 0.875rem) + var(--safe-area-inset-top));
+    right: clamp(0.625rem, 2vw, 0.875rem);
+    z-index: 11;
+    min-width: clamp(32px, 6.5vw, 36px);
+    min-height: clamp(32px, 6.5vw, 36px);
+    width: clamp(32px, 6.5vw, 36px);
+    height: clamp(32px, 6.5vw, 36px);
+    padding: 0;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+  }
+
+  .resume-modal-body {
+    padding: clamp(0.375rem, 1.5vw, 0.625rem);
+    padding-bottom: calc(clamp(0.375rem, 1.5vw, 0.625rem) + var(--safe-area-inset-bottom));
+  }
+
+  .pdf-page {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .pdf-loading,
+  .pdf-error {
+    padding: clamp(1.5rem, 4vw, 2rem);
+    min-height: clamp(200px, 40vh, 300px);
+  }
+
+  .loading-spinner {
+    width: clamp(32px, 6vw, 40px);
+    height: clamp(32px, 6vw, 40px);
+    border-width: clamp(3px, 0.75vw, 4px);
+  }
+
+  .pdf-loading p,
+  .pdf-error p {
+    font-size: clamp(0.875rem, 2vw, 1rem);
+  }
+}
+
+/* Mobile */
+@media (max-width: 767.98px) {
+  .resume-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .resume-modal {
+    max-width: 100%;
+    max-height: 95vh;
+    max-height: 95dvh;
+    border-radius: clamp(12px, 3vw, 16px) clamp(12px, 3vw, 16px) 0 0;
+    margin: 0;
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .resume-modal-header {
+    flex-direction: row;
+    align-items: center;
+    padding: clamp(0.875rem, 2.5vw, 1.125rem);
+    padding-top: calc(clamp(0.875rem, 2.5vw, 1.125rem) + var(--safe-area-inset-top));
+    gap: clamp(0.625rem, 1.5vw, 0.875rem);
+    flex-wrap: nowrap;
+  }
+
+  .resume-modal-title {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-right: auto;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+  }
+
+  .resume-modal-controls {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: clamp(0.375rem, 1.25vw, 0.625rem);
+    flex: 0 0 auto;
+  }
+
+  .page-controls,
+  .zoom-controls {
+    flex: 0 1 auto;
+    min-width: 0;
+    padding: clamp(0.25rem, 0.75vw, 0.375rem) clamp(0.375rem, 1.25vw, 0.625rem);
+    gap: clamp(0.125rem, 0.75vw, 0.25rem);
+  }
+
+  .page-info,
+  .zoom-info {
+    font-size: clamp(0.7rem, 1.5vw, 0.75rem);
+    min-width: clamp(50px, 10vw, 65px);
+    padding: 0 clamp(0.125rem, 0.5vw, 0.25rem);
+  }
+
+  .control-btn {
+    min-width: clamp(36px, 7vw, 40px);
+    min-height: clamp(36px, 7vw, 40px);
+    height: clamp(36px, 7vw, 40px);
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    padding: clamp(0.375rem, 0.75vw, 0.5rem) clamp(0.5rem, 1vw, 0.625rem);
+  }
+
+  .download-btn {
+    flex: 0 0 auto;
+    padding: clamp(0.375rem, 0.75vw, 0.5rem) clamp(0.5rem, 1.25vw, 0.75rem);
+    font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+    white-space: nowrap;
+    min-width: auto;
+    min-height: clamp(36px, 7vw, 40px);
+    height: clamp(36px, 7vw, 40px);
+  }
+
+  .close-btn {
+    position: absolute;
+    top: calc(clamp(0.875rem, 2.5vw, 1.125rem) + var(--safe-area-inset-top));
+    right: clamp(0.875rem, 2.5vw, 1.125rem);
+    z-index: 11;
+    min-width: clamp(36px, 7vw, 40px);
+    min-height: clamp(36px, 7vw, 40px);
+    width: clamp(36px, 7vw, 40px);
+    height: clamp(36px, 7vw, 40px);
+    padding: 0;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+  }
+
+  .resume-modal-body {
+    padding: clamp(0.625rem, 1.5vw, 0.875rem);
+    padding-bottom: calc(clamp(0.625rem, 1.5vw, 0.875rem) + var(--safe-area-inset-bottom));
+    max-height: calc(95dvh - clamp(70px, 11vw, 90px));
+  }
+
+  .pdf-page {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+  }
+
+  .pdf-container {
+    width: 100%;
+  }
+
+  .pdf-loading,
+  .pdf-error {
+    padding: clamp(1.5rem, 4vw, 2rem);
+    min-height: clamp(250px, 45vh, 350px);
+  }
+
+  .loading-spinner {
+    width: clamp(36px, 7vw, 40px);
+    height: clamp(36px, 7vw, 40px);
+    border-width: clamp(3px, 0.75vw, 4px);
+  }
+
+  .pdf-loading p,
+  .pdf-error p {
+    font-size: clamp(0.9rem, 2vw, 1rem);
+  }
+
+  /* Hide zoom controls on very small screens, show only essential */
+  @media (max-width: 360px) {
+    .zoom-controls {
+      display: none;
+    }
+    
+    .resume-modal-controls {
+      gap: clamp(0.25rem, 1vw, 0.5rem);
+    }
+
+    .page-controls {
+      flex: 1;
+    }
+  }
+}
+
+/* Landscape Mobile */
+@media (max-width: 767.98px) and (orientation: landscape) and (max-height: 500px) {
+  .resume-modal {
+    max-height: 100vh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+
+  .resume-modal-header {
+    padding: clamp(0.625rem, 1.5vw, 0.875rem);
+    padding-top: calc(clamp(0.625rem, 1.5vw, 0.875rem) + var(--safe-area-inset-top));
+    gap: clamp(0.5rem, 1.25vw, 0.75rem);
+  }
+
+  .resume-modal-title {
+    font-size: clamp(0.95rem, 2vw, 1.125rem);
+  }
+
+  .resume-modal-controls {
+    gap: clamp(0.25rem, 1vw, 0.5rem);
+  }
+
+  .page-controls,
+  .zoom-controls {
+    padding: clamp(0.25rem, 0.75vw, 0.375rem) clamp(0.375rem, 1vw, 0.5rem);
+  }
+
+  .control-btn {
+    min-width: clamp(32px, 6vw, 36px);
+    min-height: clamp(32px, 6vw, 36px);
+    height: clamp(32px, 6vw, 36px);
+    font-size: clamp(0.8rem, 1.75vw, 0.9rem);
+  }
+
+  .download-btn {
+    font-size: clamp(0.7rem, 1.25vw, 0.8rem);
+    padding: clamp(0.25rem, 0.75vw, 0.375rem) clamp(0.375rem, 1vw, 0.5rem);
+  }
+
+  .close-btn {
+    width: clamp(32px, 6vw, 36px);
+    height: clamp(32px, 6vw, 36px);
+    font-size: clamp(0.85rem, 1.75vw, 0.95rem);
+  }
+
+  .resume-modal-body {
+    padding: clamp(0.5rem, 1.25vw, 0.75rem);
+    max-height: calc(100dvh - clamp(55px, 9vw, 70px));
+  }
+
+  .zoom-controls {
+    display: none; /* Hide zoom in landscape to save space */
+  }
+}

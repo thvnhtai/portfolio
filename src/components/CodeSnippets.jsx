@@ -7,68 +7,248 @@ import './CodeSnippets.css'
 const codeSnippets = [
   {
     id: 1,
-    title: 'Custom Hook - useDebounce',
-    description: 'A reusable debounce hook for optimizing API calls',
-    language: 'javascript',
-    code: `import { useState, useEffect } from 'react';
+    title: 'Factory Pattern - React.createElement',
+    description: 'Encapsulates object creation, separating initialization from usage',
+    language: 'jsx',
+    code: `// JSX code
+<div className="container">
+  <h1>Hello World</h1>
+</div>
 
-function useDebounce(value, delay) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+// Gets compiled to:
+React.createElement(
+  'div',
+  { className: 'container' },
+  React.createElement('h1', null, 'Hello World')
+);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
+// Factory Pattern Implementation
+function createFormField(type, props) {
+  const fieldMap = {
+    input: () => <input {...props} />,
+    textarea: () => <textarea {...props} />,
+    select: () => <select {...props}>{props.children}</select>,
+  };
+  
+  const factory = fieldMap[type];
+  if (!factory) {
+    throw new Error(\`Unknown field type: \${type}\`);
+  }
+  
+  return factory();
 }
 
-export default useDebounce;`,
+// Usage: Dynamic form rendering
+const formSchema = [
+  { type: 'input', name: 'email', placeholder: 'Email' },
+  { type: 'textarea', name: 'message', placeholder: 'Message' },
+];
+
+function DynamicForm({ schema }) {
+  return (
+    <form>
+      {schema.map((field) => (
+        <div key={field.name}>
+          {createFormField(field.type, field)}
+        </div>
+      ))}
+    </form>
+  );
+}`,
   },
   {
     id: 2,
-    title: 'React Component - Animated Card',
-    description: 'A card component with smooth animations using Framer Motion',
-    language: 'jsx',
-    code: `import { motion } from 'framer-motion';
+    title: 'Singleton Pattern - Redux Store',
+    description: 'Ensures a class has only one instance with global access point',
+    language: 'javascript',
+    code: `// Redux Store Singleton
+import { createStore } from 'redux';
 
-function AnimatedCard({ children }) {
+function rootReducer(state = {}, action) {
+  switch (action.type) {
+    case 'SET_DATA':
+      return { ...state, data: action.payload };
+    default:
+      return state;
+  }
+}
+
+// Single instance created and exported
+const store = createStore(rootReducer);
+
+export default store;
+
+// Usage in components
+import { useSelector, useDispatch } from 'react-redux';
+import store from './store';
+
+function MyComponent() {
+  const data = useSelector((state) => state.data);
+  const dispatch = useDispatch();
+  
+  const handleUpdate = () => {
+    dispatch({ type: 'SET_DATA', payload: 'New Data' });
+  };
+  
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.05 }}
-      transition={{ duration: 0.3 }}
-      className="card"
-    >
-      {children}
-    </motion.div>
+    <div>
+      <p>{data}</p>
+      <button onClick={handleUpdate}>Update</button>
+    </div>
   );
 }
 
-export default AnimatedCard;`,
+// Provider wraps app with singleton store
+function App() {
+  return (
+    <Provider store={store}>
+      <MyComponent />
+    </Provider>
+  );
+}`,
   },
   {
     id: 3,
-    title: 'Utility Function - Format Date',
-    description: 'A utility function to format dates in a readable format',
+    title: 'Observer Pattern - Event System',
+    description: 'Defines a one-to-many dependency between objects',
     language: 'javascript',
-    code: `function formatDate(date, format = 'long') {
-  const options = {
-    year: 'numeric',
-    month: format === 'short' ? 'short' : 'long',
-    day: 'numeric',
-  };
+    code: `// Observer Pattern - Event Emitter
+class EventEmitter {
+  constructor() {
+    this.events = {};
+  }
   
-  return new Intl.DateTimeFormat('en-US', options).format(date);
+  on(event, callback) {
+    if (!this.events[event]) {
+      this.events[event] = [];
+    }
+    this.events[event].push(callback);
+  }
+  
+  off(event, callback) {
+    if (this.events[event]) {
+      this.events[event] = this.events[event].filter(cb => cb !== callback);
+    }
+  }
+  
+  emit(event, data) {
+    if (this.events[event]) {
+      this.events[event].forEach(callback => callback(data));
+    }
+  }
 }
 
-export default formatDate;`,
+// Usage in React
+const eventEmitter = new EventEmitter();
+
+function useEventEmitter() {
+  const [data, setData] = useState(null);
+  
+  useEffect(() => {
+    const handleDataChange = (newData) => {
+      setData(newData);
+    };
+    
+    eventEmitter.on('dataChange', handleDataChange);
+    
+    return () => {
+      eventEmitter.off('dataChange', handleDataChange);
+    };
+  }, []);
+  
+  return { data, emit: eventEmitter.emit.bind(eventEmitter) };
+}
+
+// React Context as Observer Pattern
+const ThemeContext = createContext();
+
+function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState('light');
+  
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+  
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+// Components observe theme changes
+function ThemedButton() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+  
+  return (
+    <button 
+      onClick={toggleTheme}
+      className={\`btn-\${theme}\`}
+    >
+      Current theme: {theme}
+    </button>
+  );
+}`,
+  },
+  {
+    id: 4,
+    title: 'Decorator Pattern - Higher-Order Components',
+    description: 'Allows adding new functionality to objects dynamically',
+    language: 'jsx',
+    code: `// Higher-Order Component (HOC) - Decorator Pattern
+function withLoading(WrappedComponent) {
+  return function EnhancedComponent(props) {
+    const [loading, setLoading] = useState(false);
+    
+    return (
+      <>
+        {loading && <div>Loading...</div>}
+        <WrappedComponent {...props} setLoading={setLoading} />
+      </>
+    );
+  };
+}
+
+function withErrorHandling(WrappedComponent) {
+  return function EnhancedComponent(props) {
+    const [error, setError] = useState(null);
+    
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    }
+    
+    return (
+      <WrappedComponent {...props} setError={setError} />
+    );
+  };
+}
+
+// Combining multiple decorators
+const MyComponent = withErrorHandling(
+  withLoading(({ setLoading, setError }) => {
+    // Component logic
+    return <div>My Component</div>;
+  })
+);
+
+// Axios Request Decorator
+function withLoading(axiosRequest) {
+  return async function enhancedRequest(...args) {
+    const loadingElement = document.getElementById('loading');
+    loadingElement.style.display = 'block';
+    
+    try {
+      const result = await axiosRequest(...args);
+      return result;
+    } finally {
+      loadingElement.style.display = 'none';
+    }
+  };
+}
+
+// Usage
+const axiosWithLoading = withLoading(axios.get);
+await axiosWithLoading('/api/data');`,
   },
 ]
 
@@ -99,7 +279,7 @@ function CodeSnippets() {
           <span className="section-label">Code</span>
           <h2 className="section-title">Code Snippets</h2>
           <p className="section-description">
-            Some useful code snippets and utilities I've created
+            Design patterns and SOLID principles I apply in frontend development
           </p>
         </motion.div>
 

@@ -8,8 +8,25 @@ function AnimatedCounter({ value, suffix = '', duration = 2000 }) {
 
   useEffect(() => {
     if (isInView) {
+      const valueStr = value.toString()
+      const isDecimal = valueStr.includes('.')
+      const isPlus = valueStr.includes('+')
+      const isK = valueStr.includes('K')
+      
+      // Parse the numeric value
+      let numericValue
+      if (isDecimal) {
+        numericValue = parseFloat(valueStr)
+      } else if (isPlus) {
+        numericValue = parseInt(valueStr.replace(/\D/g, ''))
+      } else if (isK) {
+        numericValue = parseFloat(valueStr.replace('K', '')) * 1000
+      } else {
+        numericValue = parseInt(valueStr.replace(/\D/g, ''))
+      }
+      
       const startValue = 0
-      const endValue = parseInt(value.toString().replace(/\D/g, ''))
+      const endValue = numericValue
       const increment = endValue / (duration / 16)
       
       let current = startValue
@@ -19,7 +36,7 @@ function AnimatedCounter({ value, suffix = '', duration = 2000 }) {
           setCount(endValue)
           clearInterval(timer)
         } else {
-          setCount(Math.floor(current))
+          setCount(current)
         }
       }, 16)
 
@@ -27,11 +44,23 @@ function AnimatedCounter({ value, suffix = '', duration = 2000 }) {
     }
   }, [isInView, value, duration])
 
-  const displayValue = value.toString().includes('+')
-    ? `${count}+`
-    : value.toString().includes('K')
-    ? `${(count / 1000).toFixed(1)}K`
-    : count
+  const valueStr = value.toString()
+  const isDecimal = valueStr.includes('.')
+  const isPlus = valueStr.includes('+')
+  const isK = valueStr.includes('K')
+  
+  let displayValue
+  if (isPlus) {
+    displayValue = `${Math.floor(count)}+`
+  } else if (isK) {
+    displayValue = `${(count / 1000).toFixed(1)}K`
+  } else if (isDecimal) {
+    // For decimal values, format to match original decimal places
+    const decimalPlaces = valueStr.split('.')[1]?.length || 2
+    displayValue = count.toFixed(decimalPlaces)
+  } else {
+    displayValue = Math.floor(count)
+  }
 
   return (
     <span ref={ref}>

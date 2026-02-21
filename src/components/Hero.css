@@ -199,7 +199,9 @@
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   opacity: 0.9;
-  transition: opacity var(--transition-base), transform var(--transition-base);
+  transition:
+    opacity var(--transition-base),
+    transform var(--transition-base);
 }
 
 .code-window:hover {
@@ -277,7 +279,7 @@
     padding: clamp(3rem, 6vw, 6rem) clamp(1.5rem, 3vw, 3rem);
     min-height: 100vh;
   }
-  
+
   .hero-container {
     grid-template-columns: 1fr;
     gap: clamp(2.5rem, 5vw, 4rem);
@@ -302,40 +304,40 @@
     max-width: min(500px, 80%);
     margin: 0 auto;
   }
-  
+
   .hero-title {
     font-size: clamp(3rem, 6vw + 0.5rem, 4rem);
     line-height: var(--line-height-tight);
     text-align: center;
   }
-  
+
   .hero-description {
     font-size: clamp(1.125rem, 2vw + 0.5rem, 1.25rem);
     line-height: var(--line-height-loose);
     text-align: center;
     max-width: 100%;
   }
-  
+
   .hero-actions {
     flex-wrap: wrap;
     justify-content: center;
     gap: clamp(1rem, 2vw, 1.5rem);
     width: 100%;
   }
-  
+
   .btn {
     flex: 0 1 auto;
     min-width: 200px;
     max-width: 300px;
     min-height: var(--touch-target-comfortable);
   }
-  
+
   .hero-stats {
     justify-content: center;
     gap: clamp(2rem, 4vw, 3rem);
     width: 100%;
   }
-  
+
   .stat-item {
     text-align: center;
   }
@@ -344,7 +346,8 @@
 /* Small Mobile (< 480px) */
 @media (max-width: 479.98px) {
   .hero {
-    padding: calc(clamp(1.5rem, 5vw, 2.5rem) + var(--safe-area-inset-top)) clamp(0.875rem, 3vw, 1rem) clamp(1.25rem, 4vw, 2rem);
+    padding: calc(clamp(1.5rem, 5vw, 2.5rem) + var(--safe-area-inset-top))
+      clamp(0.875rem, 3vw, 1rem) clamp(1.25rem, 4vw, 2rem);
     min-height: 100vh;
     min-height: 100dvh;
   }
@@ -376,14 +379,14 @@
     margin-top: clamp(0.5rem, 1.5vw, 0.75rem);
     margin-bottom: clamp(0.875rem, 2.5vw, 1.25rem);
   }
-  
+
   .btn {
     width: 100%;
     padding: clamp(0.875rem, 2vw, 1rem) clamp(1.125rem, 3vw, 1.5rem);
     font-size: clamp(0.9rem, 2vw, 0.95rem);
     min-height: var(--touch-target-comfortable);
   }
-  
+
   .btn-large {
     font-size: clamp(0.9rem, 2vw, 0.95rem);
   }
@@ -397,7 +400,7 @@
     padding-top: clamp(0.75rem, 2vw, 1rem);
     border-top: 1px solid var(--color-border);
   }
-  
+
   .stat-item {
     flex: 1;
     text-align: center;
@@ -407,12 +410,12 @@
     font-size: clamp(1.25rem, 4vw, 1.75rem);
     line-height: var(--line-height-tight);
   }
-  
+
   .stat-label {
     font-size: clamp(0.75rem, 2vw, 0.8rem);
     line-height: var(--line-height-normal);
   }
-  
+
   .hero-visual {
     display: none; /* Hide code window on small mobile to focus on content */
   }
@@ -421,7 +424,8 @@
 /* Mobile */
 @media (max-width: 767.98px) {
   .hero {
-    padding: calc(clamp(2rem, 6vw, 4rem) + var(--safe-area-inset-top)) clamp(1rem, 4vw, 1.5rem) clamp(1.5rem, 4vw, 3rem);
+    padding: calc(clamp(2rem, 6vw, 4rem) + var(--safe-area-inset-top))
+      clamp(1rem, 4vw, 1.5rem) clamp(1.5rem, 4vw, 3rem);
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height */
   }
@@ -448,11 +452,11 @@
     max-width: min(400px, 90%);
     opacity: 0.6;
   }
-  
+
   .code-content {
     padding: clamp(0.875rem, 2vw, 1rem);
   }
-  
+
   .code-content pre {
     font-size: clamp(0.7rem, 1.5vw + 0.5rem, 0.8rem);
   }
@@ -477,14 +481,14 @@
     margin-top: clamp(0.5rem, 2vw, 1rem);
     margin-bottom: clamp(1rem, 3vw, 1.5rem);
   }
-  
+
   .btn {
     width: 100%;
     padding: clamp(0.875rem, 2vw, 1rem) clamp(1.25rem, 3vw, 1.5rem);
     font-size: clamp(0.95rem, 2vw, 1rem);
     min-height: var(--touch-target-comfortable);
   }
-  
+
   .btn-large {
     font-size: clamp(0.95rem, 2vw, 1rem);
     padding: clamp(0.875rem, 2vw, 1rem) clamp(1.25rem, 3vw, 1.5rem);
@@ -499,7 +503,7 @@
     padding-top: clamp(1rem, 3vw, 1.5rem);
     border-top: 1px solid var(--color-border);
   }
-  
+
   .stat-item {
     flex: 1;
     text-align: center;
@@ -510,16 +514,16 @@
     font-size: clamp(1.5rem, 5vw, 2rem);
     line-height: var(--line-height-tight);
   }
-  
+
   .stat-label {
     font-size: clamp(0.8rem, 2.5vw, 0.875rem);
     line-height: var(--line-height-normal);
   }
-  
+
   .scroll-indicator {
     display: none;
   }
-  
+
   .cursor-follower {
     display: none;
   }
@@ -529,9 +533,10 @@
 @media (max-width: 767.98px) and (orientation: landscape) and (max-height: 500px) {
   .hero {
     min-height: auto;
-    padding: calc(clamp(1.25rem, 4vw, 2rem) + var(--safe-area-inset-top)) clamp(1rem, 4vw, 1.5rem) clamp(1rem, 3vw, 1.5rem);
+    padding: calc(clamp(1.25rem, 4vw, 2rem) + var(--safe-area-inset-top))
+      clamp(1rem, 4vw, 1.5rem) clamp(1rem, 3vw, 1.5rem);
   }
-  
+
   .hero-container {
     gap: clamp(1rem, 3vw, 1.5rem);
   }
@@ -539,29 +544,29 @@
   .hero-content {
     gap: clamp(0.75rem, 2vw, 1rem);
   }
-  
+
   .hero-title {
     font-size: clamp(1.75rem, 5vw + 0.5rem, 2.25rem);
     margin-bottom: clamp(0.5rem, 1.5vw, 0.75rem);
   }
-  
+
   .hero-description {
     font-size: clamp(0.95rem, 2.5vw + 0.5rem, 1.05rem);
     line-height: 1.6;
     margin-bottom: clamp(0.75rem, 2vw, 1rem);
   }
-  
+
   .hero-actions {
     flex-direction: row;
     gap: clamp(0.75rem, 2vw, 1rem);
     margin-bottom: clamp(0.75rem, 2vw, 1rem);
   }
-  
+
   .btn {
     flex: 1;
     min-width: 0;
   }
-  
+
   .hero-stats {
     flex-direction: row;
     justify-content: space-around;
@@ -569,15 +574,15 @@
     margin-top: clamp(0.75rem, 2vw, 1rem);
     padding-top: clamp(0.75rem, 2vw, 1rem);
   }
-  
+
   .stat-number {
     font-size: clamp(1.25rem, 4vw, 1.75rem);
   }
-  
+
   .stat-label {
     font-size: clamp(0.75rem, 2vw, 0.8rem);
   }
-  
+
   .hero-visual {
     display: none; /* Hide code window in landscape mobile to save space */
   }

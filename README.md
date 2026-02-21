@@ -1,160 +1,140 @@
-# Portfolio - Senior Frontend Engineer
+# <p align="center">Hello, I'm Thanh Tai Nguyen 👋</p>
 
-Production-ready portfolio website for Senior Frontend Engineer with modern and professional UI/UX.
+<p align="center">
+  <a href="https://thvnhtai.app">Portfolio</a> •
+  <a href="https://linkedin.com/in/tai-nt">LinkedIn</a> •
+  <a href="mailto:thanhtaiwork04@gmail.com">Email</a>
+</p>
 
-## 🚀 Quick Start
+## 🌟 Introduction
 
-### First Time Setup
+Welcome to my profile! I'm **Thanh Tai Nguyen**, a passionate Software Engineer and tech enthusiast based in **Ho Chi Minh City, Vietnam**. 
 
-1. **Run setup script:**
-   ```bash
-   ./setup.sh
-   ```
+I'm a final-year Software Engineering student at the **University of Information Technology (UIT - VNUHCM)** with a **GPA of 8.51/10**. Currently working at **Grab Holdings Limited** as a Software Engineer, specializing in **Frontend and Mobile development**.
 
-2. **Or follow manual setup:**
-   - See [QUICK_START.md](./QUICK_START.md) for quick commands
-   - See [SETUP_GUIDE.md](./SETUP_GUIDE.md) for detailed instructions
+I thrive on creativity and constantly seek to explore new horizons in information technology, building modern web and mobile applications with React, Next.js, and React Native.
 
-### Development
+<img src="https://github.com/Gapur/Gapur/blob/main/assets/doc.gif?raw=true" width="24" />&nbsp;&nbsp; <samp>[View Resume](https://thvnhtai.app/resume)</samp>
 
-```bash
-# Install dependencies
-npm install
+## 💼 Current Role
 
-# Start development server
-npm run dev
+**Software Engineer @ Grab** | Frontend & Mobile Development
+- Working with Micro-frontend architecture, State Management, and Type-safe APIs
+- Building large-scale systems and enterprise applications
+- Experience with Module Federation, Zustand, and TanStack Query
 
-# Build for production
-npm run build
+## 🛠️ Skills
 
-# Preview production build
-npm run preview
-```
+I possess a strong background in various programming languages and technologies:
 
-## 🌐 Live Site
+### Frontend
+- **Frameworks & Libraries**: React, Next.js, React Native, TypeScript
+- **State Management**: Redux, Zustand, Context API, TanStack Query
+- **Styling**: Tailwind CSS, Material UI, Bootstrap, CSS3
+- **Architecture**: Micro-frontend, Module Federation, Component-based design
 
-Your portfolio will be available at:
-- **Custom Domain**: `https://thvnhtai.app` (after DNS configuration)
-- **GitHub Pages**: `https://yourusername.github.io/portfolio/` (after setup)
+### Backend & Database
+- **Backend**: Node.js, Express.js, Go, GraphQL
+- **Databases**: MongoDB, MySQL, Firebase, SQLite
 
-## 📋 Setup Checklist
+### Mobile Development
+- **Mobile**: React Native, Android (Java), Firebase
+- **Cross-platform**: React Native for iOS and Android
 
-- [ ] Run `./setup.sh` or follow [SETUP_GUIDE.md](./SETUP_GUIDE.md)
-- [ ] Create GitHub repository
-- [ ] Push code to GitHub
-- [ ] Enable GitHub Pages (Source: GitHub Actions)
-- [ ] Configure DNS in Name.com (see [DOMAIN_SETUP.md](./DOMAIN_SETUP.md))
-- [ ] Add custom domain in GitHub Pages settings
-- [ ] Verify deployment at `https://thvnhtai.app`
+### Tools & Others
+- **Version Control**: Git, GitHub
+- **Design**: Figma
+- **DevOps**: Docker
+- **Testing**: Postman
+- **Blockchain**: Web3.js, Smart Contracts, NFT integration
 
-## 🚀 Deployment
+## 📊 GitHub Stats
 
-This portfolio is configured for automatic deployment to GitHub Pages using GitHub Actions.
+<div align="center">
+  
+  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=thvnhtai&show_icons=true&theme=tokyonight&hide_border=true&include_all_commits=true&count_private=true&cache_seconds=3600" alt="GitHub Stats" />
+  
+  <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=thvnhtai&layout=compact&theme=tokyonight&hide_border=true&langs_count=8&cache_seconds=3600" alt="Top Languages" />
+  
+  <img height="180em" src="https://github-readme-streak-stats.demolab.com/?user=thvnhtai&theme=tokyonight&hide_border=true&cache_seconds=3600" alt="GitHub Streak" />
+  
+</div>
 
-### Quick Setup
+**Contributions:**
+- 2022: 1 contribution
+- 2023: 265 contributions
+- 2024: 962 contributions
+- 2025: 276 contributions (and counting!)
+- **Total: 1,514+ contributions**
 
-1. **Enable GitHub Pages**:
-   - Go to repository **Settings** → **Pages**
-   - Select **Source**: **GitHub Actions**
+## 💻 Featured Projects
 
-2. **Push to main branch**:
-   ```bash
-   git push origin main
-   ```
+### 🏆 Enigma - AI-Powered Dropshipping Platform
+**Winner of Encouragement Award at SEAPP CONTEST 2024**
 
-3. **Deployment happens automatically!**
+Enigma leverages AI technology to streamline the dropshipping process. Users can effortlessly create and list products without the need for physical inventory. Our platform enables users to profit from the price difference between the set price and the customer's purchase price.
 
-Your site will be available at:
-- **Custom Domain**: `https://thvnhtai.app` (after DNS configuration)
-- **GitHub Pages**: `https://yourusername.github.io/portfolio/`
+- **Tech Stack**: React, JavaScript, AI Integration, Node.js
+- **Link**: [Enigma Frontend](https://github.com/FiveD-SE/Enigma-Frontend)
 
-For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)
+### 🔐 NFT-Based Notarization Platform
+Online notarization platform based on Blockchain and NFT technology, ensuring transparency and security for notarization transactions.
 
-For custom domain setup with Name.com, see [DOMAIN_SETUP.md](./DOMAIN_SETUP.md)
+- **Tech Stack**: React, JavaScript, Blockchain, NFT, Web3.js
+- **Link**: [Online Notarization System](https://github.com/ASE-UIT/03.-Online-Notarization-Management-System-FE)
 
-## 🛠️ Tech Stack
+### ☕ Coffee Shop Management System
+Comprehensive coffee shop management system on Android, supporting order management, inventory, and revenue reporting.
 
-- **React 18** - UI library
-- **Vite** - Build tool and dev server
-- **Framer Motion** - Animation library
-- **CSS3** - Custom styling with CSS variables
-- **Modern JavaScript** - ES6+ features
+- **Tech Stack**: Android, Java, SQLite
+- **Link**: [CoffeeShopManagement](https://github.com/FiveD-SE/CoffeeShopManagement)
 
-## 📁 Project Structure
+### 🏨 Resort Management System
+Comprehensive resort management system with room management, booking, payment, and revenue reporting features.
 
-```
-portfolio/
-├── src/
-│   ├── components/
-│   │   ├── Hero.jsx          # Hero section
-│   │   ├── About.jsx         # About section
-│   │   ├── Skills.jsx        # Skills section
-│   │   ├── Projects.jsx      # Projects showcase
-│   │   ├── Experience.jsx    # Work experience
-│   │   ├── Contact.jsx       # Contact form
-│   │   └── Navigation.jsx    # Navigation bar
-│   ├── App.jsx              # Main app component
-│   ├── App.css              # App styles
-│   ├── index.css            # Global styles
-│   └── main.jsx             # Entry point
-├── public/
-│   └── CNAME                # Custom domain configuration
-├── .github/
-│   └── workflows/
-│       ├── deploy.yml        # Deployment workflow
-│       └── ci.yml            # CI workflow
-├── index.html               # HTML template
-├── package.json             # Dependencies
-├── vite.config.js          # Vite configuration
-└── setup.sh                 # Setup script
-```
+- **Tech Stack**: React, TypeScript, REST API
 
-## 🎨 Customization
+### 🎫 Voucher Management Dashboard
+Voucher management system dashboard with data visualization reports and interactive filters, developed during internship at TMA Solutions.
 
-### Colors
+- **Tech Stack**: Next.js, Material UI, Tailwind CSS, TypeScript
 
-Edit CSS variables in `src/index.css`:
+### 👕 Custom T-Shirt & Tote Design with AI
+Mobile application for designing custom t-shirts and tote bags using AI, allowing users to create unique products and place orders directly.
 
-```css
-:root {
-  --color-accent: #00d9ff;
-  --color-bg: #0a0a0a;
-  /* ... */
-}
-```
+- **Tech Stack**: React Native, AI Integration, Firebase
 
-### Content
+## 🏆 Achievements
 
-Update content in component files:
-- `src/components/Hero.jsx` - Hero section content
-- `src/components/About.jsx` - About section
-- `src/components/Skills.jsx` - Skills and technologies
-- `src/components/Projects.jsx` - Projects list
-- `src/components/Experience.jsx` - Work experience
-- `src/components/Contact.jsx` - Contact information
+- 🏅 **Encouragement Award** at SEAPP CONTEST 2024
+- 🎓 **GPA 8.51/10** - Excellent academic performance
+- 📜 **Certifications**: Agile Development, Product Management, UX Design (IBM & Google)
+- 🌐 **TOEIC**: 745
+- 💼 **Industry Experience**: Working at Grab with large-scale systems
 
-### Fonts
+## 📚 What I'm Learning
 
-Change fonts in `index.html` and CSS variables.
+- Advanced Micro-frontend architecture patterns
+- Performance optimization techniques
+- Type-safe API development
+- Modern React patterns and best practices
 
-## 📱 Browser Support
+## 📫 Contact
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+I would love to connect with you! If you have any questions or would like to learn more about my work, please feel free to reach out:
 
-## 📚 Documentation
+- **Email**: [thanhtaiwork04@gmail.com](mailto:thanhtaiwork04@gmail.com)
+- **LinkedIn**: [linkedin.com/in/tai-nt](https://linkedin.com/in/tai-nt)
+- **GitHub**: [github.com/thvnhtai](https://github.com/thvnhtai)
+- **Portfolio**: [thvnhtai.app](https://thvnhtai.app)
+- **Location**: District 7, Ho Chi Minh City, Vietnam
 
-- [SETUP_GUIDE.md](./SETUP_GUIDE.md) - Complete setup guide from scratch
-- [QUICK_START.md](./QUICK_START.md) - Quick reference commands
-- [DEPLOYMENT.md](./DEPLOYMENT.md) - Deployment details
-- [DOMAIN_SETUP.md](./DOMAIN_SETUP.md) - Custom domain configuration
+---
 
-## 📄 License
-
-MIT License - feel free to use this template for your portfolio!
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome!
+<div align="center">
+  
+  <img src="https://komarev.com/ghpvc/?username=thvnhtai&color=00d9ff&style=flat-square" alt="Profile views" />
+  
+  **Thanks for visiting!** ⭐
+  
+</div>

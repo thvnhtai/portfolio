@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 import { motion } from "framer-motion";
 import PageLoader from "./components/PageLoader";
 import Hero from "./components/Hero";
@@ -17,18 +18,12 @@ import ParticleBackground from "./components/ParticleBackground";
 import CustomCursor from "./components/CustomCursor";
 import EasterEggs from "./components/EasterEggs";
 import SkipToContent from "./components/SkipToContent";
+import ResumePage from "./pages/ResumePage";
 import "./App.css";
 
-function App() {
+function HomePage() {
   const [scrollY, setScrollY] = useState(0);
   const [activeSection, setActiveSection] = useState("hero");
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate page loading
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,15 +58,8 @@ function App() {
   }, []);
 
   return (
-    <div className="app">
-      <PageLoader isLoading={isLoading} />
-      <SkipToContent />
-      <EasterEggs />
-      <CustomCursor />
-      <ParticleBackground />
-      <ScrollProgress />
+    <>
       <Navigation activeSection={activeSection} scrollY={scrollY} />
-
       <main tabIndex={-1}>
         <Hero />
         <About />
@@ -84,19 +72,35 @@ function App() {
         <Blog />
         <Contact />
       </main>
+    </>
+  );
+}
+
+function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate page loading
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className="app">
+      <PageLoader isLoading={isLoading} />
+      <SkipToContent />
+      <EasterEggs />
+      <CustomCursor />
+      <ParticleBackground />
+      <ScrollProgress />
+
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/resume" element={<ResumePage />} />
+      </Routes>
 
       {/* Background gradient effect */}
       <div className="bg-gradient" />
-
-      {/* Cursor trail effect */}
-      <motion.div
-        className="cursor-trail"
-        animate={{
-          scale: scrollY > 100 ? 0 : 1,
-          opacity: scrollY > 100 ? 0 : 0.3,
-        }}
-        transition={{ duration: 0.3 }}
-      />
     </div>
   );
 }

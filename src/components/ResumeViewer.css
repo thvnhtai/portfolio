@@ -14,7 +14,15 @@
   text-underline-offset: 4px;
 }
 
-.btn-view-resume-inline:hover {
+.btn-view-resume-inline,
+.btn-view-resume-inline:visited {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+}
+
+.btn-view-resume-inline:hover,
+.btn-view-resume-inline:focus {
   color: var(--color-accent-hover);
   text-decoration-color: var(--color-accent);
 }

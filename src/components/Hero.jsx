@@ -147,14 +147,16 @@ function Hero() {
               <pre>
                 <code>
                   {`const engineer = {
-  name: 'Senior Frontend Engineer',
-  skills: ['React', 'TypeScript', 'Next.js'],
-  passion: 'Building amazing UIs',
-  approach: 'User-first & Performance-focused'
+  name: 'Nguyễn Thành Tài',
+  role: 'Software Engineer @ Grab',
+  skills: ['React', 'Next.js', 'React Native'],
+  expertise: ['Micro-frontend', 'State Management', 'Type-safe APIs'],
+  passion: 'Building modern web & mobile apps',
+  approach: 'Type-safe & Performance-focused'
 };
 
 function create() {
-  return <AmazingExperience />;
+  return <ModernDigitalSolutions />;
 }`}
                 </code>
               </pre>

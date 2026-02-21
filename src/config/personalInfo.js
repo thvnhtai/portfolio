@@ -3,65 +3,66 @@
 
 export const personalInfo = {
   // Basic Info
-  name: "Your Name",
-  title: "Senior Frontend Engineer",
-  location: "Your Location",
-  email: "your.email@example.com",
+  name: "Nguyễn Thành Tài",
+  title: "Software Engineer",
+  location: "District 7, Ho Chi Minh City",
+  email: "thanhtaiwork04@gmail.com",
+  phone: "+84 328 329 908",
 
   // Social Links
   social: {
-    github: "https://github.com/yourusername",
-    linkedin: "https://linkedin.com/in/yourusername",
-    twitter: "https://twitter.com/yourusername",
-    email: "mailto:your.email@example.com",
+    github: "https://github.com/thvnhtai",
+    linkedin: "https://linkedin.com/in/tai-nt",
+    twitter: "", // No Twitter/X
+    email: "mailto:thanhtaiwork04@gmail.com",
   },
 
   // Hero Section
   hero: {
-    badge: "Senior Frontend Engineer",
-    title: "Building Digital",
-    titleHighlight: "Experiences",
-    titleEnd: "That Matter",
+    badge: "Software Engineer",
+    title: "Building Modern",
+    titleHighlight: "Digital Solutions",
+    titleEnd: "With Impact",
     description:
-      "I specialize in building modern web applications with a focus on performance, accessibility, and exceptional user experience.",
+      "Software Engineering student specializing in Frontend and Mobile development. Passionate about building modern web and mobile applications with React, Next.js, and React Native. Currently working at Grab with experience in Micro-frontend architecture, State Management, and Type-safe APIs.",
     stats: [
-      { number: "5+", label: "Years of Experience" },
-      { number: "50+", label: "Projects Completed" },
-      { number: "100%", label: "Client Satisfaction" },
+      { number: "8.51", label: "GPA / 10" },
+      { number: "4+", label: "Projects Completed" },
+      { number: "2", label: "Years Experience" },
     ],
   },
 
   // About Section
   about: {
     paragraphs: [
-      "I'm a Senior Frontend Engineer with over 5 years of experience building modern and scalable web applications. I'm passionate about creating exceptional user experiences through clean code, solid architecture, and attention to detail.",
-      "With a strong background in the React ecosystem, TypeScript, and modern web technologies, I focus on building high-performance, accessible, and maintainable applications. I also have experience mentoring junior developers and collaborating with cross-functional teams.",
-      "Beyond coding, I enjoy exploring new technologies, contributing to open source projects, and sharing knowledge through technical blogs and talks.",
+      "I'm a final-year Software Engineering student at the University of Information Technology (UIT - VNUHCM) with a GPA of 8.51/10. Currently working at Grab Holdings Limited as a Software Engineer, specializing in Frontend and Mobile development.",
+      "With experience working with React, Next.js, React Native, and modern technologies like Module Federation, Zustand, and TanStack Query, I focus on building well-architected, type-safe, and high-performance applications. I also have experience with Backend (Go, GraphQL, MongoDB) and Mobile (React Native, Firebase).",
+      "Beyond work, I'm passionate about exploring new technologies, participating in programming competitions, and contributing to open source projects. I won the Encouragement Award at SEAPP CONTEST 2024 and hold certifications in Agile Development, Product Management, and UX Design.",
     ],
     highlights: [
       {
-        icon: "🎯",
-        title: "User-Centric",
+        icon: "🚀",
+        title: "Modern Tech Stack",
         description:
-          "Always putting user experience at the center of every design and development decision",
+          "Specialized in React, Next.js, React Native with deep knowledge of Micro-frontend architecture, State Management, and Type-safe APIs",
       },
       {
-        icon: "⚡",
-        title: "Performance First",
+        icon: "💼",
+        title: "Industry Experience",
         description:
-          "Optimizing performance from code level to architecture level to ensure smooth experiences",
+          "Working at Grab with experience building large-scale systems and enterprise applications",
       },
       {
-        icon: "🔧",
-        title: "Clean Code",
+        icon: "🎓",
+        title: "Continuous Learning",
         description:
-          "Writing maintainable, testable, and scalable code with best practices and design patterns",
+          "GPA 8.51/10, achieved Excellent grade in recent semester, and continuously learning new technologies",
       },
       {
-        icon: "🤝",
-        title: "Collaboration",
+        icon: "🏆",
+        title: "Achievements",
         description:
-          "Working effectively with teams, mentoring developers, and contributing to team growth",
+          "Encouragement Award at SEAPP CONTEST 2024, certifications from IBM and Google, TOEIC 745",
       },
     ],
   },
@@ -69,7 +70,7 @@ export const personalInfo = {
   // Resume
   resume: {
     downloadUrl: "/resume.pdf", // Place your resume.pdf in public folder
-    fileName: "Resume-YourName.pdf",
+    fileName: "Resume-NguyenThanhTai.pdf",
   },
 };
 
@@ -102,11 +103,11 @@ export const analyticsConfig = {
 
 // SEO Configuration
 export const seoConfig = {
-  siteName: "Your Name - Portfolio",
+  siteName: "Nguyễn Thành Tài - Portfolio",
   siteUrl: "https://thvnhtai.app",
-  defaultTitle: "Your Name - Senior Frontend Engineer",
+  defaultTitle: "Nguyễn Thành Tài - Software Engineer | Frontend & Mobile Developer",
   defaultDescription:
-    "Senior Frontend Engineer specializing in React, TypeScript, and modern web technologies. Building exceptional digital experiences.",
+    "Software Engineer specializing in Frontend and Mobile development. UIT student with GPA 8.51/10, currently working at Grab. Expert in React, Next.js, React Native, and modern technologies.",
   defaultImage: "/og-image.png", // Create og-image.png (1200x630px) in public folder
-  twitterHandle: "@yourusername",
+  twitterHandle: "", // Can be added later if you have Twitter
 };

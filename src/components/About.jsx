@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion'
-import { personalInfo } from '../config/personalInfo'
-import './About.css'
+import { motion } from "framer-motion";
+import { personalInfo } from "../config/personalInfo";
+import "./About.css";
 
 function About() {
   const containerVariants = {
@@ -11,7 +11,7 @@ function About() {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -23,7 +23,7 @@ function About() {
         ease: [0.22, 1, 0.36, 1],
       },
     },
-  }
+  };
 
   return (
     <section id="about" className="about">
@@ -32,7 +32,7 @@ function About() {
           className="section-header"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
+          viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
           <span className="section-label">About</span>
@@ -45,10 +45,14 @@ function About() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
+            viewport={{ once: true, margin: "-100px" }}
           >
             {personalInfo.about.paragraphs.map((paragraph, index) => (
-              <motion.p key={index} variants={itemVariants} className="about-paragraph">
+              <motion.p
+                key={index}
+                variants={itemVariants}
+                className="about-paragraph"
+              >
                 {paragraph}
               </motion.p>
             ))}
@@ -58,7 +62,7 @@ function About() {
             className="about-highlights"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             {personalInfo.about.highlights.map((highlight, index) => (
@@ -76,7 +80,7 @@ function About() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
-export default About
+export default About;

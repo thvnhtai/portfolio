@@ -12,7 +12,7 @@ function Projects() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const categories = ["All", "Frontend", "Full Stack"];
+  const categories = ["All", "Frontend", "Full Stack", "Mobile"];
   
   // Get all unique tags from projects
   const allTags = Array.from(

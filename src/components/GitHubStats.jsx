@@ -2,68 +2,39 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import './GitHubStats.css'
 
-// Note: Replace with your GitHub username
-const GITHUB_USERNAME = 'your-username'
+import { personalInfo } from '../config/personalInfo'
+
+// Extract username from GitHub URL
+const GITHUB_USERNAME = personalInfo.social.github?.replace('https://github.com/', '').replace('http://github.com/', '') || 'thvnhtai'
 
 function GitHubStats() {
   const [stats, setStats] = useState({
-    repos: 0,
-    followers: 0,
-    following: 0,
-    contributions: 0,
+    repos: 6,
+    followers: 4,
+    following: 4,
+    contributions: 1514, // Total: 1 + 265 + 962 + 276 + 10
   })
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+  
+  // Contributions by year
+  const contributionsByYear = {
+    2022: 1,
+    2023: 265,
+    2024: 962,
+    2025: 276,
+    2026: 10,
+  }
 
   useEffect(() => {
-    // Fetch GitHub stats
-    // Note: GitHub API requires authentication for higher rate limits
-    // For public access, you can use: https://api.github.com/users/${GITHUB_USERNAME}
-    const fetchStats = async () => {
-      try {
-        // Using GitHub API (public endpoint)
-        const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`)
-        if (response.ok) {
-          const data = await response.json()
-          setStats({
-            repos: data.public_repos || 0,
-            followers: data.followers || 0,
-            following: data.following || 0,
-            contributions: 0, // Requires GitHub GraphQL API
-          })
-        }
-      } catch (error) {
-        console.error('Error fetching GitHub stats:', error)
-        // Fallback to placeholder data
-        setStats({
-          repos: 24,
-          followers: 120,
-          following: 45,
-          contributions: 1200,
-        })
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    if (GITHUB_USERNAME !== 'your-username') {
-      fetchStats()
-    } else {
-      // Use placeholder data
-      setStats({
-        repos: 24,
-        followers: 120,
-        following: 45,
-        contributions: 1200,
-      })
-      setLoading(false)
-    }
+    // Use static data instead of API calls
+    setLoading(false)
   }, [])
 
   const statItems = [
     { label: 'Repositories', value: stats.repos, icon: '📦' },
     { label: 'Followers', value: stats.followers, icon: '👥' },
     { label: 'Following', value: stats.following, icon: '👤' },
-    { label: 'Contributions', value: stats.contributions, icon: '⭐' },
+    { label: 'Total Contributions', value: stats.contributions, icon: '⭐' },
   ]
 
   return (
@@ -99,21 +70,37 @@ function GitHubStats() {
           ))}
         </div>
 
-        {GITHUB_USERNAME !== 'your-username' && (
-          <motion.a
-            href={`https://github.com/${GITHUB_USERNAME}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="github-link"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View GitHub Profile →
-          </motion.a>
-        )}
+        <motion.div
+          className="contributions-breakdown"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <h3 className="contributions-title">Contributions by Year</h3>
+          <div className="contributions-grid">
+            {Object.entries(contributionsByYear).map(([year, count]) => (
+              <div key={year} className="contribution-item">
+                <span className="contribution-year">{year}</span>
+                <span className="contribution-count">{count.toLocaleString()}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.a
+          href={personalInfo.social.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="github-link"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          View GitHub Profile →
+        </motion.a>
       </div>
     </section>
   )

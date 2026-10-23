@@ -1,0 +1,190 @@
+<style>
+  .hx{display:flex;flex-direction:column;gap:30px}
+  .hx .mockup-body{padding:0}
+  .hx .mockup-header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .pick{flex:none;border:1px solid currentColor;background:transparent;color:inherit;border-radius:99px;padding:4px 12px;font-size:12px;cursor:pointer}
+  .pick.selected{background:#ff4d00;border-color:#ff4d00;color:#111;font-weight:700}
+  .st{height:500px;position:relative;overflow:hidden;border-radius:0 0 10px 10px;font-family:"Helvetica Neue",Arial,sans-serif;user-select:none}
+  .o{color:#ff4d00}
+  .ttl{position:absolute;left:24px;top:22px;z-index:3}
+  .ttl small{font-size:11px;font-weight:800;letter-spacing:.12em;color:#ff4d00}
+  .ttl h2{font-size:46px;line-height:.88;font-weight:900;letter-spacing:-.05em;margin:8px 0 0}
+  .ph{border:1.5px dashed currentColor;border-radius:8px;padding:8px 10px;opacity:.6;font-size:12px;line-height:1.5;margin:6px 0}
+  .tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;border-radius:99px;padding:3px 9px;margin-right:6px}
+  .close{position:absolute;right:16px;top:14px;font-size:11px;font-weight:800;border:1.5px solid currentColor;background:transparent;color:inherit;border-radius:99px;padding:5px 12px;cursor:pointer;z-index:9}
+
+  /* A now playing */
+  .np{background:#111;color:#f2efe8}
+  .np .list{position:absolute;left:24px;right:24px;top:140px;display:flex;flex-direction:column;gap:10px}
+  .np .tr{display:grid;grid-template-columns:56px 1fr 140px 40px;align-items:center;gap:16px;padding:10px 14px;border-radius:12px;cursor:pointer;transition:background .2s}
+  .np .tr:hover{background:#1d1d1d}
+  .np .cover{width:56px;height:56px;border-radius:8px;display:grid;place-items:center;font-weight:900;font-size:18px;color:#111}
+  .np .tr b{display:block;font-size:17px}
+  .np .tr span{font-size:12px;opacity:.55}
+  .np .eq{display:flex;gap:3px;align-items:flex-end;height:22px}
+  .np .eq i{width:4px;background:#1ed760;border-radius:2px;animation:eq .9s ease-in-out infinite alternate}
+  .np .eq i:nth-child(2){animation-delay:.2s}.np .eq i:nth-child(3){animation-delay:.4s}.np .eq i:nth-child(4){animation-delay:.1s}
+  @keyframes eq{from{height:4px}to{height:22px}}
+  .np .prog{height:4px;border-radius:2px;background:#333;position:relative}
+  .np .prog i{position:absolute;left:0;top:0;bottom:0;background:#f2efe8;border-radius:2px;width:0}
+  .np .player{position:absolute;inset:0;background:linear-gradient(160deg,var(--c) 0%,#111 65%);padding:30px 30px;transform:translateY(100%);transition:transform .55s cubic-bezier(.7,0,.2,1);z-index:8;display:grid;grid-template-columns:200px 1fr;gap:30px}
+  .np .player.on{transform:none}
+  .np .player .art{width:200px;height:200px;border-radius:14px;display:grid;place-items:center;font-size:58px;font-weight:900;color:#111;box-shadow:0 20px 40px rgba(0,0,0,.4);animation:spin 18s linear infinite paused}
+  .np .player.on .art{animation-play-state:running}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .np .player h3{font-size:42px;font-weight:900;letter-spacing:-.04em;margin:6px 0 4px}
+  .np .player .lyrics{max-height:250px;overflow:auto;padding-right:8px}
+  .np .player .lyrics h5{font-size:11px;letter-spacing:.12em;margin:14px 0 4px;color:#1ed760}
+
+  /* B bookshelf */
+  .bs{background:#efe7d8;color:#111;perspective:1200px}
+  .bs .shelf{position:absolute;left:0;right:0;bottom:70px;height:18px;background:linear-gradient(#7a5532,#4e3420);box-shadow:0 10px 18px rgba(0,0,0,.25)}
+  .bs .books{position:absolute;z-index:1;left:50%;bottom:88px;transform:translateX(-50%);display:flex;gap:6px;align-items:flex-end}
+  .bs .book{width:64px;border-radius:4px 4px 2px 2px;cursor:pointer;position:relative;transition:transform .35s cubic-bezier(.2,.9,.3,1.3);display:flex;align-items:center;justify-content:center;box-shadow:inset -6px 0 0 rgba(0,0,0,.15), inset 3px 0 0 rgba(255,255,255,.2)}
+  .bs .book:hover{transform:translateY(-22px) rotate(-3deg)}
+  .bs .book span{writing-mode:vertical-rl;transform:rotate(180deg);font-weight:900;font-size:15px;letter-spacing:.02em}
+  .bs .deco{width:22px;border-radius:3px;opacity:.55}
+  .bs .open{position:absolute;left:50%;top:50%;width:640px;height:380px;margin:-200px 0 0 -320px;display:grid;grid-template-columns:1fr 1fr;z-index:8;transform:scale(.4) rotateX(30deg);opacity:0;pointer-events:none;transition:all .5s cubic-bezier(.2,.9,.3,1.1)}
+  .bs .open.on{transform:none;opacity:1;pointer-events:auto}
+  .bs .page{background:#fffdf7;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.25);overflow:auto;font-size:13px;line-height:1.55}
+  .bs .page:first-child{border-radius:8px 0 0 8px;border-right:1px solid #e5dcc8;background:linear-gradient(90deg,#fffdf7 90%,#efe6d2)}
+  .bs .page:last-child{border-radius:0 8px 8px 0;background:linear-gradient(270deg,#fffdf7 90%,#efe6d2)}
+  .bs .page h3{font-size:30px;font-weight:900;letter-spacing:-.03em;margin:6px 0 10px;line-height:.95}
+  .bs .page h5{font-size:11px;letter-spacing:.1em;color:#ff4d00;margin:12px 0 4px}
+  .bs .dim{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.3s;z-index:7}
+  .bs .dim.on{opacity:1;pointer-events:auto}
+
+  /* C sticky board */
+  .sb{background:#e9e4d8;color:#111;background-image:radial-gradient(#cfc7b5 1.2px,transparent 1.2px);background-size:22px 22px}
+  .sb .note{position:absolute;width:210px;min-height:190px;padding:18px;box-shadow:3px 6px 0 rgba(0,0,0,.12);cursor:pointer;transition:transform .3s cubic-bezier(.2,.9,.3,1.4),box-shadow .3s}
+  .sb .note:hover{transform:rotate(0) scale(1.05)!important;box-shadow:6px 14px 0 rgba(0,0,0,.14);z-index:4}
+  .sb .note::before{content:"";position:absolute;left:50%;top:-10px;width:70px;height:22px;margin-left:-35px;background:rgba(255,255,255,.55);transform:rotate(-3deg)}
+  .sb .note h3{font-size:24px;font-weight:900;letter-spacing:-.03em;margin:8px 0;line-height:1}
+  .sb .note p{font-size:12px;line-height:1.5;margin:0}
+  .sb .big{position:absolute;inset:24px;z-index:8;padding:30px;box-shadow:8px 14px 0 rgba(0,0,0,.15);transform:scale(.2) rotate(-8deg);opacity:0;pointer-events:none;transition:all .45s cubic-bezier(.2,.9,.3,1.2);overflow:auto}
+  .sb .big.on{transform:none;opacity:1;pointer-events:auto}
+  .sb .big h3{font-size:44px;font-weight:900;letter-spacing:-.04em;margin:6px 0 10px}
+  .sb .big .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;font-size:13px;line-height:1.5}
+  .sb .big h5{font-size:11px;letter-spacing:.1em;margin:0 0 6px}
+
+  /* D browser tabs */
+  .bt{background:#f2efe8;color:#111}
+  .bt .win{position:absolute;left:24px;right:24px;top:120px;bottom:24px;border:2px solid #111;border-radius:12px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+  .bt .tabs{display:flex;background:#e9e4d8;border-bottom:2px solid #111;padding:6px 6px 0}
+  .bt .tab{padding:9px 16px;font-size:12px;font-weight:800;border-radius:9px 9px 0 0;cursor:pointer;display:flex;align-items:center;gap:8px;position:relative;margin-right:4px;opacity:.6}
+  .bt .tab.on{background:#fff;opacity:1;box-shadow:0 2px 0 #fff}
+  .bt .tab i{width:9px;height:9px;border-radius:50%}
+  .bt .tab .sp{width:11px;height:11px;border:2px solid #ff4d00;border-top-color:transparent;border-radius:50%;animation:rot .8s linear infinite}
+  @keyframes rot{to{transform:rotate(360deg)}}
+  .bt .url{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #eee;font-size:11px;font-weight:600}
+  .bt .url span{flex:1;background:#f4f1ea;border-radius:6px;padding:4px 10px;opacity:.75}
+  .bt .load{height:3px;background:#ff4d00;width:0}
+  .bt .page{flex:1;overflow:auto;padding:20px 26px;font-size:13px;line-height:1.55;display:grid;grid-template-columns:1.3fr 1fr;gap:26px}
+  .bt .page h3{font-size:36px;font-weight:900;letter-spacing:-.04em;margin:0 0 8px;line-height:.95}
+  .bt .page h5{font-size:11px;letter-spacing:.1em;color:#ff4d00;margin:12px 0 4px}
+</style>
+
+<h2>"Đang học" — 4 hướng khác nhau (bấm vào từng mục để xem chi tiết)</h2>
+<p class="subtitle">3 mục: <b>System Design</b>, <b>Go backend</b>, sách <b>Designing Data-Intensive Applications</b>. Ô viền đứt là chỗ bạn sẽ điền nội dung sau (đã học được gì, đang tới đâu, điều tâm đắc). Mình không bịa % tiến độ. Bấm vào mục để mở chi tiết, rồi bấm "Chọn" cho hướng bạn thích.</p>
+
+<div class="hx">
+  <div class="mockup">
+    <div class="mockup-header"><span>A · Now playing — giống trình phát nhạc; bấm 1 "bài" để mở player toàn màn hình, "lời bài hát" là những điều bạn học được</span><button class="pick" data-choice="A-now-playing" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st np" id="na">
+      <div class="ttl"><small>NOW LEARNING</small><h2>On repeat<span class="o">.</span></h2></div>
+      <div class="list" id="nal"></div>
+      <div class="player" id="nap"></div>
+    </div></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header"><span>B · Kệ sách — 3 cuốn sách trên kệ; rê để nhấc lên, bấm để lấy ra và mở sách 2 trang ghi chú</span><button class="pick" data-choice="B-bookshelf" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st bs" id="nb">
+      <div class="ttl"><small>NOW LEARNING</small><h2>On my desk<span class="o">.</span></h2></div>
+      <div class="books" id="nbb"></div><div class="shelf"></div>
+      <div class="dim" id="nbd"></div><div class="open" id="nbo"></div>
+    </div></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header"><span>C · Bảng giấy note — 3 tờ note dán trên bảng chấm bi; bấm để tờ note phóng to thành trang ghi chú</span><button class="pick" data-choice="C-sticky" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st sb" id="nc">
+      <div class="ttl"><small>NOW LEARNING</small><h2>Pinned to<br>my wall<span class="o">.</span></h2></div>
+      <div id="ncn"></div><div class="big" id="ncb"></div>
+    </div></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header"><span>D · Tab trình duyệt — 3 tab đang mở (có vòng xoay "đang tải" = đang học); bấm tab để chuyển trang ghi chú</span><button class="pick" data-choice="D-browser-tabs" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st bt" id="nd">
+      <div class="ttl"><small>NOW LEARNING</small><h2>Tabs I keep open<span class="o">.</span></h2></div>
+      <div class="win"><div class="tabs" id="ndt"></div><div class="url"><span id="ndu"></span></div><div class="load" id="ndl"></div><div class="page" id="ndp"></div></div>
+    </div></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var L = [
+    {k:'sd', t:'System Design', by:'Self-study · articles, case studies', c:'#ff4d00', ab:'SD', url:'notes.tai.dev/system-design',
+     why:'At Grab I built pieces of larger systems; now I want to reason about the whole — scale, trade-offs, failure.'},
+    {k:'go', t:'Go backend, in depth', by:'Hands-on · building services', c:'#00add8', ab:'GO', url:'notes.tai.dev/go',
+     why:'I wrote Go services at Grab (gRPC, MySQL, Redis). Now going deeper than "it works".'},
+    {k:'dd', t:'Designing Data-Intensive Applications', by:'Martin Kleppmann · O\'Reilly', c:'#6d28d9', ab:'DDIA', url:'notes.tai.dev/ddia',
+     why:'The book behind a lot of the systems I touched — replication, partitioning, consistency.'}
+  ];
+  function detail(x){ return '<h5>WHY I\'M LEARNING IT</h5><p>'+x.why+'</p>'+
+    '<h5>WHAT I\'VE LEARNED SO FAR</h5><div class="ph">✍️ Tai fills in — 3–5 bullet points in his own words.</div>'+
+    '<h5>WHERE I AM</h5><div class="ph">✍️ e.g. chapter / module / project milestone.</div>'+
+    '<h5>FAVOURITE TAKEAWAY</h5><div class="ph">✍️ One idea that changed how I build.</div>'; }
+
+  /* A */
+  (function(){
+    var list = document.getElementById('nal'), pl = document.getElementById('nap');
+    list.innerHTML = L.map(function(x, i){ return '<div class="tr" data-i="'+i+'"><div class="cover" style="background:'+x.c+'">'+x.ab+'</div><div><b>'+x.t+'</b><span>'+x.by+'</span></div><div class="prog"><i style="background:'+x.c+'"></i></div><div class="eq"><i></i><i></i><i></i><i></i></div></div>'; }).join('');
+    list.querySelectorAll('.tr').forEach(function(tr){ tr.onclick = function(){ var x = L[+tr.dataset.i];
+      pl.style.setProperty('--c', x.c);
+      pl.innerHTML = '<button class="close">↓ Close</button><div><div class="art" style="background:'+x.c+'">'+x.ab+'</div><p style="font-size:11px;opacity:.6;margin-top:16px;font-weight:700">NOW LEARNING · '+(+tr.dataset.i+1)+' / 3</p></div><div><span class="tag" style="background:#1ed76022;color:#1ed760">● IN PROGRESS</span><h3>'+x.t+'</h3><p style="opacity:.7;margin:0">'+x.by+'</p><div class="lyrics">'+detail(x)+'</div></div>';
+      pl.classList.add('on'); pl.querySelector('.close').onclick = function(){ pl.classList.remove('on'); }; }; });
+  })();
+
+  /* B */
+  (function(){
+    var bb = document.getElementById('nbb'), op = document.getElementById('nbo'), dim = document.getElementById('nbd');
+    var decos = ['#c2b59b','#8b9a7b','#d6a77a','#a3a3a3','#b98b6e'];
+    var html = '<div class="deco" style="height:150px;background:'+decos[0]+'"></div><div class="deco" style="height:170px;background:'+decos[1]+'"></div>';
+    L.forEach(function(x, i){ html += '<div class="book" data-i="'+i+'" style="height:'+[230,210,250][i]+'px;width:'+[64,58,74][i]+'px;background:'+x.c+';color:'+(i===1?'#111':'#fff')+'"><span>'+x.t+'</span></div>'; });
+    html += '<div class="deco" style="height:160px;background:'+decos[2]+'"></div><div class="deco" style="height:140px;background:'+decos[3]+';transform:rotate(8deg);transform-origin:bottom left"></div>';
+    bb.innerHTML = html;
+    function close(){ op.classList.remove('on'); dim.classList.remove('on'); }
+    dim.onclick = close;
+    bb.querySelectorAll('.book').forEach(function(b){ b.onclick = function(){ var x = L[+b.dataset.i];
+      op.innerHTML = '<div class="page"><span class="tag" style="background:'+x.c+';color:#fff">NOW READING</span><h3>'+x.t+'</h3><p style="opacity:.6;margin:0 0 10px">'+x.by+'</p><h5>WHY</h5><p>'+x.why+'</p></div><div class="page" style="position:relative"><button class="close" style="color:#111">✕</button>'+detail(x).replace(/^<h5>WHY I'M LEARNING IT<\/h5><p>.*?<\/p>/, '')+'</div>';
+      op.classList.add('on'); dim.classList.add('on'); op.querySelector('.close').onclick = close; }; });
+  })();
+
+  /* C */
+  (function(){
+    var box = document.getElementById('ncn'), big = document.getElementById('ncb');
+    var pos = [['31%',100,-5,'#fde68a'],['54%',150,4,'#bfdbfe'],['76%',90,-2,'#fbcfe8']];
+    box.innerHTML = L.map(function(x, i){ var p = pos[i]; return '<div class="note" data-i="'+i+'" style="left:'+p[0]+';top:'+p[1]+'px;transform:rotate('+p[2]+'deg);background:'+p[3]+'"><span class="tag" style="background:#111;color:#fff">'+x.ab+'</span><h3>'+x.t+'</h3><p>'+x.why+'</p><p style="margin-top:10px;font-weight:800;font-size:11px">CLICK TO OPEN →</p></div>'; }).join('');
+    box.querySelectorAll('.note').forEach(function(n){ n.onclick = function(){ var i = +n.dataset.i, x = L[i];
+      big.style.background = pos[i][3];
+      big.innerHTML = '<button class="close">✕ Close</button><span class="tag" style="background:#111;color:#fff">'+x.ab+' · NOW LEARNING</span><h3>'+x.t+'</h3><p style="margin:0 0 18px;opacity:.7">'+x.by+' — '+x.why+'</p><div class="cols"><div><h5>WHAT I\'VE LEARNED</h5><div class="ph">✍️ Tai fills in — 3–5 bullets.</div></div><div><h5>WHERE I AM</h5><div class="ph">✍️ chapter / module / milestone.</div></div><div><h5>FAVOURITE TAKEAWAY</h5><div class="ph">✍️ one idea that changed how I build.</div></div></div>';
+      big.classList.add('on'); big.querySelector('.close').onclick = function(){ big.classList.remove('on'); }; }; });
+  })();
+
+  /* D */
+  (function(){
+    var tabs = document.getElementById('ndt'), page = document.getElementById('ndp'), url = document.getElementById('ndu'), load = document.getElementById('ndl');
+    tabs.innerHTML = L.map(function(x, i){ return '<div class="tab'+(i===0?' on':'')+'" data-i="'+i+'"><span class="sp"></span>'+x.t+'</div>'; }).join('');
+    function show(i){ var x = L[i];
+      tabs.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', +t.dataset.i === i); });
+      url.textContent = 'https://'+x.url; load.style.transition = 'none'; load.style.width = '0'; page.style.opacity = 0;
+      requestAnimationFrame(function(){ load.style.transition = 'width .6s cubic-bezier(.2,.8,.2,1)'; load.style.width = '100%'; });
+      setTimeout(function(){ page.innerHTML = '<div><span class="tag" style="background:'+x.c+';color:#fff">NOW LEARNING</span><h3>'+x.t+'</h3><p style="opacity:.6;margin:0">'+x.by+'</p><h5>WHY</h5><p>'+x.why+'</p></div><div>'+detail(x).replace(/^<h5>WHY I'M LEARNING IT<\/h5><p>.*?<\/p>/, '')+'</div>'; page.style.transition = 'opacity .3s'; page.style.opacity = 1; load.style.width = '0'; }, 450); }
+    tabs.querySelectorAll('.tab').forEach(function(t){ t.onclick = function(){ show(+t.dataset.i); }; });
+    show(0);
+  })();
+})();
+</script>

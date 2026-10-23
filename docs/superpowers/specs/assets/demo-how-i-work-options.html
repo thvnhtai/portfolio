@@ -1,0 +1,245 @@
+<style>
+  .hx{display:flex;flex-direction:column;gap:30px}
+  .hx .mockup-body{padding:0}
+  .hx .mockup-header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .pick{flex:none;border:1px solid currentColor;background:transparent;color:inherit;border-radius:99px;padding:4px 12px;font-size:12px;cursor:pointer}
+  .pick.selected{background:#ff4d00;border-color:#ff4d00;color:#111;font-weight:700}
+  .sc{height:480px;overflow-y:auto;position:relative;border-radius:0 0 10px 10px;font-family:"Helvetica Neue",Arial,sans-serif}
+  .sc .tall{height:2600px;position:relative}
+  .sc .pin{position:sticky;top:0;height:480px;overflow:hidden}
+  .o{color:#ff4d00}
+  .hint{position:absolute;right:20px;bottom:14px;font-size:10px;font-weight:800;letter-spacing:.1em;opacity:.5;z-index:9}
+
+  /* A — git graph */
+  .ga{background:#0d1117;color:#e6edf3}
+  .ga .pin{display:grid;grid-template-columns:300px 1fr}
+  .ga .l{padding:34px 26px}
+  .ga .l small{font-size:11px;font-weight:800;letter-spacing:.12em;color:#ff4d00}
+  .ga .l h2{font-size:52px;line-height:.88;font-weight:900;letter-spacing:-.05em;margin:10px 0 14px}
+  .ga .l p{font-size:12px;opacity:.6;line-height:1.5}
+  .ga .l code{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:8px 10px;display:block;margin-top:18px;color:#7ee787}
+  .ga .g{position:relative;padding:22px 20px 0 0}
+  .ga svg{position:absolute;left:0;top:22px}
+  .ga .row{position:relative;height:72px;padding-left:120px;opacity:.18;transition:opacity .4s,transform .4s;transform:translateX(10px)}
+  .ga .row.on{opacity:1;transform:none}
+  .ga .row .h{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#ff4d00}
+  .ga .row .h em{font-style:normal;color:#8b949e;margin-left:8px}
+  .ga .row .h b{margin-left:8px;font-weight:700;color:#e6edf3;background:#1f6feb33;border:1px solid #1f6feb;border-radius:99px;padding:0 6px;font-size:10px}
+  .ga .row .m{font-family:ui-monospace,Menlo,monospace;font-size:13px;font-weight:700;margin:3px 0 2px}
+  .ga .row .d{font-size:11px;opacity:.65;max-width:520px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* B — CI pipeline */
+  .cb{background:#f2efe8;color:#111}
+  .cb .pin{display:grid;grid-template-columns:270px 1fr;gap:18px;padding:26px}
+  .cb .stages small{font-size:11px;font-weight:800;letter-spacing:.12em;color:#ff4d00}
+  .cb .stages h2{font-size:40px;line-height:.9;font-weight:900;letter-spacing:-.04em;margin:8px 0 16px}
+  .cb .st{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:13px;font-weight:800;border-bottom:1px solid #ddd6c5}
+  .cb .st i{width:20px;height:20px;border-radius:50%;border:2px solid #b9b3a6;display:grid;place-items:center;font-style:normal;font-size:11px;color:#fff;flex:none}
+  .cb .st.run i{border-color:#ff4d00;border-top-color:transparent;animation:spin .7s linear infinite}
+  .cb .st.ok i{background:#16a34a;border-color:#16a34a}
+  .cb .st em{margin-left:auto;font-style:normal;font-size:10px;font-weight:700;opacity:.5;font-family:ui-monospace,Menlo,monospace}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .cb .term{background:#111;color:#c9d1d9;border-radius:12px;padding:14px 16px;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;line-height:1.7;overflow:hidden;box-shadow:10px 10px 0 #ff4d00;position:relative}
+  .cb .term .bar{display:flex;gap:6px;margin-bottom:8px}.cb .term .bar i{width:10px;height:10px;border-radius:50%;background:#333}
+  .cb .term .ln{display:none}.cb .term .ln.on{display:block}
+  .cb .term .g{color:#3fb950}.cb .term .y{color:#ff4d00}.cb .term .c{color:#8b949e}
+  .cb .ship{position:absolute;inset:0;background:#16a34a;color:#fff;display:grid;place-items:center;text-align:center;font-family:"Helvetica Neue",Arial;font-weight:900;font-size:34px;letter-spacing:-.03em;clip-path:circle(0% at 50% 50%);transition:clip-path .7s cubic-bezier(.7,0,.2,1)}
+  .cb .ship.on{clip-path:circle(80% at 50% 50%)}
+  .cb .ship small{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;opacity:.85;margin-top:6px}
+
+  /* C — product assembles itself */
+  .ac{background:#f2efe8;color:#111}
+  .ac .pin{display:grid;grid-template-columns:280px 1fr;gap:10px;padding:26px}
+  .ac .txt small{font-size:11px;font-weight:800;letter-spacing:.12em;color:#ff4d00}
+  .ac .txt .num{font-size:110px;font-weight:900;letter-spacing:-.06em;line-height:.8;margin:14px 0 6px;color:transparent;-webkit-text-stroke:2px #111}
+  .ac .txt h3{font-size:40px;font-weight:900;letter-spacing:-.04em;margin:0 0 10px;line-height:.9}
+  .ac .txt p{font-size:13px;line-height:1.55;opacity:.75;margin:0}
+  .ac .dots{display:flex;gap:6px;margin-top:18px}.ac .dots i{width:22px;height:4px;border-radius:2px;background:#d6cfbf;transition:background .3s}.ac .dots i.on{background:#ff4d00}
+  .ac .frame{position:relative;border:2px solid #111;border-radius:12px;background:#fff;overflow:hidden;height:400px;transition:transform .6s cubic-bezier(.2,.9,.3,1.3),box-shadow .6s}
+  .ac .frame .chrome{height:28px;border-bottom:2px solid #111;display:flex;align-items:center;gap:6px;padding:0 10px;background:#e9e4d8;font-size:10px;font-weight:700}
+  .ac .frame .chrome i{width:9px;height:9px;border-radius:50%;background:#111;opacity:.25}
+  .ac .frame .chrome span{margin-left:8px;background:#fff;border-radius:5px;padding:2px 10px;flex:1;transition:background .4s,color .4s}
+  .ac .ui{position:absolute;left:14px;right:14px;top:42px;bottom:14px;display:grid;grid-template-columns:110px 1fr;grid-template-rows:40px 90px 1fr;gap:10px}
+  .ac .b{border:2px dashed transparent;border-radius:8px;position:relative;transition:all .5s}
+  .ac .b.side{grid-row:1/4}.ac .b.top{grid-column:2}.ac .b.kpi{grid-column:2}.ac .b.tbl{grid-column:2}
+  .ac .note{position:absolute;padding:8px 10px;font-size:11px;font-weight:800;background:#fde68a;box-shadow:2px 3px 0 rgba(0,0,0,.15);transform:scale(0) rotate(-8deg);transition:transform .45s cubic-bezier(.2,.9,.3,1.5);z-index:3}
+  .ac .chk{position:absolute;right:-6px;top:-8px;width:20px;height:20px;border-radius:50%;background:#16a34a;color:#fff;font-size:11px;display:grid;place-items:center;transform:scale(0);transition:transform .4s cubic-bezier(.2,.9,.3,1.6);z-index:2}
+  .ac .fill{position:absolute;inset:0;border-radius:6px;opacity:0;transition:opacity .5s;padding:8px;overflow:hidden}
+  .ac .stamp{position:absolute;right:20px;bottom:24px;border:4px solid #16a34a;color:#16a34a;font-weight:900;font-size:26px;letter-spacing:.04em;padding:4px 12px;border-radius:8px;transform:rotate(-12deg) scale(3);opacity:0;transition:all .45s cubic-bezier(.2,.9,.3,1.3);z-index:4;background:rgba(255,255,255,.85)}
+  .ac .pager{position:absolute;left:24px;bottom:22px;background:#111;color:#f2efe8;border-radius:10px;padding:8px 12px;font-size:11px;font-weight:700;z-index:4;opacity:0;transform:translateY(20px);transition:.4s}
+  .ac .pager b{color:#3fb950}
+  .ac .lvl1 .note{transform:scale(1) rotate(var(--r))}
+  .ac .lvl2 .b{border-color:#111}
+  .ac .lvl2 .note{transform:scale(.0)}
+  .ac .lvl3 .fill{opacity:1}
+  .ac .lvl3 .b{border-style:solid;border-color:#e5e0d6}
+  .ac .lvl4 .chk{transform:scale(1)}
+  .ac .lvl5 .stamp{transform:rotate(-12deg) scale(1);opacity:1}
+  .ac .lvl5 .frame,.ac .frame.lift{transform:translateY(-6px);box-shadow:0 18px 0 -6px #111}
+  .ac .lvl5 .chrome span{background:#dcfce7;color:#166534}
+  .ac .lvl6 .pager{opacity:1;transform:none}
+  .ac .lvl6 .stamp{opacity:0;transform:rotate(-12deg) scale(.6)}
+  .ac .bars{display:flex;align-items:flex-end;gap:4px;height:100%}
+  .ac .bars i{flex:1;background:#ff4d00;border-radius:2px 2px 0 0;height:30%}
+  .ac .lvl6 .bars i{animation:bh 1.2s ease-in-out infinite alternate}
+  @keyframes bh{to{height:var(--h)}}
+
+  /* D — kinetic words */
+  .kw .pin{transition:background .5s,color .5s}
+  .kw .big{position:absolute;left:24px;top:110px;font-size:150px;font-weight:900;letter-spacing:-.06em;line-height:.85;white-space:nowrap}
+  .kw .big .w{display:block;overflow:hidden;height:130px}
+  .kw .big .w span{display:block;transition:transform .6s cubic-bezier(.7,0,.2,1)}
+  .kw .ghost{position:absolute;right:20px;top:-30px;font-size:320px;font-weight:900;letter-spacing:-.06em;line-height:1;color:transparent;-webkit-text-stroke:2px currentColor;opacity:.25}
+  .kw .meta{position:absolute;left:28px;bottom:40px;right:28px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:end}
+  .kw .meta p{font-size:15px;line-height:1.5;margin:0;max-width:420px;font-weight:500}
+  .kw .meta .ev{text-align:right;font-size:11px;font-weight:800;letter-spacing:.08em}
+  .kw .meta .ev span{display:inline-block;border:1.5px solid currentColor;border-radius:99px;padding:4px 10px;margin-left:6px}
+  .kw .top{position:absolute;left:28px;top:30px;right:28px;display:flex;justify-content:space-between;font-size:11px;font-weight:800;letter-spacing:.12em}
+  .kw .prog{position:absolute;left:28px;right:28px;bottom:22px;display:flex;gap:6px}
+  .kw .prog i{flex:1;height:3px;background:currentColor;opacity:.2;transition:opacity .3s}.kw .prog i.on{opacity:1}
+</style>
+
+<h2>"How I work" — 4 hướng khác nhau</h2>
+<p class="subtitle">Mỗi khung có thanh cuộn riêng: <b>cuộn chuột bên trong từng khung</b> để chạy qua 6 bước. Bấm "Chọn" cho hướng bạn thích. (Demo này chỉ có tiếng Anh; bản thật có EN/VI.)</p>
+
+<div class="hx">
+  <div class="mockup">
+    <div class="mockup-header"><span>A · Git graph — quy trình là lịch sử commit; cuộn tới đâu, nhánh vẽ tới đó, có tách nhánh feature rồi merge</span><button class="pick" data-choice="A-git-graph" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="sc ga" id="sa"><div class="tall"><div class="pin">
+      <div class="l"><small>HOW I WORK</small><h2>git log<br>--how-i<br>-work<span class="o">.</span></h2><p>Every feature I ship follows the same history — from a conversation to something running in production.</p><code>$ git log --graph --oneline</code></div>
+      <div class="g" id="gag"></div>
+    </div></div><div class="hint" style="color:#e6edf3">SCROLL INSIDE ↓</div></div></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header"><span>B · CI pipeline — 6 bước là 6 stage của pipeline; terminal chạy log theo cuộn, xong thì "Deployed"</span><button class="pick" data-choice="B-ci-pipeline" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="sc cb" id="sb"><div class="tall"><div class="pin">
+      <div class="stages"><small>HOW I WORK</small><h2>Every feature<br>is a pipeline<span class="o">.</span></h2><div id="cbst"></div></div>
+      <div class="term" id="cbt"><div class="bar"><i></i><i></i><i></i></div><div id="cbl"></div><div class="ship" id="cbs"><div>✓ Deployed to production<small>6 / 6 stages passed · that's how I work</small></div></div></div>
+    </div></div><div class="hint">SCROLL INSIDE ↓</div></div></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header"><span>C · Sản phẩm tự lắp ráp — 1 màn hình app đi qua 6 giai đoạn: giấy note → wireframe → UI thật → test xanh → deploy → giám sát</span><button class="pick" data-choice="C-assemble" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="sc ac" id="sc3"><div class="tall"><div class="pin" id="acp">
+      <div class="txt"><small>HOW I WORK</small><div class="num" id="acn">01</div><h3 id="act">Understand</h3><p id="acd"></p><div class="dots" id="acdots"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="frame"><div class="chrome"><i></i><i></i><i></i><span id="acu">localhost:3000/transactions</span></div>
+        <div class="note" style="left:40px;top:70px;--r:-6deg">"I need live data"<br>— Ops</div>
+        <div class="note" style="left:240px;top:120px;--r:5deg;background:#bfdbfe">"Filter by account"<br>— Finance</div>
+        <div class="note" style="left:120px;top:230px;--r:-3deg;background:#fbcfe8">API contract?<br>— Backend</div>
+        <div class="ui">
+          <div class="b side"><div class="fill" style="background:#111;color:#f2efe8;font-size:10px;font-weight:800;line-height:2.2">● Accounts<br>● Transactions<br>● Reports</div><div class="chk">✓</div></div>
+          <div class="b top"><div class="fill" style="background:#f2efe8;font-size:12px;font-weight:900">Transactions <span style="float:right;color:#16a34a;font-size:10px">● LIVE</span></div></div>
+          <div class="b kpi"><div class="fill" style="background:#fff7f2"><div class="bars"><i style="--h:70%"></i><i style="--h:40%"></i><i style="--h:90%"></i><i style="--h:55%"></i><i style="--h:80%"></i><i style="--h:35%"></i><i style="--h:65%"></i><i style="--h:95%"></i></div></div><div class="chk">✓</div></div>
+          <div class="b tbl"><div class="fill" style="background:#fff;font-size:10px;line-height:2.1;font-family:ui-monospace,Menlo,monospace">TX-504327 · CREDIT · 233.35<br>TX-775175 · TRANSFER · 6612.99<br>TX-804327 · DEBIT · 639.74<br>TX-765847 · CREDIT · 2473.44</div><div class="chk">✓</div></div>
+        </div>
+        <div class="stamp">DEPLOYED</div>
+        <div class="pager">📟 on-call · status <b>healthy</b> · feedback <b>logged</b></div>
+      </div>
+    </div></div><div class="hint">SCROLL INSIDE ↓</div></div></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header"><span>D · Kinetic words — mỗi bước là 1 chữ khổng lồ trượt vào, màu nền đổi theo từng bước</span><button class="pick" data-choice="D-kinetic-words" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="sc kw" id="sd"><div class="tall"><div class="pin" id="kwp">
+      <div class="top"><span>HOW I WORK</span><span id="kwc">01 / 06</span></div>
+      <div class="ghost" id="kwg">01</div>
+      <div class="big"><div class="w" id="kww"></div></div>
+      <div class="meta"><p id="kwd"></p><div class="ev" id="kwe"></div></div>
+      <div class="prog" id="kwpr"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div></div><div class="hint">SCROLL INSIDE ↓</div></div></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var STEPS = [
+    {t:'Understand', d:'Start with the people who use it — Ops, finance, PM, design. Agree the API contract with backend before a line of UI.', ev:['UCM','Zen Ledger'], c:'feat: talk to users, agree API contract', h:'a1f3c2e'},
+    {t:'Design', d:'Shape the data and boundaries first: schema, service interfaces, component APIs, how micro-frontends split.', ev:['Zen Ledger','E-Commerce'], c:'docs: schema + service boundaries', h:'b7e91d0'},
+    {t:'Build', d:'End to end: React/TypeScript on top, Go services underneath, reusable components so the next feature is faster.', ev:['All 5 projects'], c:'feat(ui,api): realtime feed end to end', h:'c42a8f1', br:true},
+    {t:'Test', d:'Unit, integration and UAT on frontend and backend, so regressions are caught before release — not by users.', ev:['Zen Ledger','UCM'], c:'test: unit + integration + UAT', h:'d9b0e37', br:true},
+    {t:'Ship', d:'CI/CD pipelines, Docker images and Kubernetes deploys I can set up from scratch — and fix when they break.', ev:['Zen Ledger','E-Commerce'], c:'ci: build → image → deploy to k8s', h:'e15c6a4', merge:true},
+    {t:'Support', d:'On-call, tracing data issues back upstream, and turning user feedback into the next iteration.', ev:['Invoicing','Zen Ledger'], c:'fix: trace upstream data mismatch', h:'f803b2c'}
+  ];
+  function onScroll(el, fn){ function u(){ var p = el.scrollTop / (el.scrollHeight - el.clientHeight); fn(Math.max(0, Math.min(1, p))); } el.addEventListener('scroll', u, {passive:true}); u(); }
+  function stepOf(p){ return Math.min(5, Math.floor(p * 6.4)); }
+
+  /* A git graph */
+  (function(){
+    var g = document.getElementById("gag"), rowH = 72, lanes = [36, 80];
+    var svg = '<svg width="110" height="'+(rowH*6)+'" xmlns="http://www.w3.org/2000/svg">';
+    var main = 'M36 8 V'+(rowH*6-20);
+    var br = 'M36 '+(rowH*1+12)+' C36 '+(rowH*2-10)+' 80 '+(rowH*2-20)+' 80 '+(rowH*2+12)+' V'+(rowH*3+12)+' C80 '+(rowH*4-10)+' 36 '+(rowH*4-14)+' 36 '+(rowH*4+12);
+    svg += '<path d="'+main+'" stroke="#30363d" stroke-width="3" fill="none"/><path id="gam" d="'+main+'" stroke="#ff4d00" stroke-width="3" fill="none"/>';
+    svg += '<path d="'+br+'" stroke="#30363d" stroke-width="3" fill="none"/><path id="gab" d="'+br+'" stroke="#1f6feb" stroke-width="3" fill="none"/>';
+    STEPS.forEach(function(s, i){ var x = s.br ? 80 : 36; svg += '<circle id="gac'+i+'" cx="'+x+'" cy="'+(i*rowH+12)+'" r="8" fill="#0d1117" stroke="#30363d" stroke-width="3"/>'; });
+    g.innerHTML = svg + '</svg>' + STEPS.map(function(s, i){ return '<div class="row" id="gar'+i+'"><div class="h">'+s.h+'<em>'+(s.br?'(feature/realtime-feed)':'(main)')+'</em>'+(s.merge?'<b>merge ✓</b>':'')+'</div><div class="m">'+s.c+'</div><div class="d"><b>'+s.t+'.</b> '+s.d+'</div></div>'; }).join('');
+    var m = document.getElementById('gam'), b = document.getElementById('gab'), ml = m.getTotalLength(), bl = b.getTotalLength();
+    m.style.strokeDasharray = ml; b.style.strokeDasharray = bl;
+    onScroll(document.getElementById('sa'), function(p){
+      var k = stepOf(p);
+      m.style.strokeDashoffset = ml * (1 - Math.min(1, p*1.15));
+      var bp = Math.max(0, Math.min(1, (p*6.4 - 1.5) / 2.6)); b.style.strokeDashoffset = bl * (1 - bp);
+      STEPS.forEach(function(s, i){ var on = i <= k && p > 0.01 || i === 0; document.getElementById('gar'+i).classList.toggle('on', on);
+        var c = document.getElementById('gac'+i); c.setAttribute('stroke', on ? (s.br ? '#1f6feb' : '#ff4d00') : '#30363d'); c.setAttribute('fill', on ? (s.br ? '#1f6feb' : '#ff4d00') : '#0d1117'); });
+    });
+  })();
+
+  /* B CI pipeline */
+  (function(){
+    var LOGS = [
+      ['$ ./understand --with ops,finance,pm', 'interviewing users… <span class="c">"manual refresh is painful"</span>', 'api contract agreed with backend <span class="g">✓</span>'],
+      ['$ ./design --schema --boundaries', 'tables: accounts, transactions, ledger_entries', 'services: account-svc, txn-svc (gRPC)  <span class="g">✓</span>'],
+      ['$ pnpm build && go build ./...', 'react/ts ui ·  go services ·  websocket feed', 'reusable component library  <span class="g">✓</span>'],
+      ['$ pnpm test && go test ./... && uat', 'unit ✓  integration ✓  uat ✓', '<span class="g">ready to release</span>'],
+      ['$ docker build && kubectl apply -f k8s/', 'image pushed · rollout complete', 'deployed to production  <span class="g">✓</span>'],
+      ['$ oncall --watch', 'alert: data mismatch → traced to upstream', 'feedback logged → next iteration  <span class="g">✓</span>']
+    ];
+    var st = document.getElementById('cbst'), lg = document.getElementById('cbl'), ship = document.getElementById('cbs');
+    st.innerHTML = STEPS.map(function(s, i){ return '<div class="st" id="cbs'+i+'"><i></i>'+s.t+'<em>'+(i+1)*7+'s</em></div>'; }).join('');
+    var lines = []; LOGS.forEach(function(L, i){ lines.push('<div class="ln" data-s="'+i+'"><span class="y">▶ stage '+(i+1)+'/6 · '+STEPS[i].t.toLowerCase()+'</span></div>'); L.forEach(function(l){ lines.push('<div class="ln" data-s="'+i+'">  '+l+'</div>'); }); });
+    lg.innerHTML = lines.join('');
+    var lns = lg.querySelectorAll('.ln');
+    onScroll(document.getElementById('sb'), function(p){
+      var shown = Math.floor(p * 1.12 * lns.length);
+      lns.forEach(function(l, i){ l.classList.toggle('on', i < shown); });
+      var visible = Array.prototype.filter.call(lns, function(l){ return l.classList.contains('on'); });
+      visible.forEach(function(l, i){ l.style.display = i < visible.length - 13 ? 'none' : ''; });
+      var cur = shown ? +lns[Math.min(shown, lns.length) - 1].dataset.s : -1, done = shown >= lns.length;
+      STEPS.forEach(function(s, i){ var e = document.getElementById('cbs'+i); e.className = 'st' + (i < cur || (done && i === cur) ? ' ok' : i === cur ? ' run' : ''); e.querySelector('i').textContent = (i < cur || done) ? '✓' : ''; });
+      ship.classList.toggle('on', p > 0.93);
+    });
+  })();
+
+  /* C assemble */
+  (function(){
+    var pin = document.getElementById('acp'), n = document.getElementById('acn'), t = document.getElementById('act'), d = document.getElementById('acd'), u = document.getElementById('acu'), dots = document.querySelectorAll('#acdots i');
+    var urls = ['notes · user interviews','wireframe.fig','localhost:3000/transactions','localhost:3000 · tests passing','https://zen-ledger.app/transactions','https://zen-ledger.app · monitoring'];
+    var last = -1;
+    onScroll(document.getElementById('sc3'), function(p){
+      var k = stepOf(p); if (k === last) return; last = k;
+      pin.className = 'pin' + [' lvl1',' lvl1 lvl2',' lvl2 lvl3',' lvl2 lvl3 lvl4',' lvl2 lvl3 lvl4 lvl5',' lvl2 lvl3 lvl4 lvl5 lvl6'][k];
+      n.textContent = '0' + (k+1); t.textContent = STEPS[k].t; d.textContent = STEPS[k].d; u.textContent = urls[k];
+      dots.forEach(function(x, i){ x.classList.toggle('on', i <= k); });
+    });
+  })();
+
+  /* D kinetic words */
+  (function(){
+    var THEMES = [['#f2efe8','#111'],['#ff4d00','#111'],['#111','#f2efe8'],['#16a34a','#0b2914'],['#6d28d9','#f2efe8'],['#f2efe8','#111']];
+    var pin = document.getElementById('kwp'), w = document.getElementById('kww'), last = -1;
+    w.innerHTML = STEPS.map(function(s){ return '<span>'+s.t.toUpperCase()+'<span style="display:inline;color:#ff4d00">.</span></span>'; }).join('');
+    var spans = w.children;
+    onScroll(document.getElementById('sd'), function(p){
+      var k = stepOf(p); if (k === last) return; last = k;
+      for (var i = 0; i < spans.length; i++) spans[i].style.transform = 'translateY(' + (-k*130) + 'px)';
+      pin.style.background = THEMES[k][0]; pin.style.color = THEMES[k][1];
+      w.querySelectorAll('span span').forEach(function(x){ x.style.color = k === 1 ? '#f2efe8' : '#ff4d00'; });
+      document.getElementById('kwg').textContent = '0' + (k+1); document.getElementById('kwc').textContent = '0' + (k+1) + ' / 06';
+      document.getElementById('kwd').textContent = STEPS[k].d;
+      document.getElementById('kwe').innerHTML = 'EVIDENCE ' + STEPS[k].ev.map(function(e){ return '<span>'+e+'</span>'; }).join('');
+      document.querySelectorAll('#kwpr i').forEach(function(x, i){ x.classList.toggle('on', i <= k); });
+    });
+  })();
+})();
+</script>

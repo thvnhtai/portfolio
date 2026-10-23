@@ -1,0 +1,21 @@
+.root { position: relative; background: var(--cream, #f2efe8); color: var(--ink, #111); padding: 72px 24px; }
+.kicker { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; color: #c23b00; margin: 0; }
+.q { font-size: clamp(24px, 4vw, 30px); font-weight: 900; letter-spacing: -0.03em; margin: 10px 0 30px; max-width: 60%; }
+.em { font: inherit; color: inherit; background: none; border: 0; border-bottom: 4px solid var(--accent, #ff4d00); padding: 0 0 4px; cursor: pointer; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: clamp(20px, 5.2vw, 46px); font-weight: 800; letter-spacing: -0.03em; display: inline-block; max-width: 100%; overflow-wrap: anywhere; text-align: left; }
+.em:focus-visible { outline: 2px solid var(--ink, #111); outline-offset: 4px; }
+.sub { font-size: 12px; font-weight: 700; opacity: 0.65; margin: 10px 0 34px; }
+.rows { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--ink, #111); }
+.rows a { padding: 18px 20px 18px 0; border-bottom: 2px solid var(--ink, #111); font-size: 22px; font-weight: 900; letter-spacing: -0.02em; text-decoration: none; color: inherit; display: flex; justify-content: space-between; transition: padding 0.25s, color 0.25s; }
+.rows a:focus-visible { outline: 2px solid var(--ink, #111); outline-offset: -2px; }
+.rows a span { font-size: 11px; font-weight: 700; opacity: 0.6; align-self: center; }
+.clock { position: absolute; right: 24px; top: 28px; text-align: right; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; }
+.clock b { display: block; font-size: 40px; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+@media (hover: hover) {
+  .em:hover { color: #c23b00; }
+  .rows a:hover { padding-left: 14px; color: #c23b00; }
+}
+@media (max-width: 720px) {
+  .rows { grid-template-columns: 1fr; }
+  .clock { position: static; text-align: left; margin-bottom: 20px; }
+  .q { max-width: none; }
+}

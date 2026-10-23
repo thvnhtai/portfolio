@@ -1,0 +1,12 @@
+.root { position: fixed; inset: 0; z-index: 10000; font-family: var(--font-mono); font-size: 13px; line-height: 1.7; color: #c9d1d9; }
+.half { position: absolute; left: 0; right: 0; height: 50%; overflow: hidden; background: #0b0b0b; transition: transform 0.8s cubic-bezier(0.7, 0, 0.2, 1); }
+.top { top: 0; }
+.bottom { bottom: 0; }
+.bottomInner { position: absolute; left: 0; right: 0; bottom: 0; height: 100vh; }
+.openTop { transform: translateY(-100%); }
+.openBottom { transform: translateY(100%); }
+.term { position: absolute; inset: 0; height: 100vh; padding: 26px; }
+.accent { color: var(--accent); }
+.bar { margin-top: 14px; height: 3px; max-width: 320px; background: #222; }
+.bar i { display: block; height: 100%; background: var(--accent); transition: width 0.3s linear; }
+.hint { margin-top: 14px; color: #8b949e; font-size: 11px; }

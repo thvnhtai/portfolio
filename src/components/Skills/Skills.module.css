@@ -1,0 +1,21 @@
+.root { position: relative; background: #111; color: #f2efe8; padding: 96px 0 72px; overflow: hidden; }
+.title { font-size: clamp(40px, 8vw, 96px); font-weight: 900; letter-spacing: -0.04em; margin: 0 24px 48px; }
+.rows { display: flex; flex-direction: column; gap: 12px; }
+.row { display: flex; white-space: nowrap; width: max-content; animation: mqx 40s linear infinite; }
+.r { animation-direction: reverse; animation-duration: 46s; }
+.s { animation-duration: 52s; }
+.paused .row { animation-play-state: paused; }
+@media (hover: hover) { .rows:hover .row { animation-play-state: paused; } }
+@keyframes mqx { to { transform: translateX(-50%); } }
+.chip {
+  font-size: clamp(26px, 5vw, 44px); font-weight: 900; letter-spacing: -0.04em; padding: 8px 22px;
+  border-radius: 99px; border: 2px solid #333; transition: all 0.25s; cursor: default;
+  display: inline-flex; align-items: center; gap: 10px; margin-right: 12px;
+}
+.chip i { width: 0.28em; height: 0.28em; border-radius: 50%; background: var(--c); flex: none; }
+.still .chip { margin: 0 12px 12px 0; }
+@media (hover: hover) { .chip:hover { background: var(--accent); color: var(--ink); border-color: var(--accent); transform: rotate(-3deg) scale(1.06); } }
+.still .row { animation: none; width: auto; flex-wrap: wrap; white-space: normal; padding: 0 24px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 32px 24px 0; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; }
+.legend b { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; padding: 0; }

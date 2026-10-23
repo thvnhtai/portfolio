@@ -1,0 +1,16 @@
+.wrap { display: flex; justify-content: center; align-items: center; min-height: 340px; }
+.card {
+  width: 220px; height: 310px; border-radius: 16px; background: #121212; color: var(--cream);
+  display: flex; flex-direction: column; align-items: center; overflow: hidden;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25); transition: transform 0.3s ease;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .card:hover { transform: rotate(-3deg) translateY(-4px); }
+}
+.top { width: 100%; height: 58px; background: var(--accent); }
+.photo { width: 120px; height: 150px; margin-top: -28px; border-radius: 10px; object-fit: cover; border: 3px solid var(--accent); background: var(--cream); }
+.name { margin: 14px 0 0; font-weight: 900; font-size: 26px; letter-spacing: -0.04em; }
+.role { margin: 2px 0 0; color: var(--accent); font-weight: 700; font-size: 14px; }
+.meta { margin: 6px 0 0; color: #8a8a8a; font-size: 10px; font-family: 'JetBrains Mono', monospace; }
+.hint { position: absolute; right: 0; bottom: 0; z-index: 5; margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5c5a55; pointer-events: none; }
+@media (max-width: 720px) { .hint { right: auto; left: 0; } }

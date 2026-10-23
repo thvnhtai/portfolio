@@ -1,0 +1,222 @@
+<style>
+  .hx{display:flex;flex-direction:column;gap:26px}
+  .hx h3.sec{font-size:22px;margin:18px 0 0}
+  .hx .mockup-body{padding:0}
+  .hx .mockup-header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .pick{flex:none;border:1px solid currentColor;background:transparent;color:inherit;border-radius:99px;padding:4px 12px;font-size:12px;cursor:pointer}
+  .pick.selected{background:#ff4d00;border-color:#ff4d00;color:#111;font-weight:700}
+  .st{height:400px;position:relative;overflow:hidden;border-radius:0 0 10px 10px;font-family:"Helvetica Neue",Arial,sans-serif;background:#f2efe8;color:#111;user-select:none}
+  .st canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:30}
+  .o{color:#ff4d00}
+  .mini .nav{display:flex;justify-content:space-between;padding:14px 22px;font-size:11px;font-weight:800;letter-spacing:.08em}
+  .mini .nav kbd{font:inherit;font-size:10px;border:1px solid #111;border-radius:4px;padding:1px 5px;cursor:pointer}
+  .mini .logo{cursor:pointer}
+  .mini .hl{font-size:84px;font-weight:900;letter-spacing:-.05em;line-height:.86;margin:40px 22px 0;display:inline-block}
+  .mini .bio{margin:18px 24px;font-size:14px;max-width:420px;line-height:1.5}
+  .mini .btns{margin:0 24px;display:flex;gap:8px}
+  .mini .btns span{padding:10px 16px;border-radius:99px;font-size:12px;font-weight:800;background:#111;color:#f2efe8;display:inline-block}
+  .mini .btns span+span{background:transparent;border:1.5px solid #111;color:#111}
+  .replay{position:absolute;right:14px;bottom:12px;z-index:60;font-size:10px;font-weight:800;letter-spacing:.08em;border:1.5px solid #111;border-radius:99px;padding:5px 11px;cursor:pointer;background:#f2efe8}
+  .hint2{position:absolute;left:14px;bottom:12px;z-index:60;font-size:10px;font-weight:800;letter-spacing:.08em;background:#111;color:#f2efe8;border-radius:99px;padding:5px 11px}
+
+  /* preloaders */
+  .pl{position:absolute;inset:0;z-index:50}
+  .p1{background:#111;color:#f2efe8}
+  .p1 .n{position:absolute;right:24px;bottom:10px;font-size:150px;font-weight:900;letter-spacing:-.06em;line-height:1;font-variant-numeric:tabular-nums}
+  .p1 .w{position:absolute;left:24px;bottom:30px;font-size:12px;font-weight:800;letter-spacing:.1em}
+  .p1 .bar{position:absolute;left:0;top:0;height:4px;background:#ff4d00;width:0}
+  .p1 .cur{position:absolute;inset:0;background:#ff4d00;transform:translateY(100%)}
+  .p2{background:#0b0b0b;color:#c9d1d9;font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.7;padding:26px}
+  .p2 .g{color:#3fb950}.p2 .y{color:#ff4d00}.p2 .c{color:#8b949e}
+  .p2 .half{position:absolute;left:0;right:0;height:50%;background:#0b0b0b;transition:transform .8s cubic-bezier(.7,0,.2,1)}
+  .p3{background:#f2efe8;display:grid;place-items:center}
+  .p3 .name{font-size:96px;font-weight:900;letter-spacing:-.05em;display:flex}
+  .p3 .name span{display:inline-block;transition:transform .9s cubic-bezier(.2,.9,.3,1.2),opacity .5s}
+  .p3 .dot{position:absolute;left:50%;top:50%;width:24px;height:24px;margin:-12px;border-radius:50%;background:#ff4d00;transform:scale(0);transition:transform .9s cubic-bezier(.7,0,.2,1)}
+
+  /* cmdk */
+  .k1 .dim{position:absolute;inset:0;background:rgba(17,17,17,.35);backdrop-filter:blur(3px);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+  .k1.open .dim{opacity:1;pointer-events:auto}
+  .k1 .pal{position:absolute;left:50%;top:50px;width:520px;margin-left:-260px;background:#fff;border-radius:14px;box-shadow:0 30px 60px rgba(0,0,0,.3);z-index:41;transform:scale(.96) translateY(-8px);opacity:0;pointer-events:none;transition:.18s;overflow:hidden;border:1.5px solid #111}
+  .k1.open .pal{transform:none;opacity:1;pointer-events:auto}
+  .k1 .pal input{width:100%;box-sizing:border-box;border:0;border-bottom:1.5px solid #eee;padding:16px 18px;font:inherit;font-size:16px;outline:none}
+  .k1 .res{max-height:250px;overflow:auto;padding:6px}
+  .k1 .grp{font-size:10px;font-weight:800;letter-spacing:.1em;opacity:.45;padding:8px 12px 4px}
+  .k1 .it{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+  .k1 .it i{font-style:normal;width:24px;height:24px;border-radius:6px;background:#f2efe8;display:grid;place-items:center;font-size:12px}
+  .k1 .it em{margin-left:auto;font-style:normal;font-size:10px;opacity:.45;font-weight:700}
+  .k1 .it.on{background:#111;color:#f2efe8}
+  .k1 .it.on i{background:#ff4d00}
+  .k1 .ft{display:flex;gap:14px;padding:9px 14px;border-top:1.5px solid #eee;font-size:10px;font-weight:700;opacity:.55}
+  .k2 .term{position:absolute;left:18px;right:18px;bottom:18px;background:#0b0b0b;color:#c9d1d9;border-radius:12px;font-family:ui-monospace,Menlo,monospace;font-size:13px;z-index:41;transform:translateY(140%);transition:transform .35s cubic-bezier(.2,.9,.3,1.2);box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+  .k2.open .term{transform:none}
+  .k2 .out{padding:12px 16px 0;max-height:150px;overflow:auto;line-height:1.6}
+  .k2 .line{display:flex;align-items:center;gap:8px;padding:12px 16px}
+  .k2 .line b{color:#3fb950}
+  .k2 .line input{flex:1;background:transparent;border:0;outline:none;color:#f2efe8;font:inherit}
+  .k2 .chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 12px}
+  .k2 .chips span{border:1px solid #333;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer}
+  .k2 .chips span:hover{border-color:#ff4d00;color:#ff4d00}
+  .toast{position:absolute;left:50%;top:14px;transform:translate(-50%,-50px);background:#111;color:#f2efe8;font-size:12px;font-weight:800;padding:8px 14px;border-radius:99px;transition:.3s;z-index:70}
+  .toast.on{transform:translate(-50%,0)}
+
+  /* eggs */
+  .dev *{outline:1px dashed rgba(255,77,0,.8)!important}
+  .dev{background-image:linear-gradient(rgba(255,77,0,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,77,0,.08) 1px,transparent 1px)!important;background-size:20px 20px!important}
+  .devtag{position:absolute;right:14px;top:44px;background:#ff4d00;color:#111;font-size:11px;font-weight:900;padding:5px 10px;border-radius:6px;z-index:60;transform:scale(0);transition:transform .3s cubic-bezier(.2,.9,.3,1.6)}
+  .dev .devtag{transform:scale(1)}
+  .scoot{position:absolute;font-size:40px;z-index:55;pointer-events:none}
+  .fall{transition:transform 1.2s cubic-bezier(.5,0,.75,0),opacity 1.2s}
+</style>
+
+<h2>Preloader · Menu ⌘K · Easter egg — các phương án</h2>
+<p class="subtitle">Mỗi khung là một trang mini. Preloader: bấm ↻ REPLAY để xem lại. ⌘K: rê chuột vào khung rồi nhấn <b>⌘K / Ctrl+K</b> (hoặc bấm nút ⌘K trên menu mini), dùng ↑ ↓ Enter. Easter egg: làm theo gợi ý ở góc trái dưới. Bấm "Chọn" cho mỗi phần (mỗi phần chọn 1).</p>
+
+<div class="hx">
+  <h3 class="sec">1 · Preloader</h3>
+  <div class="mockup"><div class="mockup-header"><span>P1 · Bộ đếm + rèm cam — đếm 0→100%, rèm cam kéo lên mở ra site (như bản thiết kế)</span><button class="pick" data-choice="P1-counter-curtain" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st mini" id="p1"></div></div></div>
+  <div class="mockup"><div class="mockup-header"><span>P2 · git clone — terminal chạy "git clone thvnhtai/portfolio", xong thì màn hình tách đôi mở ra</span><button class="pick" data-choice="P2-git-clone" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st mini" id="p2"></div></div></div>
+  <div class="mockup"><div class="mockup-header"><span>P3 · Tên tụ lại — chữ TAI NGUYEN bay vào từ khắp nơi, co lại thành chấm cam rồi chấm nở ra thành site</span><button class="pick" data-choice="P3-name-dot" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st mini" id="p3"></div></div></div>
+
+  <h3 class="sec">2 · Menu ⌘K</h3>
+  <div class="mockup"><div class="mockup-header"><span>K1 · Command palette — hộp tìm kiếm giữa màn hình kiểu Raycast/Linear, nhóm lệnh, gõ để lọc</span><button class="pick" data-choice="K1-palette" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st mini k1" id="k1"></div></div></div>
+  <div class="mockup"><div class="mockup-header"><span>K2 · Terminal — dòng lệnh trượt lên từ dưới; gõ lệnh như cd projects, copy email, lang vi (có gợi ý bấm nhanh)</span><button class="pick" data-choice="K2-terminal" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st mini k2" id="k2"></div></div></div>
+
+  <h3 class="sec">3 · Easter egg</h3>
+  <div class="mockup"><div class="mockup-header"><span>E1 · Konami code — gõ ↑ ↑ ↓ ↓ ← → ← → B A: pháo giấy + "DEV MODE" hiện khung lưới và viền mọi phần tử (khoe chất frontend)</span><button class="pick" data-choice="E1-konami-devmode" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st mini" id="e1"></div></div></div>
+  <div class="mockup"><div class="mockup-header"><span>E2 · Gõ chữ "grab" — một đoàn xe máy xanh phóng ngang qua màn hình (nhắc tới Grab)</span><button class="pick" data-choice="E2-grab-scooters" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st mini" id="e2"></div></div></div>
+  <div class="mockup"><div class="mockup-header"><span>E3 · Bấm logo 5 lần — chế độ trọng lực: mọi thứ trên trang rơi xuống, rồi tự bay về chỗ cũ</span><button class="pick" data-choice="E3-gravity" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st mini" id="e3"></div></div></div>
+</div>
+
+<script>
+(function(){
+  var EMAIL = 'thanhtaiwork04@gmail.com';
+  var SITE = '<div class="nav"><span class="logo">TAI NGUYEN ©2026</span><span>WORK · PROCESS · CONTACT · EN/VI <kbd class="kb">⌘K</kbd></span></div><div class="hl">FULLSTACK<br>ENGINEER<span class="o">.</span></div><div class="bio">Hi, I\'m Tai — a fullstack engineer who leans frontend. At Grab I shipped internal platforms end to end.</div><div class="btns"><span>Download CV ↓</span><span>Get in touch →</span></div>';
+  document.querySelectorAll('.st.mini').forEach(function(s){ s.innerHTML = SITE; });
+  var hovered = null; document.querySelectorAll('.st').forEach(function(s){ s.addEventListener('pointerenter', function(){ hovered = s; }); s.addEventListener('pointerleave', function(){ if (hovered === s) hovered = null; }); });
+  function toast(st, msg){ var t = st.querySelector('.toast'); if (!t){ t = document.createElement('div'); t.className = 'toast'; st.appendChild(t); } t.textContent = msg; t.classList.add('on'); clearTimeout(t._tm); t._tm = setTimeout(function(){ t.classList.remove('on'); }, 1500); }
+  function replayBtn(st, fn){ var b = document.createElement('button'); b.className = 'replay'; b.textContent = '↻ REPLAY'; b.onclick = fn; st.appendChild(b); }
+  function hint(st, txt){ var h = document.createElement('div'); h.className = 'hint2'; h.textContent = txt; st.appendChild(h); }
+  function onView(st, fn){ var io = new IntersectionObserver(function(es){ if (es[0].isIntersecting){ io.disconnect(); fn(); } }, {threshold:.5}); io.observe(st); }
+
+  /* ---------- PRELOADERS ---------- */
+  (function(){
+    var st = document.getElementById('p1');
+    function run(){ var old = st.querySelector('.pl'); if (old) old.remove();
+      var p = document.createElement('div'); p.className = 'pl p1'; p.innerHTML = '<div class="bar"></div><div class="w">TAI NGUYEN — PORTFOLIO 2026</div><div class="n">0</div><div class="cur"></div>'; st.appendChild(p);
+      var n = p.querySelector('.n'), bar = p.querySelector('.bar'), cur = p.querySelector('.cur'), t0 = performance.now();
+      (function f(t){ var k = Math.min(1, (t - t0)/1800), e = k < .5 ? 2*k*k : 1 - Math.pow(-2*k+2, 2)/2; n.textContent = Math.round(e*100); bar.style.width = (e*100)+'%';
+        if (k < 1) requestAnimationFrame(f); else { cur.style.transition = 'transform .6s cubic-bezier(.7,0,.2,1)'; cur.style.transform = 'none';
+          setTimeout(function(){ p.style.background = 'transparent'; n.remove(); bar.remove(); p.querySelector('.w').remove(); cur.style.transform = 'translateY(-100%)'; setTimeout(function(){ p.remove(); }, 650); }, 650); } })(t0); }
+    replayBtn(st, run); onView(st, run);
+  })();
+  (function(){
+    var st = document.getElementById('p2');
+    function run(){ var old = st.querySelector('.pl'); if (old) old.remove();
+      var p = document.createElement('div'); p.className = 'pl p2'; st.appendChild(p);
+      var L = ['<span class="g">guest@web</span> <span class="c">~</span> $ git clone https://github.com/thvnhtai/portfolio', 'Cloning into \'portfolio\'...', 'remote: Enumerating objects: <span class="y">done</span>.', '__RECV__', 'Resolving deltas: 100%, done.', '<span class="g">guest@web</span> <span class="c">~</span> $ cd portfolio && npm run hello', '', '<span class="y">  ▲ Hi, I\'m Tai. Welcome in.</span>'];
+      var k = 0;
+      (function next(){ if (k >= L.length){ setTimeout(open, 500); return; }
+        if (L[k] === '__RECV__'){ var d = document.createElement('div'); p.appendChild(d); var pc = 0; var iv = setInterval(function(){ pc += 7; if (pc > 100) pc = 100; var b = Math.round(pc/5); d.innerHTML = 'Receiving objects: '+pc+'% <span class="y">'+'█'.repeat(b)+'</span><span class="c">'+'░'.repeat(20-b)+'</span>'; if (pc === 100){ clearInterval(iv); k++; next(); } }, 60); return; }
+        var d2 = document.createElement('div'); d2.innerHTML = L[k] || '&nbsp;'; p.appendChild(d2); k++; setTimeout(next, k === 1 ? 500 : 260); })();
+      function open(){ var bg = p; p.innerHTML = '<div class="half" style="top:0"></div><div class="half" style="bottom:0"></div>'; p.style.background = 'transparent'; p.style.padding = '0';
+        requestAnimationFrame(function(){ requestAnimationFrame(function(){ var h = p.querySelectorAll('.half'); h[0].style.transform = 'translateY(-100%)'; h[1].style.transform = 'translateY(100%)'; setTimeout(function(){ p.remove(); }, 850); }); }); }
+    }
+    replayBtn(st, run); onView(st, run);
+  })();
+  (function(){
+    var st = document.getElementById('p3');
+    function run(){ var old = st.querySelector('.pl'); if (old) old.remove();
+      var p = document.createElement('div'); p.className = 'pl p3'; p.innerHTML = '<div class="name">'+'TAI NGUYEN'.split('').map(function(c){ return '<span>'+(c === ' ' ? '&nbsp;' : c)+'</span>'; }).join('')+'<span class="o">.</span></div><div class="dot"></div>'; st.appendChild(p);
+      var sp = p.querySelectorAll('.name span'), dot = p.querySelector('.dot');
+      sp.forEach(function(s){ s.style.transition = 'none'; s.style.transform = 'translate('+((Math.random()-.5)*900)+'px,'+((Math.random()-.5)*500)+'px) rotate('+((Math.random()-.5)*180)+'deg)'; s.style.opacity = 0; });
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ sp.forEach(function(s, i){ s.style.transition = ''; s.style.transitionDelay = (i*40)+'ms'; s.style.transform = 'none'; s.style.opacity = 1; }); }); });
+      setTimeout(function(){ sp.forEach(function(s, i){ var r = s.getBoundingClientRect(), pr = p.getBoundingClientRect(); s.style.transitionDelay = (i*25)+'ms'; s.style.transform = 'translate('+(pr.left + pr.width/2 - r.left - r.width/2)+'px,'+(pr.top + pr.height/2 - r.top - r.height/2)+'px) scale(.1)'; s.style.opacity = 0; }); }, 1500);
+      setTimeout(function(){ dot.style.transform = 'scale(1)'; }, 1900);
+      setTimeout(function(){ p.style.background = 'transparent'; dot.style.transform = 'scale(80)'; }, 2300);
+      setTimeout(function(){ p.style.transition = 'opacity .4s'; p.style.opacity = 0; }, 3000);
+      setTimeout(function(){ p.remove(); }, 3450); }
+    replayBtn(st, run); onView(st, run);
+  })();
+
+  /* ---------- CMD+K ---------- */
+  var CMDS = [
+    {g:'Navigate', i:'⌂', t:'Home', k:'home'}, {g:'Navigate', i:'▦', t:'Selected Works', k:'works'}, {g:'Navigate', i:'⎇', t:'How I work', k:'process'}, {g:'Navigate', i:'⌛', t:'Career journey', k:'career'}, {g:'Navigate', i:'✉', t:'Contact', k:'contact'},
+    {g:'Projects', i:'01', t:'Zen Ledger Portal', k:'zen ledger'}, {g:'Projects', i:'02', t:'Invoicing Portal', k:'invoicing'}, {g:'Projects', i:'03', t:'Universal Config Management', k:'ucm'}, {g:'Projects', i:'04', t:'Voucher Dashboard', k:'voucher'}, {g:'Projects', i:'05', t:'Cloud-Native E-Commerce', k:'ecommerce'},
+    {g:'Actions', i:'⧉', t:'Copy email', k:'copy email', e:'copy'}, {g:'Actions', i:'⇣', t:'Download CV', k:'cv resume'}, {g:'Actions', i:'文', t:'Switch to Tiếng Việt', k:'language vi lang'},
+    {g:'Links', i:'in', t:'LinkedIn', k:'linkedin', e:'↗'}, {g:'Links', i:'gh', t:'GitHub', k:'github', e:'↗'}, {g:'Links', i:'lc', t:'LeetCode', k:'leetcode', e:'↗'}
+  ];
+  function runCmd(st, c){ if (c.t === 'Copy email'){ try { navigator.clipboard.writeText(EMAIL); } catch(e){} toast(st, 'Email copied ✓'); } else toast(st, (c.g === 'Links' ? 'Opening ' : c.g === 'Actions' ? '' : 'Going to ') + c.t + (c.g === 'Links' ? ' ↗' : '…')); }
+  (function(){
+    var st = document.getElementById('k1'), wrap = document.createElement('div');
+    wrap.innerHTML = '<div class="dim"></div><div class="pal"><input placeholder="Type a command or search…"><div class="res"></div><div class="ft"><span>↑↓ navigate</span><span>↵ select</span><span>esc close</span></div></div>';
+    while (wrap.firstChild) st.appendChild(wrap.firstChild);
+    hint(st, 'HOVER + ⌘K / CTRL+K');
+    var input = st.querySelector('input'), res = st.querySelector('.res'), sel = 0, list = [];
+    function render(){ var q = input.value.toLowerCase().trim(); list = CMDS.filter(function(c){ return !q || (c.t + ' ' + c.k + ' ' + c.g).toLowerCase().indexOf(q) >= 0; }); if (sel >= list.length) sel = 0;
+      var html = '', lastG = ''; list.forEach(function(c, i){ if (c.g !== lastG){ html += '<div class="grp">'+c.g.toUpperCase()+'</div>'; lastG = c.g; } html += '<div class="it'+(i === sel ? ' on' : '')+'" data-i="'+i+'"><i>'+c.i+'</i>'+c.t+(c.e ? '<em>'+c.e+'</em>' : '')+'</div>'; });
+      res.innerHTML = html || '<div class="grp">NO RESULTS</div>';
+      res.querySelectorAll('.it').forEach(function(it){ it.onmouseenter = function(){ sel = +it.dataset.i; render(); }; it.onclick = function(){ pick(); }; });
+      var on = res.querySelector('.on'); if (on) on.scrollIntoView({block:'nearest'}); }
+    function open(){ st.classList.add('open'); input.value = ''; sel = 0; render(); setTimeout(function(){ input.focus(); }, 30); }
+    function close(){ st.classList.remove('open'); input.blur(); }
+    function pick(){ var c = list[sel]; close(); if (c) runCmd(st, c); }
+    st.querySelector('.kb').onclick = open; st.querySelector('.dim').onclick = close;
+    input.addEventListener('input', function(){ sel = 0; render(); });
+    input.addEventListener('keydown', function(e){ if (e.key === 'ArrowDown'){ sel = Math.min(list.length-1, sel+1); render(); e.preventDefault(); } else if (e.key === 'ArrowUp'){ sel = Math.max(0, sel-1); render(); e.preventDefault(); } else if (e.key === 'Enter') pick(); else if (e.key === 'Escape') close(); e.stopPropagation(); });
+    window.addEventListener('keydown', function(e){ if (hovered === st && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){ e.preventDefault(); st.classList.contains('open') ? close() : open(); } });
+  })();
+  (function(){
+    var st = document.getElementById('k2'), t = document.createElement('div'); t.className = 'term';
+    t.innerHTML = '<div class="out"><span style="color:#8b949e">type <span style="color:#ff4d00">help</span> or tap a suggestion</span></div><div class="line"><b>tai@portfolio ~ $</b><input spellcheck="false" autocomplete="off"></div><div class="chips"><span>cd projects</span><span>open zen-ledger</span><span>copy email</span><span>lang vi</span><span>cv</span><span>exit</span></div>';
+    st.appendChild(t); hint(st, 'HOVER + ⌘K / CTRL+K');
+    var input = t.querySelector('input'), out = t.querySelector('.out');
+    var H = {help:'cd <section> · open <project> · copy email · lang vi|en · cv · social · exit', 'cd projects':'→ scrolling to Selected Works…', 'open zen-ledger':'→ opening case study: Zen Ledger Portal', 'copy email':'✓ copied '+EMAIL, 'lang vi':'✓ đã chuyển sang Tiếng Việt', cv:'⇣ downloading Tai_Nguyen_CV.pdf', social:'linkedin.com/in/tai-nt · github.com/thvnhtai · leetcode.com/u/thvnhtai'};
+    function exec(v){ v = v.trim(); if (!v) return; if (v === 'exit'){ st.classList.remove('open'); return; } if (v === 'copy email'){ try { navigator.clipboard.writeText(EMAIL); } catch(e){} }
+      out.innerHTML += '<div><span style="color:#3fb950">$</span> '+v.replace(/</g,'&lt;')+'<br><span style="color:'+(H[v] ? '#f2efe8' : '#ef4444')+'">'+(H[v] || 'command not found: '+v.replace(/</g,'&lt;')+' — try help')+'</span></div>'; out.scrollTop = 1e9; }
+    function open(){ st.classList.add('open'); setTimeout(function(){ input.focus(); }, 60); }
+    st.querySelector('.kb').onclick = open;
+    t.querySelectorAll('.chips span').forEach(function(c){ c.onclick = function(){ exec(c.textContent); }; });
+    input.addEventListener('keydown', function(e){ e.stopPropagation(); if (e.key === 'Enter'){ exec(input.value); input.value = ''; } if (e.key === 'Escape') st.classList.remove('open'); if (e.key === 'Tab'){ e.preventDefault(); var m = Object.keys(H).filter(function(k){ return k.indexOf(input.value) === 0; })[0]; if (m) input.value = m; } });
+    window.addEventListener('keydown', function(e){ if (hovered === st && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){ e.preventDefault(); st.classList.contains('open') ? st.classList.remove('open') : open(); } });
+  })();
+
+  /* ---------- EASTER EGGS ---------- */
+  function confetti(st){ var c = document.createElement('canvas'); st.appendChild(c); var r = st.getBoundingClientRect(); c.width = r.width; c.height = r.height; var x = c.getContext('2d'), P = [];
+    for (var i = 0; i < 140; i++) P.push({x:r.width/2, y:r.height*0.6, vx:(Math.random()-.5)*18, vy:-Math.random()*14-5, c:['#ff4d00','#111','#16a34a','#6d28d9','#eab308'][i%5], r:0, s:5+Math.random()*6});
+    var n = 0; (function f(){ x.clearRect(0,0,c.width,c.height); P.forEach(function(p){ p.vy += .35; p.x += p.vx; p.y += p.vy; p.r += .25; x.save(); x.translate(p.x,p.y); x.rotate(p.r); x.fillStyle = p.c; x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); x.restore(); }); if (++n < 130) requestAnimationFrame(f); else c.remove(); })(); }
+  (function(){
+    var st = document.getElementById('e1'), seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'], pos = 0;
+    var tag = document.createElement('div'); tag.className = 'devtag'; tag.textContent = '</> DEV MODE ON'; st.appendChild(tag);
+    hint(st, 'HOVER + ↑ ↑ ↓ ↓ ← → ← → B A');
+    var b = document.createElement('button'); b.className = 'replay'; b.textContent = '▶ TRIGGER'; b.onclick = fire; st.appendChild(b);
+    function fire(){ var on = !st.classList.contains('dev'); st.classList.toggle('dev', on); if (on){ confetti(st); toast(st, '🎮 Konami! Dev mode unlocked'); } }
+    window.addEventListener('keydown', function(e){ if (hovered !== st) return; var k = e.key.length === 1 ? e.key.toLowerCase() : e.key; if (k.indexOf('Arrow') === 0) e.preventDefault(); pos = (k === seq[pos]) ? pos + 1 : (k === seq[0] ? 1 : 0); if (pos === seq.length){ pos = 0; fire(); } });
+  })();
+  (function(){
+    var st = document.getElementById('e2'), buf = '';
+    hint(st, 'HOVER + TYPE "grab"');
+    var b = document.createElement('button'); b.className = 'replay'; b.textContent = '▶ TRIGGER'; b.onclick = fire; st.appendChild(b);
+    function fire(){ toast(st, '🛵 Ride on!'); for (var i = 0; i < 9; i++){ (function(i){ var s = document.createElement('div'); s.className = 'scoot'; s.textContent = '🛵'; s.style.top = (60 + Math.random()*260)+'px'; s.style.left = '-60px'; s.style.transform = 'scaleX(-1)'; st.appendChild(s);
+        var sp = 5 + Math.random()*6, x = -60 - i*70, w = st.clientWidth; (function f(){ x += sp; s.style.left = x+'px'; if (x < w + 60) requestAnimationFrame(f); else s.remove(); })(); })(i); } }
+    window.addEventListener('keydown', function(e){ if (hovered !== st || e.key.length !== 1) return; buf = (buf + e.key.toLowerCase()).slice(-4); if (buf === 'grab'){ buf = ''; fire(); } });
+  })();
+  (function(){
+    var st = document.getElementById('e3'), clicks = 0, tm, falling = false;
+    hint(st, 'CLICK "TAI NGUYEN ©2026" 5×');
+    var b = document.createElement('button'); b.className = 'replay'; b.textContent = '▶ TRIGGER'; b.onclick = fire; st.appendChild(b);
+    st.querySelector('.logo').addEventListener('click', function(){ clicks++; clearTimeout(tm); tm = setTimeout(function(){ clicks = 0; }, 1200); if (clicks >= 5){ clicks = 0; fire(); } });
+    function fire(){ if (falling) return; falling = true; toast(st, '🍎 Gravity on'); var parts = st.querySelectorAll('.nav > span, .hl, .bio, .btns span');
+      parts.forEach(function(p){ p.style.display = p.style.display || ''; p.classList.add('fall'); p.style.transitionDelay = (Math.random()*.4)+'s'; p.style.transform = 'translateY('+(st.clientHeight + 100)+'px) rotate('+((Math.random()-.5)*90)+'deg)'; });
+      setTimeout(function(){ parts.forEach(function(p){ p.style.transition = 'transform .9s cubic-bezier(.2,.9,.3,1.3)'; p.style.transitionDelay = (Math.random()*.3)+'s'; p.style.transform = ''; }); setTimeout(function(){ parts.forEach(function(p){ p.classList.remove('fall'); p.style.transition = ''; p.style.transitionDelay = ''; }); falling = false; }, 1300); }, 2200); }
+  })();
+})();
+</script>

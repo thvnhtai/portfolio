@@ -1,0 +1,6 @@
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.word { display: inline-block; white-space: nowrap; }
+.ch { display: inline-block; transition: transform 0.25s, color 0.25s; }
+.ch:hover { transform: translateY(-18%) rotate(-6deg); color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .ch { transition: none; } .ch:hover { transform: none; } }
+.ch[data-accent] { color: var(--accent); }

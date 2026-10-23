@@ -1,0 +1,238 @@
+<style>
+  .hx{display:flex;flex-direction:column;gap:30px}
+  .hx .mockup-body{padding:0}
+  .hx .mockup-header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .pick{flex:none;border:1px solid currentColor;background:transparent;color:inherit;border-radius:99px;padding:4px 12px;font-size:12px;cursor:pointer}
+  .pick.selected{background:#ff4d00;border-color:#ff4d00;color:#111;font-weight:700}
+  .sc{height:480px;overflow-y:auto;position:relative;border-radius:0 0 10px 10px;font-family:"Helvetica Neue",Arial,sans-serif}
+  .sc .tall{height:2600px;position:relative}
+  .sc .pin{position:sticky;top:0;height:480px;overflow:hidden}
+  .o{color:#ff4d00}
+  .hint{position:absolute;right:20px;bottom:14px;font-size:10px;font-weight:800;letter-spacing:.1em;opacity:.5;z-index:9}
+  .ttl small{font-size:11px;font-weight:800;letter-spacing:.12em;color:#ff4d00}
+  .ttl h2{font-size:46px;line-height:.88;font-weight:900;letter-spacing:-.05em;margin:8px 0 0}
+
+  /* A metro */
+  .mt{background:#f2efe8;color:#111}
+  .mt .ttl{position:absolute;left:24px;top:22px;z-index:3}
+  .mt svg{position:absolute;left:0;top:0}
+  .mt .info{position:absolute;right:24px;top:24px;width:270px;background:#111;color:#f2efe8;border-radius:14px;padding:18px;z-index:4;transition:opacity .3s}
+  .mt .info small{font-size:10px;font-weight:800;letter-spacing:.1em;color:#ff4d00}
+  .mt .info h3{font-size:22px;margin:6px 0 4px;letter-spacing:-.02em}
+  .mt .info em{font-style:normal;font-size:11px;opacity:.6;font-weight:700}
+  .mt .info p{font-size:12px;line-height:1.5;opacity:.85;margin:8px 0 0}
+  .mt .legend{position:absolute;left:24px;bottom:20px;display:flex;gap:16px;font-size:11px;font-weight:800}
+  .mt .legend i{display:inline-block;width:18px;height:5px;border-radius:3px;margin-right:6px;vertical-align:2px}
+
+  /* B odometer */
+  .od{background:#111;color:#f2efe8}
+  .od .ttl{position:absolute;left:26px;top:24px}
+  .od .year{position:absolute;left:20px;top:120px;font-size:210px;font-weight:900;letter-spacing:-.07em;line-height:1;display:flex}
+  .od .digit{height:200px;overflow:hidden;display:inline-block}
+  .od .digit div{transition:transform .7s cubic-bezier(.7,0,.2,1)}
+  .od .digit div span{display:block;height:200px}
+  .od .year .last{color:#ff4d00}
+  .od .ev{position:absolute;right:26px;top:110px;width:330px;display:flex;flex-direction:column;gap:10px}
+  .od .ev .c{border:1.5px solid #333;border-radius:12px;padding:14px;transform:translateX(30px);opacity:0;transition:.5s}
+  .od .ev .c.on{transform:none;opacity:1}
+  .od .ev .c small{font-size:10px;font-weight:800;letter-spacing:.1em;color:#ff4d00}
+  .od .ev .c b{display:block;font-size:16px;margin:4px 0}
+  .od .ev .c span{font-size:12px;opacity:.65;line-height:1.45}
+  .od .ticks{position:absolute;left:26px;right:26px;bottom:26px;display:flex;justify-content:space-between;font-size:12px;font-weight:800;opacity:.9}
+  .od .ticks span{opacity:.35;transition:opacity .3s}.od .ticks span.on{opacity:1;color:#ff4d00}
+
+  /* C gantt */
+  .gt{background:#f2efe8;color:#111}
+  .gt .ttl{position:absolute;left:24px;top:22px}
+  .gt .chart{position:absolute;left:24px;right:24px;top:120px;bottom:70px}
+  .gt .axis{position:absolute;left:150px;right:0;top:0;height:20px;font-size:10px;font-weight:800;letter-spacing:.06em}
+  .gt .axis span{position:absolute;transform:translateX(-50%);opacity:.55}
+  .gt .row{position:absolute;left:0;right:0;height:38px;display:flex;align-items:center}
+  .gt .row .lb{width:150px;font-size:11px;font-weight:800;line-height:1.2}
+  .gt .row .lb em{display:block;font-style:normal;font-weight:600;opacity:.5;font-size:10px}
+  .gt .bar{position:absolute;height:26px;border-radius:7px;display:flex;align-items:center;padding:0 10px;font-size:10px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;transform-origin:left;transform:scaleX(0);transition:transform .7s cubic-bezier(.2,.8,.2,1);cursor:pointer}
+  .gt .bar.on{transform:scaleX(1)}
+  .gt .bar:hover{filter:brightness(1.1);box-shadow:0 6px 0 -2px #111}
+  .gt .dot{position:absolute;width:14px;height:14px;margin-left:-7px;border-radius:50%;border:3px solid #111;background:#f2efe8;transform:scale(0);transition:transform .4s cubic-bezier(.2,.9,.3,1.6)}
+  .gt .dot.on{transform:scale(1)}
+  .gt .play{position:absolute;top:22px;bottom:0;width:2px;background:#ff4d00;left:150px}
+  .gt .play::before{content:attr(data-d);position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:#ff4d00;color:#111;font-size:10px;font-weight:900;padding:2px 6px;border-radius:4px;white-space:nowrap}
+  .gt .tip{position:absolute;left:174px;right:24px;bottom:18px;font-size:12px;line-height:1.45;min-height:34px}
+  .gt .tip b{color:#ff4d00}
+
+  /* D achievements */
+  .ach{background:#0f0f14;color:#f2efe8}
+  .ach .ttl{position:absolute;left:24px;top:22px}
+  .ach .lvl{position:absolute;left:24px;top:118px;width:300px}
+  .ach .lvl .n{font-size:13px;font-weight:800;letter-spacing:.08em;opacity:.6}
+  .ach .lvl .big{font-size:84px;font-weight:900;letter-spacing:-.05em;line-height:.9;margin:4px 0}
+  .ach .lvl .role{font-size:15px;font-weight:800;color:#ff4d00;min-height:20px}
+  .ach .xp{height:14px;border-radius:99px;background:#24242c;margin-top:16px;overflow:hidden;position:relative}
+  .ach .xp i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#ff4d00,#ffb199);width:0;transition:width .5s}
+  .ach .xpl{display:flex;justify-content:space-between;font-size:10px;font-weight:800;opacity:.5;margin-top:6px}
+  .ach .grid{position:absolute;right:24px;top:28px;width:390px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .ach .badge{aspect-ratio:1;border-radius:14px;background:#1a1a22;border:1.5px solid #2a2a35;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px;filter:grayscale(1);opacity:.35;transition:.5s}
+  .ach .badge b{font-size:30px}
+  .ach .badge span{font-size:10px;font-weight:800;margin-top:6px;line-height:1.25}
+  .ach .badge em{font-style:normal;font-size:9px;opacity:.55;margin-top:2px}
+  .ach .badge.on{filter:none;opacity:1;border-color:#ff4d00;background:#1f1612;transform:scale(1.02)}
+  .ach .toast{position:absolute;left:24px;bottom:24px;background:#f2efe8;color:#111;border-radius:12px;padding:10px 14px;display:flex;gap:10px;align-items:center;font-size:12px;font-weight:800;transform:translateY(120px);transition:transform .45s cubic-bezier(.2,.9,.3,1.3);max-width:330px}
+  .ach .toast.on{transform:none}
+  .ach .toast b{font-size:24px}
+  .ach .toast small{display:block;font-size:10px;letter-spacing:.08em;color:#ff4d00}
+</style>
+
+<h2>"Hành trình sự nghiệp" — 4 hướng khác nhau</h2>
+<p class="subtitle"><b>Cuộn chuột bên trong từng khung</b>. Mốc thời gian lấy đúng từ CV: UIT 9/2022 · TOEIC 745 9/2024 · TMA 12/2024–3/2025 · Grab intern 7–12/2025 · Grab engineer 12/2025–6/2026 · TOEIC S&W 1/2026 · tốt nghiệp 3/2026 · hiện tại: sẵn sàng nhận việc. Bấm "Chọn" cho hướng bạn thích.</p>
+
+<div class="hx">
+  <div class="mockup">
+    <div class="mockup-header"><span>A · Bản đồ metro — sự nghiệp là tuyến tàu; xe máy xanh chạy qua từng ga theo cuộn (nối với thành phố ở Works)</span><button class="pick" data-choice="A-metro" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="sc mt" id="ta"><div class="tall"><div class="pin">
+      <svg id="mts" width="100%" height="480"></svg>
+      <div class="ttl"><small>CAREER JOURNEY</small><h2>Next stop:<br>your team<span class="o">?</span></h2></div>
+      <div class="info" id="mti"></div>
+      <div class="legend"><span><i style="background:#ff4d00"></i>Work</span><span><i style="background:#6d28d9"></i>Education</span><span><i style="background:#0891b2"></i>Certificates</span></div>
+    </div></div><div class="hint">SCROLL INSIDE ↓</div></div></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header"><span>B · Đồng hồ năm — năm khổng lồ quay như đồng hồ công-tơ-mét 2022 → 2026, sự kiện của năm trượt vào bên phải</span><button class="pick" data-choice="B-odometer" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="sc od" id="tb"><div class="tall"><div class="pin">
+      <div class="ttl"><small>CAREER JOURNEY</small></div>
+      <div class="year" id="ody"></div>
+      <div class="ev" id="ode"></div>
+      <div class="ticks" id="odt"></div>
+    </div></div><div class="hint">SCROLL INSIDE ↓</div></div></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header"><span>C · Biểu đồ Gantt — thấy rõ các giai đoạn chồng lên nhau (vừa học vừa làm); vạch cam quét theo thời gian, rê vào thanh để xem chi tiết</span><button class="pick" data-choice="C-gantt" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="sc gt" id="tc"><div class="tall"><div class="pin">
+      <div class="ttl"><small>CAREER JOURNEY</small><h2>Four years, overlapping<span class="o">.</span></h2></div>
+      <div class="chart" id="gtc"></div>
+      <div class="tip" id="gtt">Hover a bar for details.</div>
+    </div></div><div class="hint">SCROLL INSIDE ↓</div></div></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header"><span>D · Level up — sự nghiệp như game: thanh XP tăng dần, mỗi mốc mở khoá 1 huy hiệu, có thông báo "Achievement unlocked"</span><button class="pick" data-choice="D-achievements" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="sc ach" id="td"><div class="tall"><div class="pin">
+      <div class="ttl"><small>CAREER JOURNEY</small><h2>Player: Tai<span class="o">.</span></h2></div>
+      <div class="lvl"><div class="n">LEVEL</div><div class="big" id="acl">01</div><div class="role" id="acr"></div><div class="xp"><i id="acx"></i></div><div class="xpl"><span>2022</span><span>NOW</span></div></div>
+      <div class="grid" id="acg"></div>
+      <div class="toast" id="act"></div>
+    </div></div><div class="hint" style="color:#f2efe8">SCROLL INSIDE ↓</div></div></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // single source of truth (from CV). t = months since Sep 2022
+  var EV = [
+    {k:'edu', t:0,  date:'Sep 2022', title:'Started at UIT', sub:'B.Sc. Software Engineering · VNU-HCM', d:'Four years of software engineering fundamentals.', icon:'🎓', lv:'Student'},
+    {k:'cert',t:24, date:'Sep 2024', title:'TOEIC 745', sub:'Listening & Reading · ETS', d:'Professional working English.', icon:'🗣️', lv:'Student'},
+    {k:'work',t:27, date:'Dec 2024 – Mar 2025', end:30, title:'TMA Solutions', sub:'Frontend Developer Intern', d:'Voucher Management dashboard with Next.js — my first production frontend.', icon:'🧩', lv:'Frontend Intern'},
+    {k:'work',t:34, date:'Jul – Dec 2025', end:39, title:'Grab', sub:'Software Engineer Intern', d:'Invoicing Portal and Universal Configuration Management — fullstack, on-call.', icon:'🛵', lv:'SWE Intern @ Grab'},
+    {k:'work',t:39, date:'Dec 2025 – Jun 2026', end:45, title:'Grab', sub:'Software Engineer (Contract)', d:'Zen Ledger Portal — realtime WebSocket feed, Go services, CI/CD + Kubernetes.', icon:'⚡', lv:'Software Engineer @ Grab'},
+    {k:'cert',t:40, date:'Jan 2026', title:'TOEIC S&W 280', sub:'Speaking & Writing · ETS', d:'Professional working English.', icon:'✍️', lv:'Software Engineer @ Grab'},
+    {k:'edu', t:42, date:'Mar 2026', title:'Graduated UIT', sub:'GPA 8.57 / 10', d:'Finished the degree while working at Grab.', icon:'🏅', lv:'Software Engineer @ Grab'},
+    {k:'now', t:49, date:'Now', title:'Open to work', sub:'Junior fullstack / frontend roles', d:'Looking for my next team — maybe yours.', icon:'🚀', lv:'Fullstack Engineer · open to work'}
+  ];
+  var COL = {work:'#ff4d00', edu:'#6d28d9', cert:'#0891b2', now:'#16a34a'};
+  function onScroll(el, fn){ function u(){ var p = el.scrollTop / (el.scrollHeight - el.clientHeight); fn(Math.max(0, Math.min(1, p))); } el.addEventListener('scroll', u, {passive:true}); u(); }
+  function idx(p){ return Math.min(EV.length-1, Math.floor(p * EV.length * 1.06)); }
+
+  /* A metro */
+  (function(){
+    var svg = document.getElementById('mts'), info = document.getElementById('mti'), W = svg.getBoundingClientRect().width || 900;
+    var pts = [[0,330],[130,330],[210,220],[340,220],[440,330],[560,330],[640,420],[800,420]].map(function(p){ return [p[0]*(W*0.62)/800+40, p[1]]; });
+    // line path through stations with rounded corners
+    var d = 'M'+pts[0][0]+' '+pts[0][1]; for (var i = 1; i < pts.length; i++) d += ' L'+pts[i][0]+' '+pts[i][1];
+    var html = '<path d="'+d+'" stroke="#d6cfbf" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+    html += '<path id="mtl" d="'+d+'" stroke="#111" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+    EV.forEach(function(e, i){ var p = pts[i], up = i % 2 === 0;
+      html += '<g class="stn" id="mts'+i+'"><circle cx="'+p[0]+'" cy="'+p[1]+'" r="13" fill="#f2efe8" stroke="'+COL[e.k]+'" stroke-width="5"/>'+
+              '<text x="'+p[0]+'" y="'+(up ? p[1]-28 : p[1]+40)+'" text-anchor="middle" font-size="11" font-weight="800" fill="#111">'+e.title+'</text>'+
+              '<text x="'+p[0]+'" y="'+(up ? p[1]-15 : p[1]+53)+'" text-anchor="middle" font-size="9" font-weight="700" fill="#888">'+e.date+'</text></g>'; });
+    html += '<g id="mtb"><ellipse rx="11" ry="7" fill="#00b14f"/><circle cy="-10" r="5" fill="#111"/></g>';
+    svg.innerHTML = html;
+    var line = document.getElementById('mtl'), L = line.getTotalLength(), bike = document.getElementById('mtb');
+    line.style.strokeDasharray = L;
+    var segL = [0]; for (var j = 1; j < pts.length; j++) segL.push(segL[j-1] + Math.hypot(pts[j][0]-pts[j-1][0], pts[j][1]-pts[j-1][1]));
+    var last = -1;
+    onScroll(document.getElementById('ta'), function(p){
+      var f = Math.min(1, p * 1.08), len = f * segL[segL.length-1];
+      line.style.strokeDashoffset = L - len;
+      var pt = line.getPointAtLength(len); bike.setAttribute('transform', 'translate('+pt.x+','+(pt.y-2)+')');
+      var k = 0; for (var s = 0; s < segL.length; s++) if (len >= segL[s] - 2) k = s;
+      for (var s2 = 0; s2 < EV.length; s2++) document.getElementById('mts'+s2).style.opacity = s2 <= k ? 1 : .35;
+      if (k !== last){ last = k; var e = EV[k]; info.innerHTML = '<small>'+e.date.toUpperCase()+'</small><h3>'+e.icon+' '+e.title+'</h3><em>'+e.sub+'</em><p>'+e.d+'</p>'; info.style.borderTop = '4px solid '+COL[e.k]; }
+    });
+  })();
+
+  /* B odometer */
+  (function(){
+    var yEl = document.getElementById('ody'), ev = document.getElementById('ode'), ticks = document.getElementById('odt');
+    var YEARS = [2022, 2023, 2024, 2025, 2026];
+    yEl.innerHTML = '<span>2</span><span>0</span><span>2</span><span class="digit last"><div id="odd">'+YEARS.map(function(y){ return '<span>'+(y%10)+'</span>'; }).join('')+'</div></span>';
+    ticks.innerHTML = YEARS.map(function(y){ return '<span>'+y+'</span>'; }).join('');
+    var byYear = {2022:[0], 2023:[], 2024:[1,2], 2025:[3,4], 2026:[5,6,7]};
+    var last = -1;
+    onScroll(document.getElementById('tb'), function(p){
+      var yi = Math.min(4, Math.floor(p * 5.2)); if (yi === last) return; last = yi;
+      document.getElementById('odd').style.transform = 'translateY('+(-yi*200)+'px)';
+      ticks.querySelectorAll('span').forEach(function(s, i){ s.classList.toggle('on', i === yi); });
+      var list = byYear[YEARS[yi]];
+      ev.innerHTML = list.length ? list.map(function(i){ var e = EV[i]; return '<div class="c"><small>'+e.date.toUpperCase()+'</small><b>'+e.icon+' '+e.title+' — '+e.sub+'</b><span>'+e.d+'</span></div>'; }).join('')
+        : '<div class="c"><small>2023</small><b>📚 Heads-down at UIT</b><span>Core CS, data structures, software engineering projects.</span></div>';
+      requestAnimationFrame(function(){ ev.querySelectorAll('.c').forEach(function(c, i){ setTimeout(function(){ c.classList.add('on'); }, 80 + i*140); }); });
+    });
+  })();
+
+  /* C gantt */
+  (function(){
+    var ch = document.getElementById('gtc'), tip = document.getElementById('gtt'), T = 49;
+    var rows = [
+      {lb:'Education', sub:'UIT', bars:[[0,42,'#6d28d9','B.Sc. Software Engineering · GPA 8.57',0]]},
+      {lb:'Work', sub:'internships & jobs', bars:[[27,30,'#0891b2','TMA · Frontend Intern',2],[34,39,'#111','Grab · SWE Intern',3],[39,45,'#ff4d00','Grab · Software Engineer',4]]},
+      {lb:'Certificates', sub:'ETS', dots:[[24,1],[40,5]]},
+      {lb:'Milestones', sub:'', dots:[[42,6],[49,7]]}
+    ];
+    var html = '<div class="axis">'; for (var y = 0; y <= 4; y++){ var t = y*12 - 8; if (t < 0) t = 0; html += '<span style="left:'+(t/T*100)+'%">'+(2022+y)+'</span>'; } html += '</div>';
+    rows.forEach(function(r, i){
+      html += '<div class="row" style="top:'+(34+i*52)+'px"><div class="lb">'+r.lb+'<em>'+r.sub+'</em></div><div style="position:absolute;left:150px;right:0;top:0;bottom:0">';
+      (r.bars||[]).forEach(function(b){ html += '<div class="bar" data-a="'+b[0]+'" data-e="'+b[4]+'" style="left:'+(b[0]/T*100)+'%;width:'+((b[1]-b[0])/T*100)+'%;background:'+b[2]+';top:6px">'+b[3]+'</div>'; });
+      (r.dots||[]).forEach(function(dt){ html += '<div class="dot" data-a="'+dt[0]+'" data-e="'+dt[1]+'" style="left:'+(dt[0]/T*100)+'%;top:12px;border-color:'+COL[EV[dt[1]].k]+'"></div>'; });
+      html += '</div></div>';
+    });
+    html += '<div style="position:absolute;left:150px;right:0;top:0;bottom:0;pointer-events:none"><div class="play" id="gtp" data-d="Sep 2022"></div></div>';
+    ch.innerHTML = html;
+    var items = ch.querySelectorAll('.bar,.dot'), play = document.getElementById('gtp');
+    var MON = ['Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'];
+    items.forEach(function(it){ it.addEventListener('mouseenter', function(){ var e = EV[+it.dataset.e]; tip.innerHTML = '<b>'+e.date+'</b> · '+e.title+' — '+e.sub+'. '+e.d; }); });
+    onScroll(document.getElementById('tc'), function(p){
+      var t = p * T * 1.02; play.style.left = Math.min(100, t/T*100)+'%';
+      var m = Math.min(T, Math.round(t)); play.dataset.d = (m >= 49 ? 'Now' : MON[m%12]+' '+(2022 + Math.floor((m+8)/12)));
+      items.forEach(function(it){ it.classList.toggle('on', +it.dataset.a <= t + .5); });
+      var cur = -1; EV.forEach(function(e, i){ if (e.t <= t + .5) cur = i; });
+      if (cur >= 0){ var e = EV[cur]; tip.innerHTML = '<b>'+e.date+'</b> · '+e.title+' — '+e.sub+'. '+e.d; }
+    });
+  })();
+
+  /* D achievements */
+  (function(){
+    var g = document.getElementById('acg'), toast = document.getElementById('act'), last = -1, tm;
+    g.innerHTML = EV.map(function(e, i){ return '<div class="badge" id="acb'+i+'"><b>'+e.icon+'</b><span>'+e.title+'</span><em>'+e.date+'</em></div>'; }).join('') + '<div class="badge" style="opacity:.25;border-style:dashed"><b>🔒</b><span>Your team?</span><em>next</em></div>';
+    onScroll(document.getElementById('td'), function(p){
+      var k = idx(p); if (k === last) return;
+      var up = k > last; last = k;
+      EV.forEach(function(e, i){ document.getElementById('acb'+i).classList.toggle('on', i <= k); });
+      document.getElementById('acl').textContent = (k+1 < 10 ? '0' : '') + (k+1);
+      document.getElementById('acr').textContent = EV[k].lv;
+      document.getElementById('acx').style.width = ((k+1)/EV.length*100)+'%';
+      if (up){ var e = EV[k]; toast.innerHTML = '<b>'+e.icon+'</b><div><small>ACHIEVEMENT UNLOCKED</small>'+e.title+' — '+e.sub+'</div>'; toast.classList.add('on'); clearTimeout(tm); tm = setTimeout(function(){ toast.classList.remove('on'); }, 1600); }
+    });
+  })();
+})();
+</script>

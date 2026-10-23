@@ -1,0 +1,613 @@
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<style>
+  .cb .mockup-body{padding:0;position:relative;overflow:hidden;border-radius:0 0 10px 10px}
+  .site{height:640px;overflow-y:auto;overflow-x:hidden;position:relative;background:#f2efe8;color:#111;font-family:"Helvetica Neue",Arial,sans-serif;scroll-behavior:smooth}
+  .nav{position:sticky;top:0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:14px 26px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(242,239,232,.75);backdrop-filter:blur(8px)}
+  .nav a{color:inherit;text-decoration:none;margin-left:18px;cursor:pointer}
+  .nav .lang{display:inline-flex;margin-left:18px;border:1.5px solid #111;border-radius:99px;overflow:hidden;cursor:pointer}
+  .nav .lang b{padding:2px 9px;font-size:10px;transition:background .25s,color .25s}
+  .nav .lang b.on{background:#111;color:#f2efe8}
+  [data-i]{transition:opacity .22s,filter .22s}
+  .swap [data-i]{opacity:0;filter:blur(4px)}
+  .nav kbd{font:inherit;font-size:10px;border:1px solid #111;border-radius:4px;padding:1px 5px;margin-left:18px;opacity:.6}
+  .stage{position:relative;overflow:hidden;user-select:none;-webkit-user-select:none}
+  .stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .o{color:#ff4d00}
+
+  /* hero */
+  .hero{height:600px;margin-top:-46px;background:radial-gradient(ellipse at 75% 30%,#fbf9f4 0,#f2efe8 55%,#e9e4d8 100%)}
+  .hero .lc{position:absolute;left:28px;top:84px;z-index:5;max-width:560px}
+  .hero .hl{position:relative;font-size:100px;line-height:.85;font-weight:900;letter-spacing:-.055em;z-index:2;pointer-events:none}
+  .hero .intro{position:relative;margin:22px 0 0 2px;font-size:16px;line-height:1.5;font-weight:500;max-width:470px;z-index:2;pointer-events:none}
+  .hero .cta{position:relative;margin:20px 0 0 2px;display:flex;gap:10px}
+  .hero .cta a{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:99px;font-size:13px;font-weight:800;letter-spacing:.02em;cursor:pointer;text-decoration:none;transition:transform .2s,background .2s,color .2s}
+  .hero .cta .p{background:#111;color:#f2efe8}
+  .hero .cta .p:hover{background:#ff4d00;color:#111;transform:translateY(-2px)}
+  .hero .cta .s{border:1.5px solid #111;color:#111}
+  .hero .cta .s:hover{background:#111;color:#f2efe8;transform:translateY(-2px)}
+  .hero .meta{position:absolute;left:30px;bottom:28px;z-index:5;display:grid;grid-template-columns:repeat(4,auto);gap:26px;border-top:1.5px solid #111;padding-top:14px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;pointer-events:none}
+  .hero .meta span{opacity:.55}
+  .hero .meta b{display:block;font-size:13px;letter-spacing:0;text-transform:none;margin-top:3px}
+  .hero .hint{position:absolute;right:28px;bottom:28px;z-index:5;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.5;pointer-events:none}
+  .hero canvas{z-index:3}
+  .hero .loading{position:absolute;right:22%;top:45%;font-size:11px;font-weight:700;letter-spacing:.1em;opacity:.4}
+
+  /* works */
+  .sec-h{padding:80px 28px 0;display:flex;justify-content:space-between;align-items:flex-end}
+  .sec-h h2{font-size:84px;line-height:.86;font-weight:900;letter-spacing:-.05em;margin:0}
+  .sec-h p{max-width:280px;font-size:13px;line-height:1.5;opacity:.7;margin:0 0 8px}
+  .city{height:560px}
+  .city canvas{transition:transform .9s cubic-bezier(.7,0,.2,1)}
+  .city .tt{position:absolute;pointer-events:none;background:#111;color:#f2efe8;font-size:11px;font-weight:700;padding:6px 10px;border-radius:6px;transform:translate(-50%,-130%);white-space:nowrap;z-index:6;opacity:0;transition:opacity .15s}
+  .city .legend{position:absolute;left:28px;top:20px;z-index:5;font-size:12px;line-height:1.9;font-weight:700}
+  .city .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:8px;vertical-align:-1px}
+  .city .legend div{cursor:pointer}
+  .city .legend div:hover{color:#ff4d00}
+  .city .tip{position:absolute;right:28px;bottom:20px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.55;pointer-events:none;z-index:5}
+  .rest{padding:60px 28px 80px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .rest div{border:1.5px dashed #b9b3a6;border-radius:10px;padding:18px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.6;min-height:60px}
+
+  /* case study overlay */
+  .cs{position:absolute;inset:0;z-index:60;overflow-y:auto;background:#f2efe8;color:#111;font-family:"Helvetica Neue",Arial,sans-serif;
+      clip-path:circle(0% at var(--cx,50%) var(--cy,50%));transition:clip-path .8s cubic-bezier(.7,0,.2,1);pointer-events:none}
+  .cs.on{clip-path:circle(150% at var(--cx,50%) var(--cy,50%));pointer-events:auto}
+  .cs .bar{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:12px 26px;background:rgba(242,239,232,.85);backdrop-filter:blur(8px);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  .cs .bar button{background:#111;color:#f2efe8;border:0;border-radius:99px;padding:7px 14px;font-weight:800;font-size:11px;letter-spacing:.06em;cursor:pointer}
+  .cs .bar .prog{position:absolute;left:0;bottom:0;height:2px;background:var(--pc,#ff4d00);width:0}
+  .cs .top{background:var(--pc,#ff4d00);color:var(--pt,#111);padding:56px 28px 40px;position:relative;overflow:hidden}
+  .cs .top .idx{position:absolute;right:18px;top:-30px;font-size:260px;font-weight:900;letter-spacing:-.06em;opacity:.15;line-height:1}
+  .cs .top small{font-size:11px;font-weight:800;letter-spacing:.12em}
+  .cs .top h1{font-size:88px;line-height:.86;font-weight:900;letter-spacing:-.05em;margin:14px 0 20px;max-width:760px}
+  .cs .top p{font-size:18px;line-height:1.45;max-width:620px;font-weight:500;margin:0}
+  .cs .metas{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1.5px solid #111}
+  .cs .metas div{padding:18px 28px;border-right:1.5px solid #111;font-size:13px;font-weight:600;line-height:1.4}
+  .cs .metas div:last-child{border-right:0}
+  .cs .metas span{display:block;font-size:10px;font-weight:800;letter-spacing:.12em;opacity:.5;margin-bottom:6px}
+  .cs section{padding:56px 28px;border-bottom:1.5px solid #111}
+  .cs .lbl{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--pc,#ff4d00);margin-bottom:18px;filter:brightness(.85)}
+  .cs h2{font-size:44px;line-height:.95;font-weight:900;letter-spacing:-.04em;margin:0 0 20px}
+  .cs .two{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+  .cs .two p{font-size:15px;line-height:1.6;margin:0}
+  .cs .browser{border:1.5px solid #111;border-radius:12px;overflow:hidden;background:#fff;box-shadow:12px 12px 0 #111}
+  .cs .browser .chrome{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#e9e4d8;border-bottom:1.5px solid #111;font-size:11px;font-weight:600}
+  .cs .browser .chrome i{width:10px;height:10px;border-radius:50%;background:#111;opacity:.25}
+  .cs .browser .chrome span{margin-left:10px;background:#fff;border-radius:6px;padding:3px 10px;flex:1;opacity:.7}
+  .cs .browser .scr{padding:16px;min-height:240px;font-size:12px}
+  .cs .builts{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .cs .built{border:1.5px solid #111;border-radius:12px;padding:20px;background:#fff;transition:transform .2s,box-shadow .2s}
+  .cs .built:hover{transform:translate(-4px,-4px);box-shadow:6px 6px 0 var(--pc,#ff4d00)}
+  .cs .built b{display:block;font-size:12px;font-weight:900;color:var(--pc,#ff4d00);filter:brightness(.85);margin-bottom:8px}
+  .cs .built h4{font-size:18px;margin:0 0 8px;letter-spacing:-.01em}
+  .cs .built p{font-size:13px;line-height:1.55;margin:0;opacity:.8}
+  .cs .arch{background:#111;color:#f2efe8;border-radius:14px;padding:26px}
+  .cs .arch svg{width:100%;height:auto;display:block}
+  .cs .impact{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1.5px solid #111;border-radius:12px;overflow:hidden}
+  .cs .impact div{padding:24px;border-right:1.5px solid #111;font-size:20px;font-weight:800;line-height:1.2;letter-spacing:-.02em}
+  .cs .impact div:last-child{border-right:0}
+  .cs .impact div small{display:block;font-size:12px;font-weight:600;opacity:.6;margin-top:10px;letter-spacing:0;line-height:1.45}
+  .cs .chips span{display:inline-block;border:1.5px solid #111;border-radius:99px;padding:6px 14px;margin:0 8px 8px 0;font-size:13px;font-weight:700}
+  .cs .todo{border:1.5px dashed #b9b3a6;border-radius:10px;padding:18px;font-size:14px;opacity:.65;line-height:1.5}
+  .cs .next{display:block;background:#111;color:#f2efe8;padding:50px 28px;cursor:pointer}
+  .cs .next small{font-size:11px;font-weight:800;letter-spacing:.12em;opacity:.6}
+  .cs .next div{font-size:64px;font-weight:900;letter-spacing:-.05em;line-height:.9;margin-top:10px;transition:color .2s}
+  .cs .next:hover div{color:#ff4d00}
+  .rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s cubic-bezier(.2,.8,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  /* mock UI bits */
+  .mt{width:100%;border-collapse:collapse;font-size:11.5px}
+  .mt th{text-align:left;font-size:10px;letter-spacing:.08em;opacity:.5;padding:6px 8px;border-bottom:1px solid #e5e0d6}
+  .mt td{padding:7px 8px;border-bottom:1px solid #f0ece3}
+  .mt tr.new{animation:flash 1.4s}
+  @keyframes flash{from{background:#ffe2d3}}
+  .pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:800}
+  .live{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;color:#16a34a}
+  .live i{width:7px;height:7px;border-radius:50%;background:#16a34a;animation:pu 1.4s infinite}
+  @keyframes pu{0%{box-shadow:0 0 0 0 rgba(22,163,74,.6)}100%{box-shadow:0 0 0 8px rgba(22,163,74,0)}}
+  .diff{font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.7;border:1px solid #e5e0d6;border-radius:8px;overflow:hidden}
+  .diff div{padding:0 10px}
+  .diff .a{background:#dcfce7}.diff .d{background:#fee2e2}
+  .btn{display:inline-block;padding:6px 12px;border-radius:6px;font-weight:800;font-size:11px;margin-right:6px;cursor:pointer}
+  .stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+  .stats4 div{border:1px solid #e5e0d6;border-radius:8px;padding:10px;font-size:10px;opacity:.9}
+  .stats4 b{display:block;font-size:20px;margin-top:4px}
+</style>
+
+<h2>Demo v6: Chuyển EN / VI cho toàn bộ — Hero, Works và cả 5 case study</h2>
+<p class="subtitle">Bấm <b>EN / VI</b> trên thanh menu để đổi ngôn ngữ (chữ chuyển mượt, giữ nguyên vị trí cuộn). Giờ áp dụng cho Hero, Selected Works và toàn bộ nội dung case study — đổi ngôn ngữ ngay khi đang mở case study cũng được. Hero giờ chứa luôn phần About: bio ngắn, học vấn, nút Download CV và Get in touch. Thẻ đeo dây dùng ảnh thật của bạn. Kéo thẻ, double-click để lật. Phần Works và case study giữ nguyên như v3.</p>
+
+<div class="mockup cb">
+  <div class="mockup-header">thvnhtai.github.io/portfolio — preview (cuộn bên trong ↓)</div>
+  <div class="mockup-body" id="mb">
+    <div class="site" id="site">
+      <div class="nav"><span>Tai Nguyen ©2026</span><span><a data-go="h" data-i="home">Home</a><a data-go="w" data-i="work">Work</a><a data-go="ct" data-i="contact">Contact</a><span class="lang" id="lang"><b data-l="en" class="on">EN</b><b data-l="vi">VI</b></span><kbd>⌘K</kbd></span></div>
+      <section class="stage hero" id="h">
+        <div class="lc"><div class="hl">FULLSTACK<br>ENGINEER<span class="o">.</span></div>
+        <div class="intro" data-i="bio">Hi, I'm Tai — a fullstack engineer who leans frontend. At Grab I shipped internal platforms end to end — React/TypeScript UIs, Go services, and the pipelines behind them.</div>
+        <div class="cta"><a class="p" onclick="alert('CV PDF goes here')" data-i="cv">Download CV ↓</a><a class="s" data-go2="ct" data-i="touch">Get in touch →</a></div></div>
+        <div class="meta"><div><span data-i="based">Based in</span><b><i data-i="city" style="font-style:normal">Ho Chi Minh City</i> · <span id="clk" style="opacity:1"></span></b></div><div><span data-i="prev">Previously</span><b>Grab · TMA Solutions</b></div><div><span data-i="edu">Education</span><b data-i="eduv">UIT · Software Eng. · GPA 8.57</b></div><div><span data-i="status">Status</span><b style="color:#16a34a" data-i="open">● Open to work</b></div></div>
+        <div class="hint" data-i="hint">Drag the badge · double-click to flip</div>
+        <div class="loading" id="ld">LOADING 3D…</div>
+      </section>
+      <div class="sec-h" id="w"><h2 data-ih="worksh">SELECTED<br>WORKS <span class="o">(5)</span></h2><p data-i="worksp">Every product I've shipped, as a little city. Hover a building, click to fly in.</p></div>
+      <section class="stage city" id="d5">
+        <div class="legend" id="lg"></div>
+        <div class="tt" id="d5tt"></div>
+        <div class="tip" data-i="citytip">Hover · click to enter</div>
+      </section>
+      <div class="rest"><div data-i="r1">How I work</div><div data-i="r2">Career timeline</div><div data-i="r3">Skills (physics)</div><div data-i="r4">LeetCode stats</div><div data-i="r5">Now learning</div><div id="ct" data-i="r6">Contact</div></div>
+    </div>
+    <div class="cs" id="cs"></div>
+  </div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+function whenSized(el){ return new Promise(function(res){ (function w(){ if (el.getBoundingClientRect().width > 0) res(); else requestAnimationFrame(w); })(); }); }
+const hero = document.getElementById('h');
+await whenSized(hero);
+document.getElementById('ld').remove();
+
+const W = hero.clientWidth, H = hero.clientHeight;
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(2, devicePixelRatio));
+renderer.setSize(W, H);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+hero.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pm = new THREE.PMREMGenerator(renderer);
+scene.environment = pm.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+const camera = new THREE.PerspectiveCamera(30, W / H, 0.1, 100);
+camera.position.set(0, 0, 11);
+
+const sun = new THREE.DirectionalLight(0xffffff, 2.2);
+sun.position.set(-4, 6, 8); sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048); sun.shadow.radius = 8; sun.shadow.blurSamples = 16;
+Object.assign(sun.shadow.camera, { left: -8, right: 8, top: 6, bottom: -6, near: 1, far: 30 });
+scene.add(sun, new THREE.AmbientLight(0xffffff, 0.35));
+const wall = new THREE.Mesh(new THREE.PlaneGeometry(40, 30), new THREE.ShadowMaterial({ opacity: 0.16 }));
+wall.position.z = -1.2; wall.receiveShadow = true; scene.add(wall);
+
+/* ---------- textures ---------- */
+function canvasTex(w, h, draw){ const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; }
+function rr(x, X, Y, w, h, r){ x.beginPath(); x.moveTo(X+r,Y); x.arcTo(X+w,Y,X+w,Y+h,r); x.arcTo(X+w,Y+h,X,Y+h,r); x.arcTo(X,Y+h,X,Y,r); x.arcTo(X,Y,X+w,Y,r); x.closePath(); }
+const CW = 1.7, CH = 2.4, CR = 0.12, CT = 0.035;
+const photo = await new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = '/files/profile.jpg'; });
+const front = canvasTex(680, 960, (x, w, h) => {
+  x.fillStyle = '#121212'; x.fillRect(0, 0, w, h);
+  const g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, 'rgba(255,255,255,.06)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, w, h);
+  x.fillStyle = '#ff4d00'; x.fillRect(0, 0, w, 210);
+  x.fillStyle = '#e9e4d8'; rr(x, w/2-70, 40, 140, 30, 15); x.fill();
+  x.fillStyle = '#111'; x.font = '800 30px Helvetica Neue, Arial'; x.textAlign = 'center'; x.fillText('ENGINEERING · VISITOR PASS', w/2, 160);
+  const pw = 252, ph = 316, px = w/2 - pw/2, py = 236;
+  x.save(); rr(x, px, py, pw, ph, 18); x.clip();
+  if (photo){ const sw = photo.width, sh = photo.width * ph/pw; x.drawImage(photo, 0, (photo.height - sh) * 0.35, sw, sh, px, py, pw, ph); }
+  else { x.fillStyle = '#f2efe8'; x.fillRect(px, py, pw, ph); }
+  x.restore();
+  x.lineWidth = 6; x.strokeStyle = '#ff4d00'; rr(x, px, py, pw, ph, 18); x.stroke();
+  x.fillStyle = '#f2efe8'; x.font = '900 74px Helvetica Neue, Arial'; x.fillText('TAI NGUYEN', w/2, 650);
+  x.fillStyle = '#ff4d00'; x.font = '700 38px Helvetica Neue, Arial'; x.fillText('Fullstack Engineer', w/2, 704);
+  x.fillStyle = '#8a8a8a'; x.font = '600 25px Helvetica Neue, Arial'; x.fillText('HCMC · GMT+7 · ex-GRAB', w/2, 750);
+  x.fillStyle = '#f2efe8'; for (let b = 0; b < 46; b++) if ((b*7) % 3) x.fillRect(90 + b*11, 790, (b % 4) + 2, 80);
+  x.fillStyle = '#555'; x.font = '600 22px ui-monospace, Menlo, monospace'; x.fillText('ID 2025-0715 · TN-FSE', w/2, 910);
+});
+const back = canvasTex(680, 960, (x, w, h) => {
+  x.fillStyle = '#f2efe8'; x.fillRect(0, 0, w, h);
+  x.fillStyle = '#111'; const q = 21, s = 22, ox = w/2 - q*s/2, oy = 150;
+  for (let r = 0; r < q; r++) for (let c = 0; c < q; c++){ const finder = (r<7&&c<7)||(r<7&&c>13)||(r>13&&c<7); const ring = finder && !(((r%14)>0&&(r%14)<6&&(c%14)>0&&(c%14)<6) && !((r%14)>1&&(r%14)<5&&(c%14)>1&&(c%14)<5));
+    if (finder ? ring : Math.random() < .48) x.fillRect(ox + c*s, oy + r*s, s, s); }
+  x.font = '800 36px Helvetica Name, Helvetica Neue, Arial'; x.textAlign = 'center'; x.fillText('linkedin.com/in/tai-nt', w/2, 700);
+  x.fillStyle = '#ff4d00'; x.font = '700 32px Helvetica Neue, Arial'; x.fillText('github.com/thvnhtai', w/2, 752);
+  x.fillStyle = '#777'; x.font = '600 26px Helvetica Neue, Arial'; x.fillText('thanhtaiwork04@gmail.com', w/2, 800);
+  x.fillStyle = '#aaa'; x.font = '600 22px Helvetica Neue, Arial'; x.fillText('double-click to flip back', w/2, 900);
+});
+const strapTex = canvasTex(1024, 64, (x, w, h) => {
+  x.fillStyle = '#ff4d00'; x.fillRect(0, 0, w, h);
+  x.fillStyle = 'rgba(0,0,0,.12)'; for (let i = 0; i < w; i += 3) x.fillRect(i, 0, 1, h);
+  x.fillStyle = '#111'; x.font = '900 34px Helvetica Neue, Arial'; x.textBaseline = 'middle';
+  for (let i = 0; i < 4; i++) x.fillText('TAI NGUYEN ✦ FULLSTACK ✦', i*256 - 10, h/2+2);
+});
+strapTex.wrapS = THREE.RepeatWrapping;
+
+/* ---------- card ---------- */
+const shape = new THREE.Shape();
+shape.moveTo(-CW/2 + CR, -CH/2); shape.lineTo(CW/2 - CR, -CH/2); shape.quadraticCurveTo(CW/2, -CH/2, CW/2, -CH/2 + CR);
+shape.lineTo(CW/2, CH/2 - CR); shape.quadraticCurveTo(CW/2, CH/2, CW/2 - CR, CH/2); shape.lineTo(-CW/2 + CR, CH/2);
+shape.quadraticCurveTo(-CW/2, CH/2, -CW/2, CH/2 - CR); shape.lineTo(-CW/2, -CH/2 + CR); shape.quadraticCurveTo(-CW/2, -CH/2, -CW/2 + CR, -CH/2);
+const hole = new THREE.Path(); hole.absellipse(0, CH/2 - 0.17, 0.2, 0.05, 0, Math.PI*2, true); shape.holes.push(hole);
+function faceGeo(){ const g = new THREE.ShapeGeometry(shape, 24); const uv = g.attributes.uv, p = g.attributes.position;
+  for (let i = 0; i < uv.count; i++) uv.setXY(i, (p.getX(i) + CW/2)/CW, (p.getY(i) + CH/2)/CH); return g; }
+const card = new THREE.Group();
+const body = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth: CT, bevelEnabled: true, bevelThickness: 0.008, bevelSize: 0.008, bevelSegments: 3, curveSegments: 24 }),
+  new THREE.MeshPhysicalMaterial({ color: 0xf2efe8, roughness: 0.4, clearcoat: 0.6 }));
+body.position.z = -CT/2; body.castShadow = true;
+const glossy = { roughness: 0.32, clearcoat: 1, clearcoatRoughness: 0.12, iridescence: 0.35, iridescenceIOR: 1.4, iridescenceThicknessRange: [200, 500] };
+const f = new THREE.Mesh(faceGeo(), new THREE.MeshPhysicalMaterial({ map: front, ...glossy })); f.position.z = CT/2 + 0.009;
+const bk = new THREE.Mesh(faceGeo(), new THREE.MeshPhysicalMaterial({ map: back, ...glossy })); bk.rotation.y = Math.PI; bk.position.z = -CT/2 - 0.009;
+const bkUv = bk.geometry.attributes.uv; for (let i = 0; i < bkUv.count; i++) bkUv.setX(i, 1 - bkUv.getX(i));
+card.add(body, f, bk);
+const metal = new THREE.MeshStandardMaterial({ color: 0xc9c9c9, metalness: 1, roughness: 0.22 });
+const clip = new THREE.Group();
+const ring = new THREE.Mesh(new THREE.TorusGeometry(0.13, 0.025, 16, 40), metal); ring.position.y = 0.1;
+const plate = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.16, 0.07), metal); plate.position.y = -0.08;
+const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.42, 16), metal); pin.rotation.z = Math.PI/2; pin.position.y = -0.18;
+clip.add(ring, plate, pin); clip.traverse(m => m.castShadow = true);
+card.add(clip); clip.position.y = CH/2 + 0.02;
+card.traverse(m => { if (m.isMesh) m.castShadow = true; });
+scene.add(card);
+
+/* ---------- strap (verlet rope rendered as a ribbon) ---------- */
+const N = 12, SEG = 0.24, L = CH/2 + 0.32;
+const halfV = Math.tan(THREE.MathUtils.degToRad(15)) * 11, halfH = halfV * W / H;
+const anchor = new THREE.Vector3(halfH * 0.5, halfV + 0.4, 0);
+const P = []; for (let i = 0; i <= N; i++) P.push({ p: anchor.clone().add(new THREE.Vector3(0, -i*SEG, 0)), o: anchor.clone().add(new THREE.Vector3(0, -i*SEG, 0)) });
+const B = { p: anchor.clone().add(new THREE.Vector3(0.35, -N*SEG - L, 0.1)), o: anchor.clone().add(new THREE.Vector3(0.28, -N*SEG - L, 0)) };
+const sGeo = new THREE.BufferGeometry();
+const sPos = new Float32Array((N+1)*2*3), sUv = new Float32Array((N+1)*2*2), idx = [];
+for (let i = 0; i <= N; i++){ sUv.set([i/N*3, 0, i/N*3, 1], i*4); if (i < N){ const a = i*2; idx.push(a, a+1, a+2, a+1, a+3, a+2); } }
+sGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3)); sGeo.setAttribute('uv', new THREE.BufferAttribute(sUv, 2)); sGeo.setIndex(idx);
+const strap = new THREE.Mesh(sGeo, new THREE.MeshStandardMaterial({ map: strapTex, side: THREE.DoubleSide, roughness: 0.75 }));
+strap.castShadow = true; strap.frustumCulled = false; scene.add(strap);
+
+/* ---------- interaction ---------- */
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), dragPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+let drag = null, grabOff = new THREE.Vector3();
+function setNdc(e){ const r = renderer.domElement.getBoundingClientRect(); ndc.set(((e.clientX - r.left)/r.width)*2 - 1, -((e.clientY - r.top)/r.height)*2 + 1); ray.setFromCamera(ndc, camera); }
+renderer.domElement.addEventListener('pointerdown', e => { setNdc(e); const hit = ray.intersectObject(card, true)[0];
+  if (hit){ drag = new THREE.Vector3(); ray.ray.intersectPlane(dragPlane, drag); grabOff.copy(B.p).sub(drag); grabOff.z = 0; renderer.domElement.setPointerCapture(e.pointerId); renderer.domElement.style.cursor = 'grabbing'; } });
+renderer.domElement.addEventListener('pointermove', e => { setNdc(e); if (drag){ ray.ray.intersectPlane(dragPlane, drag); } else renderer.domElement.style.cursor = ray.intersectObject(card, true).length ? 'grab' : ''; });
+renderer.domElement.addEventListener('pointerup', () => { drag = null; renderer.domElement.style.cursor = ''; });
+let yaw = 0.25, yawV = 0, yawT = 0;
+renderer.domElement.addEventListener('dblclick', () => { yawT = yawT ? 0 : Math.PI; });
+
+/* ---------- sim ---------- */
+const G = new THREE.Vector3(0, -0.0042, 0), tmp = new THREE.Vector3(), up = new THREE.Vector3(), Y = new THREE.Vector3(0, 1, 0), q1 = new THREE.Quaternion(), q2 = new THREE.Quaternion();
+const maxLen = N*SEG + L + 0.6;
+let visible = true; new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { root: document.getElementById('site') }).observe(hero);
+function step(){
+  const pts = P.concat([B]);
+  for (let i = 1; i < pts.length; i++){ const p = pts[i]; tmp.copy(p.p).sub(p.o).multiplyScalar(0.982); p.o.copy(p.p); p.p.add(tmp).add(G); p.p.z *= 0.97; }
+  const pinB = () => { if (!drag) return; tmp.copy(drag).add(grabOff).sub(anchor); if (tmp.length() > maxLen) tmp.setLength(maxLen); B.p.copy(anchor).add(tmp); };
+  pinB();
+  for (let k = 0; k < 16; k++){
+    P[0].p.copy(anchor);
+    for (let j = 0; j < pts.length - 1; j++){
+      const a = pts[j].p, b = pts[j+1].p, d0 = j === pts.length - 2 ? L : SEG;
+      tmp.copy(b).sub(a); const d = tmp.length() || 1e-6, df = (d - d0)/d;
+      if (j === 0) b.addScaledVector(tmp, -df);
+      else if (pts[j+1] === B && drag) a.addScaledVector(tmp, df);
+      else { a.addScaledVector(tmp, df*0.5); b.addScaledVector(tmp, -df*0.5); }
+    }
+    pinB();
+  }
+  const vx = B.p.x - B.o.x;
+  yawV += vx * 0.5 + (yawT - yaw) * 0.012; yawV *= 0.92; yaw += yawV;
+}
+function render(){
+  const A = P[N].p;
+  up.copy(A).sub(B.p).normalize();
+  q1.setFromUnitVectors(Y, up); q2.setFromAxisAngle(up, yaw);
+  card.quaternion.copy(q2).multiply(q1);
+  card.position.copy(A).addScaledVector(up, -(CH/2 + 0.2));
+  // ribbon: width vector perpendicular to rope, twisting toward the card's yaw near the bottom
+  for (let i = 0; i <= N; i++){
+    const p = P[i].p, nx = P[Math.min(N, i+1)].p, pv = P[Math.max(0, i-1)].p;
+    tmp.copy(nx).sub(pv).normalize();
+    const side = new THREE.Vector3().crossVectors(tmp, new THREE.Vector3(0, 0, 1)).normalize();
+    side.applyAxisAngle(tmp, yaw * Math.pow(i/N, 2.2)).multiplyScalar(0.11);
+    sPos.set([p.x + side.x, p.y + side.y, p.z + side.z, p.x - side.x, p.y - side.y, p.z - side.z], i*6);
+  }
+  sGeo.attributes.position.needsUpdate = true; sGeo.computeVertexNormals();
+  renderer.render(scene, camera);
+}
+let last = performance.now(), acc = 0;
+(function tick(t){
+  requestAnimationFrame(tick);
+  if (!visible) { last = t; return; }
+  acc += Math.min(50, t - last); last = t;
+  while (acc >= 8){ step(); acc -= 8; }
+  render();
+})(performance.now());
+</script>
+
+<script>
+function __boot(){
+  var $ = function(s,r){ return (r||document).querySelector(s); };
+  var DPR = window.devicePixelRatio || 1;
+  function canvasFor(stage){
+    var c = document.createElement('canvas'); stage.insertBefore(c, stage.firstChild);
+    var r = stage.getBoundingClientRect(); c.width = r.width*DPR; c.height = r.height*DPR;
+    var x = c.getContext('2d'); x.setTransform(DPR,0,0,DPR,0,0);
+    return {c:c, x:x, w:r.width, h:r.height};
+  }
+  var site = $('#site'), vis = new Map();
+  var io = new IntersectionObserver(function(es){ es.forEach(function(e){ vis.set(e.target, e.isIntersecting); }); }, {root:site, threshold:0.02});
+  function loop(stage, fn){ io.observe(stage); var t0 = performance.now(); (function f(t){ if (vis.get(stage)) fn((t-t0)/1000); requestAnimationFrame(f); })(t0); }
+  function pos(el,e){ var r = el.getBoundingClientRect(); return {x:e.clientX-r.left, y:e.clientY-r.top}; }
+  function rr(x,X,Y,W,H,R){ x.beginPath(); x.moveTo(X+R,Y); x.arcTo(X+W,Y,X+W,Y+H,R); x.arcTo(X+W,Y+H,X,Y+H,R); x.arcTo(X,Y+H,X,Y,R); x.arcTo(X,Y,X+W,Y,R); x.closePath(); }
+  document.querySelectorAll('[data-go],[data-go2]').forEach(function(a){ a.onclick = function(){ var t = document.getElementById(a.dataset.go || a.dataset.go2); site.scrollTop = t.offsetTop - 40; }; });
+  var I18N = { vi: { home:'Trang chủ', work:'Dự án', contact:'Liên hệ',
+      bio:'Chào bạn, mình là Tài — kỹ sư fullstack thiên về frontend. Ở Grab, mình xây dựng trọn vẹn các nền tảng nội bộ — giao diện React/TypeScript, dịch vụ Go và cả pipeline triển khai phía sau.',
+      cv:'Tải CV ↓', touch:'Liên hệ với mình →', based:'Sống tại', city:'TP. Hồ Chí Minh', prev:'Từng làm tại', edu:'Học vấn', eduv:'UIT · Kỹ thuật Phần mềm · GPA 8.57',
+      status:'Trạng thái', open:'● Sẵn sàng nhận việc', hint:'Kéo thẻ · double-click để lật', citytip:'Rê chuột · bấm để vào', r1:'Cách mình làm việc', r2:'Hành trình sự nghiệp', r3:'Kỹ năng (vật lý)', r4:'Thống kê LeetCode', r5:'Đang học', r6:'Liên hệ',
+      worksh:'DỰ ÁN<br>TIÊU BIỂU <span class="o">(5)</span>', worksp:'Mọi sản phẩm mình đã ship, dựng thành một thành phố nhỏ. Rê vào toà nhà, bấm để bay vào.' }, en: {} };
+  document.querySelectorAll('[data-i]').forEach(function(el){ I18N.en[el.dataset.i] = el.textContent; });
+  document.querySelectorAll('[data-ih]').forEach(function(el){ I18N.en[el.dataset.ih] = el.innerHTML; });
+  var cur = 'en';
+  function setLang(l){ if (l === cur) return; cur = l; site.classList.add('swap');
+    setTimeout(function(){ document.querySelectorAll('[data-i]').forEach(function(el){ el.textContent = I18N[l][el.dataset.i]; });
+      document.querySelectorAll('[data-ih]').forEach(function(el){ el.innerHTML = I18N[l][el.dataset.ih]; });
+      if (cs.classList.contains('on')){ var keep = cs.scrollTop; openCase(curCase, parseFloat(cs.style.getPropertyValue('--cx')) || 0, parseFloat(cs.style.getPropertyValue('--cy')) || 0, csClose); cs.querySelectorAll('.rv').forEach(function(e){ e.classList.add('in'); }); cs.scrollTop = keep; }
+      document.querySelectorAll('#lang b').forEach(function(b){ b.classList.toggle('on', b.dataset.l === l); }); document.documentElement.lang = l; site.classList.remove('swap'); }, 230); }
+  $('#lang').onclick = function(){ setLang(cur === 'en' ? 'vi' : 'en'); };
+  var clk = $('#clk'); (function t(){ clk.textContent = new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit'}); setTimeout(t, 15000); })();
+
+
+  /* ===== CASE STUDY ===== */
+  var CASES = [
+    { n:'Zen Ledger Portal', c:'#ff4d00', fg:'#111', m:'GRAB · SOFTWARE ENGINEER (CONTRACT)',
+      lead:'A fullstack portal that Ledger engineers and Operations use every day to inspect accounts and follow transactions — now updating live instead of on refresh.',
+      meta:[['Role','Fullstack Engineer — frontend + Go backend'],['Company','Grab, Ho Chi Minh City'],['Timeline','Dec 2025 — Jun 2026'],['Users','Ledger engineering, Operations, FinOps']],
+      problem:'Ops and Ledger engineers needed one reliable place for account and transaction workflows. The transaction page relied on manual refresh, so people watching money move were always looking at stale data.',
+      approach:'Own the feature end to end: React/TypeScript UI, Go services over gRPC, the MySQL schema and queries behind it, and the delivery pipeline that keeps it running on Kubernetes.',
+      mock:'ledger', url:'zen-ledger.internal/transactions',
+      built:[['Realtime transaction feed','Designed and built a WebSocket feed so new transactions stream onto the page — replacing manual refresh.'],
+             ['Go backend services','Account and transaction services in Go, talking gRPC, with Redis alongside MySQL.'],
+             ['Schema & queries','Took part in database schema design and wrote the queries that power account and transaction data.'],
+             ['CI/CD + Kubernetes from scratch','Configured pipelines and deployment infrastructure, and resolved deployment incidents to keep the portal available.'],
+             ['Tests on both sides','Unit and UAT tests across frontend and backend logic to catch regressions before release.'],
+             ['On-call & FinOps support','Answered ad-hoc questions and ran scripts for daily data extracts used by FinOps.']],
+      arch:['React UI','WebSocket','Go service','gRPC','MySQL · Redis'], archNote:'Deployed on Kubernetes · CI/CD pipeline',
+      impact:[['Live, not refreshed','The transaction page updates in real time — positively received by Ops users.'],['Kept it running','Deployment issues resolved; portal reliably available for daily use.'],['Fewer regressions','FE + BE unit and UAT tests before every release.']],
+      stack:['React','TypeScript','Go','gRPC','WebSocket','MySQL','Redis','Kubernetes','CI/CD'] },
+    { n:'Invoicing Portal', c:'#111111', fg:'#f2efe8', m:'GRAB · SOFTWARE ENGINEER INTERN',
+      lead:'Billing and invoicing tools for finance and operations teams — turning manual workarounds into proper features, and fixing what blocked users from even loading the app.',
+      meta:[['Role','Software Engineer Intern — fullstack'],['Company','Grab, Ho Chi Minh City'],['Timeline','Jul 2025 — Dec 2025'],['Users','Finance & Operations']],
+      problem:'Billing rule schedules were managed manually, exporting billing calculation rules needed workarounds, and some users whose SSO login completed still saw the micro-frontend fail to render.',
+      approach:'Trace the permission bug to its source, then ship the two missing workflows end to end — backend in Go and MySQL, UI in React — while covering on-call.',
+      mock:'invoice', url:'invoicing.internal/billing-rules',
+      built:[['Permission-lookup API','Diagnosed the micro-frontend permission-loading bug and built an API that queries the company\'s central OIDC service — restoring access.'],
+             ['Billing Rule Schedules','Delivered schedule management end to end, simplifying a previously manual process.'],
+             ['Bulk Download BCR','Built bulk export of billing calculation rules so users no longer need manual workarounds.'],
+             ['On-call investigations','Resolved invoice/receipt data discrepancies by tracing them back to upstream systems.'],
+             ['Legacy migration support','Fixed auth, styling and legacy-platform issues with backend engineers to unblock the migration.']],
+      arch:['MFE host','Invoicing MFE','Go API','OIDC service','MySQL'], archNote:'Observed with Datadog · Kibana · Superset',
+      impact:[['Access restored','Users stuck after SSO login could render the app again.'],['Manual → feature','Billing schedules and BCR export are now first-class workflows.'],['Migration unblocked','Legacy-platform issues cleared with the backend team.']],
+      stack:['Go','MySQL','React','TypeScript','Superset','Kibana','Datadog'] },
+    { n:'Universal Config Management', c:'#6d28d9', fg:'#f2efe8', m:'GRAB · SOFTWARE ENGINEER INTERN',
+      lead:'A request-and-approval interface for configuration changes — submit, review, diff, approve, and watch it roll out — built on an existing backend platform.',
+      meta:[['Role','Frontend Engineer Intern'],['Company','Grab, Ho Chi Minh City'],['Timeline','Jul 2025 — Dec 2025'],['Worked with','PM, UI/UX, backend engineers']],
+      problem:'Configuration changes needed a clear, auditable flow: who asked for what, what exactly changes, who approved it, and whether the pipeline shipped it.',
+      approach:'Build every step of the request lifecycle as a coherent UI, on a reusable component library, with API contracts agreed sprint by sprint.',
+      mock:'diff', url:'ucm.internal/requests/4821',
+      built:[['End-to-end request workflows','Submission, approval, rejection, history, config-diff and pipeline-status views.'],
+             ['Reusable component library','Designed shared components and wrote unit tests for the core ones.'],
+             ['API contracts','Aligned with PM, UI/UX and backend through iterative sprint delivery.'],
+             ['Code review','Reviewed peer pull requests.']],
+      arch:['React UI','TanStack Query','Zod validation','Platform API','Pipeline'], archNote:'Ant Design component base',
+      impact:[['Full lifecycle','From submission to pipeline status in one place.'],['Fewer regressions','Unit-tested core components reduced post-release bugs.'],['Shared building blocks','A library the team can reuse.']],
+      stack:['React','TypeScript','Ant Design','TanStack Query','Zod','Jest','RTL'] },
+    { n:'Voucher Management Dashboard', c:'#0891b2', fg:'#111', m:'TMA SOLUTIONS · FRONTEND DEVELOPER INTERN',
+      lead:'An admin dashboard to monitor voucher usage and track operational errors, built with Next.js.',
+      meta:[['Role','Frontend Developer Intern'],['Company','TMA Solutions, Ho Chi Minh City'],['Timeline','Dec 2024 — Mar 2025'],['Users','Voucher system admins']],
+      problem:'Admins needed to see how vouchers were being used and spot operational issues without digging through raw logs.',
+      approach:'A Next.js dashboard with filtering and an error-log view, built from reusable components with efficient data fetching.',
+      mock:'voucher', url:'vouchers.admin/dashboard',
+      built:[['Filtering','Filter voucher usage to find what matters quickly.'],['Error-log tracking','A dedicated view for operational errors.'],['Performance','Efficient data fetching and reusable components.']],
+      arch:['Next.js','Material UI','Tailwind','REST API'], archNote:'',
+      impact:[['Visibility','Admins can monitor voucher usage in one place.'],['Faster triage','Operational issues surface in the error-log view.'],['First production frontend','Where my frontend journey started.']],
+      stack:['Next.js','React','Material UI','Tailwind CSS'] },
+    { n:'Cloud-Native E-Commerce', c:'#16a34a', fg:'#111', m:'TEAM PROJECT · OPEN SOURCE',
+      lead:'A cloud-native store: .NET microservices, React micro-frontends composed at runtime, async checkout, and AWS infrastructure as code.',
+      meta:[['Role','Fullstack contributor'],['Type','Team project'],['Timeline','Jan 2026 — Mar 2026'],['Code','github.com/sloweyyy/cloud-native-ecommerce-platform']],
+      problem:'Practice building commerce the way large teams do: independently deployable services and frontends, asynchronous order processing, and reproducible cloud infrastructure.',
+      approach:'Split storefront, checkout, account and admin into services and micro-frontends; connect them with messaging and gRPC; provision everything with Terraform.',
+      mock:'mfe', url:'shop.demo/checkout',
+      built:[['Micro-frontends','React apps composed with Nx + Module Federation.'],['.NET microservices','Storefront, checkout, account and administration services.'],
+             ['Async checkout','Order processing over RabbitMQ with MassTransit; gRPC between basket and discount.'],['Terraform modules','Reusable modules for AWS networking, EKS, registry, databases, messaging, storage and security.']],
+      arch:['Shell (Nx)','Remote MFEs','.NET services','RabbitMQ · gRPC','AWS EKS'], archNote:'Provisioned with Terraform',
+      impact:[['Runtime composition','Frontends deploy independently via Module Federation.'],['Event-driven checkout','Async order processing decoupled from the UI.'],['Infra as code','Whole AWS stack reproducible from Terraform.']],
+      stack:['React','Nx','Module Federation','.NET','RabbitMQ','MassTransit','gRPC','Terraform','AWS'] }
+  ];
+
+  var UI = {
+    en: { cs:'Case study', back:'← Back to the city', product:'THE PRODUCT', note:'Recreated interface with sample data — not production screenshots.',
+          problem:'THE PROBLEM', problemH:'What wasn\'t working', approach:'THE APPROACH', approachH:'How I took it on',
+          built:'WHAT I BUILT', builtH:' things I shipped', arch:'ARCHITECTURE', archH:'How the pieces talk', out:'OUTCOME', outH:'What changed',
+          stack:'STACK', learned:'WHAT I LEARNED', todo:'✍️ Your own reflection goes here — 2–3 sentences in your words (we\'ll write it together).', next:'NEXT PROJECT →' },
+    vi: { cs:'Case study', back:'← Quay lại thành phố', product:'SẢN PHẨM', note:'Giao diện dựng lại với dữ liệu mẫu — không phải ảnh chụp hệ thống thật.',
+          problem:'VẤN ĐỀ', problemH:'Điều gì chưa ổn', approach:'CÁCH TIẾP CẬN', approachH:'Mình đã giải quyết thế nào',
+          built:'NHỮNG GÌ MÌNH LÀM', builtH:' việc mình đã ship', arch:'KIẾN TRÚC', archH:'Các thành phần nói chuyện với nhau ra sao', out:'KẾT QUẢ', outH:'Điều gì đã thay đổi',
+          stack:'CÔNG NGHỆ', learned:'MÌNH HỌC ĐƯỢC GÌ', todo:'✍️ Cảm nhận của riêng bạn — 2–3 câu bằng lời của bạn (mình sẽ cùng viết).', next:'DỰ ÁN TIẾP THEO →' }
+  };
+  var CASES_VI = [
+    { m:'GRAB · SOFTWARE ENGINEER (HỢP ĐỒNG)',
+      lead:'Một portal fullstack mà đội Ledger engineering và Operations dùng hằng ngày để tra cứu tài khoản và theo dõi giao dịch — giờ cập nhật trực tiếp thay vì phải tải lại trang.',
+      meta:[['Vai trò','Fullstack Engineer — frontend + backend Go'],['Công ty','Grab, TP. Hồ Chí Minh'],['Thời gian','12/2025 — 6/2026'],['Người dùng','Ledger engineering, Operations, FinOps']],
+      problem:'Đội Ops và Ledger cần một nơi đáng tin cậy cho các luồng tài khoản và giao dịch. Trang giao dịch phải tải lại thủ công, nên người theo dõi dòng tiền luôn nhìn thấy dữ liệu cũ.',
+      approach:'Làm chủ tính năng từ đầu đến cuối: giao diện React/TypeScript, dịch vụ Go giao tiếp qua gRPC, schema MySQL và các truy vấn phía sau, cùng pipeline triển khai chạy trên Kubernetes.',
+      built:[['Feed giao dịch realtime','Thiết kế và xây dựng feed qua WebSocket để giao dịch mới tự hiện lên trang — thay cho việc tải lại thủ công.'],
+             ['Dịch vụ backend bằng Go','Các dịch vụ tài khoản và giao dịch viết bằng Go, giao tiếp gRPC, dùng Redis cùng MySQL.'],
+             ['Schema & truy vấn','Tham gia thiết kế schema cơ sở dữ liệu và viết các truy vấn cho dữ liệu tài khoản, giao dịch.'],
+             ['CI/CD + Kubernetes từ con số 0','Cấu hình pipeline và hạ tầng triển khai, xử lý sự cố deploy để portal luôn sẵn sàng.'],
+             ['Test cả hai phía','Unit test và UAT cho cả logic frontend lẫn backend để bắt lỗi trước khi release.'],
+             ['On-call & hỗ trợ FinOps','Trả lời các câu hỏi phát sinh và chạy script trích xuất dữ liệu hằng ngày cho FinOps.']],
+      archNote:'Triển khai trên Kubernetes · pipeline CI/CD',
+      impact:[['Trực tiếp, không cần tải lại','Trang giao dịch cập nhật realtime — được người dùng Ops đón nhận tích cực.'],['Giữ hệ thống ổn định','Xử lý sự cố triển khai; portal luôn sẵn sàng cho công việc hằng ngày.'],['Ít lỗi hồi quy hơn','Unit test và UAT cho FE + BE trước mỗi lần release.']] },
+    { m:'GRAB · SOFTWARE ENGINEER INTERN',
+      lead:'Công cụ billing và hoá đơn cho đội tài chính và vận hành — biến các thao tác thủ công thành tính năng hoàn chỉnh, và sửa lỗi khiến người dùng không mở nổi ứng dụng.',
+      meta:[['Vai trò','Thực tập sinh Software Engineer — fullstack'],['Công ty','Grab, TP. Hồ Chí Minh'],['Thời gian','7/2025 — 12/2025'],['Người dùng','Tài chính & Vận hành']],
+      problem:'Lịch áp dụng billing rule được quản lý thủ công, xuất billing calculation rules phải dùng cách chữa cháy, và một số người dùng đăng nhập SSO xong vẫn không hiển thị được micro-frontend.',
+      approach:'Lần ra gốc rễ lỗi phân quyền, rồi ship trọn vẹn hai luồng còn thiếu — backend bằng Go và MySQL, giao diện bằng React — song song với việc trực on-call.',
+      built:[['API tra cứu quyền','Chẩn đoán lỗi tải quyền trong micro-frontend và xây API truy vấn dịch vụ OIDC tập trung của công ty — khôi phục quyền truy cập.'],
+             ['Lịch Billing Rule','Hoàn thiện tính năng quản lý lịch từ đầu đến cuối, đơn giản hoá một quy trình vốn làm thủ công.'],
+             ['Tải hàng loạt BCR','Xây dựng tính năng xuất hàng loạt billing calculation rules, không còn phải chữa cháy thủ công.'],
+             ['Điều tra khi on-call','Xử lý sai lệch dữ liệu hoá đơn/biên nhận bằng cách lần ngược về các hệ thống upstream.'],
+             ['Hỗ trợ chuyển đổi hệ thống cũ','Cùng backend sửa các lỗi xác thực, giao diện và nền tảng cũ để gỡ vướng cho việc chuyển đổi.']],
+      archNote:'Giám sát bằng Datadog · Kibana · Superset',
+      impact:[['Khôi phục truy cập','Người dùng bị kẹt sau khi đăng nhập SSO đã mở được ứng dụng.'],['Thủ công → tính năng','Lịch billing và xuất BCR giờ là luồng chính thức.'],['Gỡ vướng chuyển đổi','Cùng đội backend xử lý xong các vấn đề của nền tảng cũ.']] },
+    { m:'GRAB · SOFTWARE ENGINEER INTERN',
+      lead:'Giao diện gửi và duyệt yêu cầu thay đổi cấu hình — gửi, review, so sánh diff, phê duyệt và theo dõi quá trình triển khai — xây trên một nền tảng backend có sẵn.',
+      meta:[['Vai trò','Thực tập sinh Frontend Engineer'],['Công ty','Grab, TP. Hồ Chí Minh'],['Thời gian','7/2025 — 12/2025'],['Làm việc cùng','PM, UI/UX, backend engineers']],
+      problem:'Thay đổi cấu hình cần một quy trình rõ ràng, truy vết được: ai yêu cầu gì, chính xác thay đổi những gì, ai đã duyệt, và pipeline đã triển khai hay chưa.',
+      approach:'Xây mọi bước trong vòng đời một yêu cầu thành một giao diện thống nhất, trên thư viện component tái sử dụng, với API contract được chốt qua từng sprint.',
+      built:[['Luồng yêu cầu trọn vẹn','Các màn hình gửi yêu cầu, duyệt, từ chối, lịch sử, so sánh diff cấu hình và trạng thái pipeline.'],
+             ['Thư viện component tái sử dụng','Thiết kế các component dùng chung và viết unit test cho những component cốt lõi.'],
+             ['API contract','Thống nhất với PM, UI/UX và backend qua các sprint lặp.'],
+             ['Review code','Review pull request của đồng đội.']],
+      archNote:'Nền tảng component Ant Design',
+      impact:[['Trọn vòng đời','Từ lúc gửi yêu cầu đến trạng thái pipeline, tất cả ở một nơi.'],['Ít lỗi hồi quy hơn','Component cốt lõi có unit test giúp giảm lỗi sau release.'],['Khối xây dựng dùng chung','Một thư viện cả đội có thể tái sử dụng.']] },
+    { m:'TMA SOLUTIONS · THỰC TẬP SINH FRONTEND',
+      lead:'Dashboard quản trị để theo dõi mức sử dụng voucher và lỗi vận hành, xây bằng Next.js.',
+      meta:[['Vai trò','Thực tập sinh Frontend Developer'],['Công ty','TMA Solutions, TP. Hồ Chí Minh'],['Thời gian','12/2024 — 3/2025'],['Người dùng','Quản trị viên hệ thống voucher']],
+      problem:'Quản trị viên cần thấy voucher đang được dùng ra sao và phát hiện sự cố vận hành mà không phải lục log thô.',
+      approach:'Một dashboard Next.js có bộ lọc và trang log lỗi, xây từ các component tái sử dụng với cách lấy dữ liệu hiệu quả.',
+      built:[['Bộ lọc','Lọc dữ liệu sử dụng voucher để nhanh chóng tìm thứ cần xem.'],['Theo dõi log lỗi','Một màn hình riêng cho các lỗi vận hành.'],['Hiệu năng','Lấy dữ liệu hiệu quả và component tái sử dụng.']],
+      archNote:'',
+      impact:[['Nhìn rõ hơn','Quản trị viên theo dõi việc dùng voucher ở một nơi.'],['Xử lý nhanh hơn','Sự cố vận hành hiện ngay trên màn hình log lỗi.'],['Frontend production đầu tiên','Nơi hành trình frontend của mình bắt đầu.']] },
+    { m:'DỰ ÁN NHÓM · MÃ NGUỒN MỞ',
+      lead:'Một cửa hàng cloud-native: microservice .NET, micro-frontend React ghép lại lúc runtime, checkout bất đồng bộ và hạ tầng AWS dạng code.',
+      meta:[['Vai trò','Thành viên đóng góp fullstack'],['Loại','Dự án nhóm'],['Thời gian','1/2026 — 3/2026'],['Mã nguồn','github.com/sloweyyy/cloud-native-ecommerce-platform']],
+      problem:'Luyện cách xây thương mại điện tử theo kiểu các đội lớn: service và frontend triển khai độc lập, xử lý đơn hàng bất đồng bộ, hạ tầng cloud tái tạo được.',
+      approach:'Tách storefront, checkout, tài khoản và quản trị thành các service và micro-frontend; kết nối bằng messaging và gRPC; dựng mọi thứ bằng Terraform.',
+      built:[['Micro-frontend','Các ứng dụng React ghép bằng Nx + Module Federation.'],['Microservice .NET','Các service storefront, checkout, tài khoản và quản trị.'],
+             ['Checkout bất đồng bộ','Xử lý đơn hàng qua RabbitMQ với MassTransit; gRPC giữa basket và discount.'],['Module Terraform','Các module tái sử dụng cho mạng AWS, EKS, registry, database, messaging, storage và bảo mật.']],
+      archNote:'Hạ tầng dựng bằng Terraform',
+      impact:[['Ghép lúc runtime','Frontend triển khai độc lập nhờ Module Federation.'],['Checkout hướng sự kiện','Xử lý đơn hàng bất đồng bộ, tách khỏi giao diện.'],['Hạ tầng dạng code','Toàn bộ AWS stack tái tạo được từ Terraform.']] }
+  ];
+  function caseData(i){ var b = CASES[i]; if (cur !== 'vi') return b; var v = CASES_VI[i], o = {}; for (var k in b) o[k] = b[k]; for (var k2 in v) o[k2] = v[k2]; return o; }
+
+  var cs = $('#cs'), csTimer = null, csClose = null, curCase = 0;
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  function mockHTML(k){
+    if (k === 'ledger') return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:14px">Transactions</b><span class="live"><i></i>LIVE · WebSocket</span></div><table class="mt"><thead><tr><th>ID</th><th>ACCOUNT</th><th>TYPE</th><th>STATUS</th><th style="text-align:right">AMOUNT</th></tr></thead><tbody id="ltb"></tbody></table>';
+    if (k === 'invoice') return '<div style="display:flex;justify-content:space-between;margin-bottom:10px"><b style="font-size:14px">Billing Rule Schedules</b><span><span class="btn" style="background:#111;color:#fff">+ New schedule</span><span class="btn" style="border:1px solid #111">⇣ Bulk download BCR</span></span></div><table class="mt"><thead><tr><th>RULE</th><th>EFFECTIVE</th><th>STATUS</th></tr></thead><tbody>'+
+      [['Commission tier A','2025-09-01','Active','#dcfce7'],['Delivery fee rule','2025-10-15','Scheduled','#fef3c7'],['Promo surcharge','2025-08-01','Expired','#e5e7eb'],['Merchant rebate','2025-11-01','Scheduled','#fef3c7']].map(function(r){ return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td><span class="pill" style="background:'+r[3]+'">'+r[2]+'</span></td></tr>'; }).join('')+'</tbody></table>';
+    if (k === 'diff') return '<div style="display:flex;justify-content:space-between;margin-bottom:10px"><b style="font-size:14px">Request #4821 · payment-service config</b><span class="pill" style="background:#fef3c7">Pending approval</span></div><div class="diff"><div>  timeout_ms: 3000</div><div class="d">- max_retries: 3</div><div class="a">+ max_retries: 5</div><div class="d">- feature.new_router: false</div><div class="a">+ feature.new_router: true</div><div>  region: ap-southeast-1</div></div><div style="margin-top:12px"><span class="btn" style="background:#16a34a;color:#fff">✓ Approve</span><span class="btn" style="background:#dc2626;color:#fff">✕ Reject</span><span style="font-size:11px;opacity:.6">Pipeline: ● build ● test ○ deploy</span></div>';
+    if (k === 'voucher') return '<div class="stats4"><div>Issued<b>12,480</b></div><div>Redeemed<b>8,215</b></div><div>Active<b>3,902</b></div><div style="color:#dc2626">Errors (24h)<b>17</b></div></div><div style="display:flex;gap:6px;margin-bottom:8px"><span class="btn" style="border:1px solid #111">Status: All ▾</span><span class="btn" style="border:1px solid #111">Campaign ▾</span><span class="btn" style="border:1px solid #111">Last 7 days ▾</span></div><table class="mt"><tbody><tr><td style="color:#dc2626">ERROR</td><td>VCH-2291 redeem failed: expired</td><td>10:42</td></tr><tr><td style="color:#d97706">WARN</td><td>Campaign SUMMER25 near limit</td><td>10:31</td></tr><tr><td style="color:#dc2626">ERROR</td><td>VCH-1180 duplicate redemption</td><td>09:58</td></tr></tbody></table>';
+    if (k === 'mfe') return '<div style="display:grid;grid-template-columns:1fr 2fr;grid-template-rows:auto 1fr;gap:8px;height:220px"><div style="grid-column:1/3;border:2px dashed #16a34a;border-radius:8px;padding:8px;font-weight:800">shell · header + routing <span style="float:right;opacity:.5">host</span></div><div style="border:2px dashed #ff4d00;border-radius:8px;padding:8px;font-weight:800">account<br><span style="font-weight:600;opacity:.5">remote</span></div><div style="border:2px dashed #6d28d9;border-radius:8px;padding:8px;font-weight:800">storefront / checkout<br><span style="font-weight:600;opacity:.5">remote · loaded at runtime</span></div></div>';
+    return '';
+  }
+  function archSVG(nodes, note, col){
+    var n = nodes.length, W = 900, bw = 150, gap = (W - n*bw)/(n-1), y = 40, out = '<svg viewBox="0 0 900 '+(note?150:120)+'" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica Neue, Arial" font-weight="800">';
+    nodes.forEach(function(t, i){ var x = i*(bw+gap);
+      if (i < n-1){ var x1 = x+bw, x2 = x+bw+gap; out += '<line x1="'+x1+'" y1="'+(y+28)+'" x2="'+x2+'" y2="'+(y+28)+'" stroke="#555" stroke-width="2" stroke-dasharray="6 6"><animate attributeName="stroke-dashoffset" from="24" to="0" dur="1s" repeatCount="indefinite"/></line>'+
+        '<circle r="5" fill="'+col+'"><animateMotion dur="'+(1.4+i*.2)+'s" repeatCount="indefinite" path="M'+x1+','+(y+28)+' L'+x2+','+(y+28)+'"/></circle>'; }
+      out += '<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="56" rx="10" fill="#1d1d1d" stroke="'+(i===0?col:'#444')+'" stroke-width="2"/><text x="'+(x+bw/2)+'" y="'+(y+33)+'" text-anchor="middle" fill="#f2efe8" font-size="14">'+esc(t)+'</text>';
+    });
+    if (note) out += '<rect x="0" y="'+(y+80)+'" width="900" height="26" rx="6" fill="none" stroke="#444" stroke-dasharray="4 4"/><text x="450" y="'+(y+97)+'" text-anchor="middle" fill="#999" font-size="12" font-weight="700">'+esc(note)+'</text>';
+    return out + '</svg>';
+  }
+  function openCase(i, cx, cy, onClose){
+    var p = caseData(i), nx = CASES[(i+1) % CASES.length], U = UI[cur]; curCase = i;
+    csClose = onClose;
+    cs.style.setProperty('--pc', p.c); cs.style.setProperty('--pt', p.fg); cs.style.setProperty('--cx', cx+'px'); cs.style.setProperty('--cy', cy+'px');
+    cs.innerHTML =
+      '<div class="bar"><span>0'+(i+1)+' / 05 · '+U.cs+'</span><span style="display:flex;align-items:center;gap:12px"><span class="lang" id="lang2" style="display:inline-flex;border:1.5px solid #111;border-radius:99px;overflow:hidden;cursor:pointer"><b style="padding:3px 9px;font-size:10px;'+(cur==='en'?'background:#111;color:#f2efe8':'')+'">EN</b><b style="padding:3px 9px;font-size:10px;'+(cur==='vi'?'background:#111;color:#f2efe8':'')+'">VI</b></span><button id="csb">'+U.back+'</button></span><div class="prog" id="csp"></div></div>'+
+      '<div class="top"><div class="idx">0'+(i+1)+'</div><small>'+esc(p.m)+'</small><h1>'+esc(p.n)+'</h1><p>'+esc(p.lead)+'</p></div>'+
+      '<div class="metas">'+p.meta.map(function(m){ return '<div><span>'+esc(m[0].toUpperCase())+'</span>'+esc(m[1])+'</div>'; }).join('')+'</div>'+
+      '<section class="rv"><div class="lbl">'+U.product+'</div><div class="browser"><div class="chrome"><i></i><i></i><i></i><span>'+esc(p.url)+'</span></div><div class="scr">'+mockHTML(p.mock)+'</div></div><p style="font-size:11px;opacity:.5;margin:14px 0 0">'+U.note+'</p></section>'+
+      '<section class="rv two"><div><div class="lbl">'+U.problem+'</div><h2>'+U.problemH+'</h2><p>'+esc(p.problem)+'</p></div><div><div class="lbl">'+U.approach+'</div><h2>'+U.approachH+'</h2><p>'+esc(p.approach)+'</p></div></section>'+
+      '<section class="rv"><div class="lbl">'+U.built+'</div><h2>'+p.built.length+U.builtH+'</h2><div class="builts">'+p.built.map(function(b, k){ return '<div class="built"><b>0'+(k+1)+'</b><h4>'+esc(b[0])+'</h4><p>'+esc(b[1])+'</p></div>'; }).join('')+'</div></section>'+
+      '<section class="rv"><div class="lbl">'+U.arch+'</div><h2>'+U.archH+'</h2><div class="arch">'+archSVG(p.arch, p.archNote, p.c === '#111111' ? '#ff4d00' : p.c)+'</div></section>'+
+      '<section class="rv"><div class="lbl">'+U.out+'</div><h2>'+U.outH+'</h2><div class="impact">'+p.impact.map(function(m){ return '<div>'+esc(m[0])+'<small>'+esc(m[1])+'</small></div>'; }).join('')+'</div></section>'+
+      '<section class="rv two"><div><div class="lbl">'+U.stack+'</div><div class="chips">'+p.stack.map(function(s){ return '<span>'+esc(s)+'</span>'; }).join('')+'</div></div><div><div class="lbl">'+U.learned+'</div><div class="todo">'+U.todo+'</div></div></section>'+
+      '<a class="next" id="csn"><small>'+U.next+'</small><div>'+esc(nx.n)+'</div></a>';
+    cs.scrollTop = 0; cs.classList.add('on');
+    $('#csb').onclick = closeCase;
+    $('#lang2').onclick = function(){ setLang(cur === 'en' ? 'vi' : 'en'); };
+    $('#csn').onclick = function(){ cs.scrollTop = 0; openCase((i+1) % CASES.length, cs.clientWidth/2, 80, onClose); };
+    var rio = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) e.target.classList.add('in'); }); }, {root:cs, threshold:.15});
+    cs.querySelectorAll('.rv').forEach(function(s){ rio.observe(s); });
+    cs.onscroll = function(){ $('#csp').style.width = (cs.scrollTop/(cs.scrollHeight-cs.clientHeight)*100)+'%'; };
+    clearInterval(csTimer);
+    if (p.mock === 'ledger'){
+      var tb = $('#ltb'), types = [['CREDIT','#dcfce7'],['DEBIT','#fee2e2'],['TRANSFER','#e0e7ff'],['REFUND','#fef3c7']], accts = ['ACC-10482','ACC-55210','ACC-78013','ACC-32901'];
+      function row(){ var t = types[Math.floor(Math.random()*4)], tr = document.createElement('tr'); tr.className = 'new';
+        tr.innerHTML = '<td>TX-'+Math.floor(Math.random()*900000+100000)+'</td><td>'+accts[Math.floor(Math.random()*4)]+'</td><td><span class="pill" style="background:'+t[1]+'">'+t[0]+'</span></td><td>'+(Math.random()<.85?'Settled':'Pending')+'</td><td style="text-align:right;font-variant-numeric:tabular-nums">'+(Math.random()*9000+10).toFixed(2)+'</td>';
+        tb.insertBefore(tr, tb.firstChild); if (tb.children.length > 7) tb.lastChild.remove(); }
+      for (var r = 0; r < 6; r++) row(); csTimer = setInterval(row, 1300);
+    }
+  }
+  window.__openCase = openCase;
+  function closeCase(){ cs.classList.remove('on'); clearInterval(csTimer); if (csClose) setTimeout(csClose, 500); }
+
+  /* ===== WORKS: iso city ===== */
+  (function(){
+    var st = $('#d5'), C = canvasFor(st), x = C.x, w = C.w, h = C.h, tt = $('#d5tt');
+    var G = 10, tw = 70, th = 35, ox = w*0.6, oy = 90;
+    function iso(a,b){ return {x: ox+(a-b)*tw/2, y: oy+(a+b)*th/2}; }
+    function road(a,b){ return a === 4 || b === 4 || b === 8 || a === 8; }
+    var projs = [
+      {a:2,b:2,h:120,n:'Zen Ledger Portal',c:'#ff4d00',m:'GRAB · SOFTWARE ENGINEER · 2025–2026',d:'Fullstack portal used daily by Ledger engineering and Ops. Built a WebSocket realtime transaction feed that replaced manual refresh, Go services over gRPC, MySQL schema and queries, and CI/CD + Kubernetes deployment from scratch.',t:['React','TypeScript','Go','gRPC','MySQL','Redis','WebSocket','Kubernetes']},
+      {a:6,b:2,h:85,n:'Invoicing Portal',c:'#111111',m:'GRAB · INTERN · 2025',d:'Billing Rule Schedule management and Bulk BCR download end-to-end. Fixed a micro-frontend permission bug by building a permission-lookup API on the central OIDC service.',t:['Go','MySQL','React','TypeScript','Datadog','Kibana']},
+      {a:2,b:6,h:95,n:'Universal Config Management',c:'#6d28d9',m:'GRAB · INTERN · 2025',d:'Request workflows — submission, approval, rejection, history, config-diff, pipeline status — on a reusable, unit-tested component library.',t:['React','TypeScript','Ant Design','TanStack Query','Zod']},
+      {a:6,b:6,h:62,n:'Voucher Management Dashboard',c:'#0891b2',m:'TMA SOLUTIONS · FRONTEND INTERN · 2024–2025',d:'Admin dashboard with filtering and error-log tracking so admins can monitor voucher usage and operational issues.',t:['Next.js','Material UI','Tailwind CSS']},
+      {a:9,b:2,h:140,n:'Cloud-Native E-Commerce',c:'#16a34a',m:'TEAM PROJECT · 2026',d:'.NET microservices with React micro-frontends (Nx + Module Federation), async checkout over RabbitMQ/MassTransit, gRPC between services, Terraform modules for AWS EKS.',t:['React','Nx','Module Federation','.NET','RabbitMQ','Terraform','AWS']}
+    ];
+    var lg = $('#lg');
+    projs.forEach(function(p, i){ var d = document.createElement('div'); d.innerHTML = '<i style="background:'+p.c+'"></i>0'+(i+1)+' '+p.n; d.onmouseenter = function(){ legendHover = p; }; d.onmouseleave = function(){ legendHover = null; }; d.onclick = function(){ enter(objs.filter(function(o){ return o.p === p; })[0]); }; lg.appendChild(d); });
+    var legendHover = null;
+    var objs = [], seed = 7; function rnd(){ seed = (seed*9301+49297)%233280; return seed/233280; }
+    for (var a = 0; a < G; a++) for (var b = 0; b < G; b++){
+      if (road(a,b)) continue;
+      var p = projs.filter(function(q){ return q.a === a && q.b === b; })[0];
+      if (p) objs.push({a:a,b:b,h:p.h,c:p.c,p:p});
+      else if (rnd() < .45) objs.push({a:a,b:b,h:12+rnd()*30,c:'#d6cfbf'});
+      else if (rnd() < .5) objs.push({a:a,b:b,tree:true});
+    }
+    var bikes = []; for (var i = 0; i < 10; i++) bikes.push({line: i%4, t: rnd()*G, v: (rnd()<.5?-1:1)*(0.015+rnd()*.02)});
+    function shade(hex, f){ var n = parseInt(hex.slice(1),16), r = n>>16, g = n>>8&255, b2 = n&255; return 'rgb('+Math.min(255,Math.round(r*f))+','+Math.min(255,Math.round(g*f))+','+Math.min(255,Math.round(b2*f))+')'; }
+    function box(a,b,hh,col,hi){
+      var i = .14, N = iso(a+i,b+i), E = iso(a+1-i,b+i), S = iso(a+1-i,b+1-i), W = iso(a+i,b+1-i);
+      x.fillStyle = shade(col, .8); x.beginPath(); x.moveTo(W.x,W.y); x.lineTo(S.x,S.y); x.lineTo(S.x,S.y-hh); x.lineTo(W.x,W.y-hh); x.fill();
+      x.fillStyle = shade(col, .62); x.beginPath(); x.moveTo(S.x,S.y); x.lineTo(E.x,E.y); x.lineTo(E.x,E.y-hh); x.lineTo(S.x,S.y-hh); x.fill();
+      x.fillStyle = shade(col, col === '#111111' ? 2.4 : 1); x.beginPath(); x.moveTo(N.x,N.y-hh); x.lineTo(E.x,E.y-hh); x.lineTo(S.x,S.y-hh); x.lineTo(W.x,W.y-hh); x.closePath(); x.fill();
+      if (hi){ x.strokeStyle = '#ff4d00'; x.lineWidth = 3; x.stroke(); }
+      if (col !== '#d6cfbf' && hh > 50){ x.fillStyle = 'rgba(255,255,255,.35)'; for (var k = 14; k < hh-8; k += 14){ x.fillRect(W.x+7, W.y-k-4+((S.y-W.y)*.25), 5, 6); x.fillRect(W.x+18, W.y-k-4+((S.y-W.y)*.55), 5, 6); } }
+      return {top: Math.min(N.y,E.y,W.y)-hh, cx:(N.x+S.x)/2, l: W.x, r: E.x, bot: S.y};
+    }
+    var hover = null, zoomed = false;
+    st.addEventListener('pointermove', function(e){ if (zoomed) return; var m = pos(st,e); hover = null;
+      objs.forEach(function(o){ if (o.p && o.bb && m.x > o.bb.l && m.x < o.bb.r && m.y > o.bb.top && m.y < o.bb.bot) hover = o; });
+      st.style.cursor = hover ? 'pointer' : ''; });
+    function enter(o){ if (!o || !o.bb || zoomed) return; zoomed = true; tt.style.opacity = 0;
+      C.c.style.transformOrigin = o.bb.cx+'px '+(o.bb.top+40)+'px'; C.c.style.transform = 'scale(4.5)';
+      var sr = st.getBoundingClientRect(), mr = $('#mb').getBoundingClientRect();
+      var cx = sr.left - mr.left + o.bb.cx, cy = sr.top - mr.top + o.bb.top + 40;
+      setTimeout(function(){ openCase(projs.indexOf(o.p), cx, cy, function(){ C.c.style.transform = ''; setTimeout(function(){ zoomed = false; }, 900); }); }, 450); }
+    st.addEventListener('click', function(e){ if (e.target.closest('.legend')) return; enter(hover); });
+    loop(st, function(t){
+      x.clearRect(0,0,w,h);
+      for (var a = 0; a < G; a++) for (var b = 0; b < G; b++){
+        var N = iso(a,b), E = iso(a+1,b), S = iso(a+1,b+1), W = iso(a,b+1);
+        x.fillStyle = road(a,b) ? '#3a3a3a' : ((a+b)%2 ? '#e5dfd0' : '#ddd6c5');
+        x.beginPath(); x.moveTo(N.x,N.y); x.lineTo(E.x,E.y); x.lineTo(S.x,S.y); x.lineTo(W.x,W.y); x.fill();
+        if (road(a,b)){ var c = iso(a+.5,b+.5); x.fillStyle = '#f2efe8'; x.fillRect(c.x-3,c.y-1,6,2); }
+      }
+      bikes.forEach(function(k){ k.t += k.v; if (k.t > G) k.t = 0; if (k.t < 0) k.t = G; });
+      var draw = objs.map(function(o){ return {k:o.a+o.b, o:o}; });
+      bikes.forEach(function(k){ var a, b; if (k.line === 0){ a = 4.5; b = k.t; } else if (k.line === 1){ a = k.t; b = 4.5; } else if (k.line === 2){ a = k.t; b = 8.5; } else { a = 8.5; b = k.t; } draw.push({k:a+b-.5, bike:{a:a,b:b}}); });
+      draw.sort(function(p,q){ return p.k-q.k; });
+      var hl = hover || (legendHover && objs.filter(function(o){ return o.p === legendHover; })[0]);
+      draw.forEach(function(d){
+        if (d.bike){ var p = iso(d.bike.a, d.bike.b); x.fillStyle = '#00b14f'; x.beginPath(); x.ellipse(p.x, p.y-6, 6, 4, 0, 0, 7); x.fill(); x.fillStyle = '#111'; x.beginPath(); x.arc(p.x, p.y-12, 3.2, 0, 7); x.fill(); return; }
+        var o = d.o;
+        if (o.tree){ var p2 = iso(o.a+.5,o.b+.5); x.fillStyle = '#6b4a2b'; x.fillRect(p2.x-1.5,p2.y-10,3,10); x.fillStyle = '#3f8f4a'; x.beginPath(); x.arc(p2.x,p2.y-16,9,0,7); x.fill(); return; }
+        var lift = o === hl ? 14 : 0;
+        o.lift = (o.lift || 0) + (lift - (o.lift || 0))*.15;
+        o.bb = box(o.a,o.b,o.h+(o.p ? Math.sin(t*2+o.a)*2 + o.lift : 0),o.c,o === hl);
+        if (o.p){ var pin = o.bb.top - 12 + Math.sin(t*3+o.b)*3; x.beginPath(); x.arc(o.bb.cx, pin, 9, 0, 7); x.fillStyle = o.c === '#111111' ? '#ff4d00' : '#111'; x.fill(); x.fillStyle = '#fff'; x.font = '800 10px Helvetica Neue, Arial'; x.textAlign = 'center'; x.fillText(projs.indexOf(o.p)+1, o.bb.cx, pin+3.5); }
+      });
+      tt.style.opacity = hl && !zoomed ? 1 : 0;
+      if (hl && hl.bb){ tt.textContent = hl.p.n; tt.style.left = hl.bb.cx+'px'; tt.style.top = (hl.bb.top-14)+'px'; }
+    });
+  })();
+}
+(function wait(){ var s = document.getElementById('h'); if (s && s.getBoundingClientRect().width > 0) __boot(); else requestAnimationFrame(wait); })();
+</script>

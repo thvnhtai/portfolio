@@ -1,35 +1,38 @@
 {
-  "name": "portfolio-senior-frontend-engineer",
-  "private": true,
+  "name": "portfolio-v2",
   "version": "1.0.0",
-  "type": "module",
+  "directories": {
+    "doc": "docs"
+  },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test:email": "node test-email-setup.js"
+    "build": "tsc -b && vite build",
+    "test": "vitest run",
+    "typecheck": "tsc -b --noEmit",
+    "e2e": "playwright test",
+    "stats": "node scripts/fetch-leetcode.mjs"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.3.3",
-    "@tsparticles/engine": "^3.9.1",
-    "@tsparticles/react": "^3.0.0",
-    "@tsparticles/slim": "^3.9.1",
-    "@types/react-syntax-highlighter": "^15.5.13",
-    "framer-motion": "^10.16.16",
-    "pdfjs-dist": "^5.4.624",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-particles": "^2.12.2",
-    "react-pdf": "^10.3.0",
-    "react-router-dom": "^7.13.0",
-    "react-syntax-highlighter": "^16.1.0",
-    "react-type-animation": "^3.2.0",
-    "tsparticles": "^3.9.1"
+    "@fontsource/inter-tight": "5.1.0",
+    "@fontsource/jetbrains-mono": "5.1.1",
+    "@playwright/test": "1.49.1",
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.1.0",
+    "@testing-library/user-event": "14.5.2",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@types/three": "0.160.0",
+    "@vitejs/plugin-react": "4.3.4",
+    "gsap": "3.12.5",
+    "jsdom": "25.0.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "three": "0.160.0",
+    "typescript": "5.6.3",
+    "vite": "5.4.11",
+    "vitest": "2.1.8"
   },
-  "devDependencies": {
-    "@types/react": "^18.2.43",
-    "@types/react-dom": "^18.2.17",
-    "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.0.8"
-  }
+  "private": true,
+  "type": "module"
 }

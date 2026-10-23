@@ -4,10 +4,10 @@ import type { Skill } from './types';
 const g = (group: Skill['group'], names: string[]): Skill[] => names.map(name => ({ name, group }));
 
 export const SKILLS: Skill[] = [
-  ...g('fe', ['React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML/CSS', 'TanStack Router', 'TanStack Query', 'Zustand', 'Zod', 'Ant Design', 'Storybook']),
-  ...g('ar', ['Micro-frontends', 'Module Federation', 'Nx', 'Component libraries', 'REST/JSON', 'WebSocket']),
-  ...g('be', ['Go', 'gRPC', 'MySQL', 'Redis']),
-  ...g('dv', ['Webpack', 'Rspack', 'GitHub Actions', 'GitLab CI/CD', 'Docker', 'Kubernetes']),
-  ...g('qa', ['Jest', 'React Testing Library', 'Unit / integration / E2E', 'Datadog']),
+  ...g('fe', ['React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML/CSS', 'TanStack Query', 'TanStack Router', 'TanStack Virtual', 'Zustand', 'Zod', 'Ant Design', 'Tailwind CSS', 'Storybook']),
+  ...g('ar', ['Microservices', 'Micro-frontends', 'Module Federation', 'Nx']),
+  ...g('be', ['Go', 'SQL', 'gRPC', 'REST APIs', 'MySQL', 'Redis', 'RabbitMQ']),
+  ...g('dv', ['Docker', 'GitHub Actions', 'GitLab CI/CD', 'Webpack', 'AWS', 'Terraform', 'Kubernetes']),
+  ...g('qa', ['Jest', 'React Testing Library', 'Go testing', 'Datadog', 'Kibana']),
   ...g('ai', ['Claude Code', 'Cursor']),
 ];

@@ -16,6 +16,7 @@ test.each(SLUGS)('renders %s with title and outcomes', (slug) => {
   expect(within(dlg).getAllByRole('heading').length).toBeGreaterThan(4);
   expect(within(dlg).getByText(/Recreated interface|Giao diện dựng lại/)).toBeInTheDocument();
   expect(within(dlg).getByRole('img', { name: /→/ })).toBeInTheDocument();
+  expect(within(dlg).getByText(/WHAT I LEARNED|MÌNH HỌC ĐƯỢC GÌ/).nextElementSibling?.querySelectorAll('li').length).toBeGreaterThan(1);
 });
 
 test('focuses the title and locks body scroll; Escape closes, unlocks', async () => {

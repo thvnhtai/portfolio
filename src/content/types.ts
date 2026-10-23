@@ -11,7 +11,7 @@ export type CaseBase = {
 export type CaseCopy = {
   roleLine: string; lead: string; meta: [label: string, value: string][];
   problem: string; approach: string; built: [title: string, body: string][];
-  archNote: string; outcomes: [title: string, body: string][];
+  archNote: string; outcomes: [title: string, body: string][]; learned: string[];
 };
 
 export type Skill = { name: string; group: 'fe' | 'ar' | 'be' | 'dv' | 'qa' | 'ai' };
@@ -34,7 +34,7 @@ export type Copy = {
   nav: { work: string; contact: string; openPalette: string; language: string; main: string };
   hero: { bio: string; cv: string; touch: string; based: string; city: string; prev: string; edu: string; eduValue: string; status: string; open: string; badgeHint: string; badgeHintTouch: string };
   works: { heading: string; intro: string; tip: string };
-  caseUi: { case: string; back: string; product: string; note: string; problem: string; problemH: string; approach: string; approachH: string; built: string; builtH: string; arch: string; archH: string; outcome: string; outcomeH: string; stack: string; learned: string; learnedPlaceholder: string; next: string; repo: string };
+  caseUi: { case: string; back: string; product: string; note: string; problem: string; problemH: string; approach: string; approachH: string; built: string; builtH: string; arch: string; archH: string; outcome: string; outcomeH: string; stack: string; learned: string; next: string; repo: string };
   cases: Record<CaseSlug, CaseCopy>;
   how: { kicker: string; title: string; note: string; steps: Record<HowStep['id'], { title: string; body: string }> };
   timeline: { kicker: string; cards: Record<TimelineEvent['id'], { title: string; sub: string; body: string }> };

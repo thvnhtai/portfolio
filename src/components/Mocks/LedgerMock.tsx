@@ -5,6 +5,7 @@ import s from './Mocks.module.css';
 
 const TYPES = [['CREDIT', '#dcfce7'], ['DEBIT', '#fee2e2'], ['TRANSFER', '#e0e7ff'], ['REFUND', '#fef3c7']] as const;
 const MAX = 7;
+const REFRESH_MS = 5000;
 let seq = 0;
 const pick = (n: number) => Math.floor(Math.random() * n);
 const row = () => ({
@@ -19,16 +20,24 @@ type Row = ReturnType<typeof row>;
 
 export function LedgerMock() {
   const [rows, setRows] = useState<Row[]>(() => [row(), row(), row()]);
+  const [balance, setBalance] = useState(1284530.42);
   const [ref, inView] = useInView<HTMLDivElement>();
   const reduce = useReducedMotion();
   useEffect(() => {
     if (reduce || !inView) return;
-    const id = setInterval(() => setRows((r) => [row(), ...r].slice(0, MAX)), 1300);
+    // each poll: one new transaction since the last refresh, balance moves with it
+    const id = setInterval(() => {
+      setRows((r) => [row(), ...r].slice(0, MAX));
+      setBalance((b) => b + (Math.random() - 0.4) * 5000);
+    }, REFRESH_MS);
     return () => clearInterval(id);
   }, [reduce, inView]);
   return (
     <div ref={ref}>
-      <div className={s.head}><b>Transactions</b><span className={s.live}><i />LIVE · WebSocket</span></div>
+      <div className={s.head}>
+        <b>ACC-20418 · Balance <span className={s.r}>{balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></b>
+        <span className={s.live}><i />Auto-refresh · 5s</span>
+      </div>
       <table className={s.mt}>
         <thead><tr><th>ID</th><th>ACCOUNT</th><th>TYPE</th><th>STATUS</th><th className={s.r}>AMOUNT</th></tr></thead>
         <tbody>
@@ -41,6 +50,7 @@ export function LedgerMock() {
           ))}
         </tbody>
       </table>
+      <div className={s.foot}><span>Page 1 of 248 · server-side</span><span>Filters synced to URL</span></div>
     </div>
   );
 }

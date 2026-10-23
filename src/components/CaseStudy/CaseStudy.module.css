@@ -38,7 +38,7 @@
 .impact p { font-size: 12px; font-weight: 600; opacity: .6; margin: 10px 0 0; letter-spacing: 0; line-height: 1.45; }
 .chips { list-style: none; padding: 0; margin: 0 0 32px; }
 .chips li { display: inline-block; border: 1.5px solid var(--ink); border-radius: 99px; padding: 6px 14px; margin: 0 8px 8px 0; font-size: 13px; font-weight: 700; }
-.todo { border: 1.5px dashed #b9b3a6; border-radius: 10px; padding: 18px; font-size: 14px; opacity: .65; line-height: 1.5; }
+.learned { margin: 0 0 8px; padding-left: 20px; display: grid; gap: 10px; font-size: 15px; line-height: 1.6; max-width: 68ch; }
 .repo { display: inline-block; margin-top: 16px; font-weight: 800; color: inherit; }
 .next { display: block; background: var(--ink); color: var(--cream); padding: 50px 28px; text-decoration: none; }
 .next small { font-size: 11px; font-weight: 800; letter-spacing: .12em; opacity: .6; }

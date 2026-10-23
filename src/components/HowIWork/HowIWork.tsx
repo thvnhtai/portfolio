@@ -120,7 +120,7 @@ export function HowIWork() {
           </svg>
           {HOW_STEPS.map((x, i) => (
             <div key={x.id} data-row data-on={i <= step} className={`${s.row} ${i <= step ? s.on : ''}`}>
-              <div className={s.h}>{x.hash}<em>{x.branch === 'feature' ? '(feature/realtime-feed)' : '(main)'}</em>{x.merge && <b>merge ✓</b>}</div>
+              <div className={s.h}>{x.hash}<em>{x.branch === 'feature' ? '(feature/account-workflows)' : '(main)'}</em>{x.merge && <b>merge ✓</b>}</div>
               <div className={s.m}>{x.commit}</div>
               <div className={s.d} data-i18n><b>{h.steps[x.id].title}.</b> {h.steps[x.id].body}</div>
             </div>

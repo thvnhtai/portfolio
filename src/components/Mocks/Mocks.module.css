@@ -1,5 +1,6 @@
 .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
 .head b { font-size: 14px; }
+.foot { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-top: 8px; font-size: 10px; opacity: .55; }
 .mt { width: 100%; border-collapse: collapse; font-size: 11.5px; }
 .mt th { text-align: left; font-size: 10px; letter-spacing: .08em; opacity: .5; padding: 6px 8px; border-bottom: 1px solid #e5e0d6; }
 .mt td { padding: 7px 8px; border-bottom: 1px solid #f0ece3; }

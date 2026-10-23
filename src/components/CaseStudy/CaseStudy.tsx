@@ -152,7 +152,7 @@ export function CaseStudy({ slug }: { slug: CaseSlug }) {
         <div className={s.lbl}>{ui.stack}</div>
         <ul className={s.chips}>{c.stack.map((x) => <li key={x}>{x}</li>)}</ul>
         <div className={s.lbl}>{ui.learned}</div>
-        <div className={s.todo}>{ui.learnedPlaceholder}</div>
+        <ul className={s.learned}>{copy.learned.map((x) => <li key={x}>{x}</li>)}</ul>
         {c.repo && <a className={s.repo} href={c.repo} target="_blank" rel="noreferrer">{ui.repo}</a>}
       </section>
 

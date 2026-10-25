@@ -13,10 +13,12 @@ test('arrow keys move between tabs and show the panel', async () => {
   expect(screen.getAllByRole('tab')[1]).toHaveAttribute('aria-selected', 'true');
   await waitFor(() => expect(screen.getByRole('tabpanel')).toHaveTextContent(/I wrote Go services/));
 });
-test('unfilled fields show placeholders, no percentages', () => {
+test('filled topic shows its notes; unfilled topic shows placeholders; no percentages', async () => {
   render(<Providers><NowLearning /></Providers>);
-  expect(screen.getAllByText(/Tai fills in|e\.g\. chapter/).length).toBeGreaterThan(0);
+  expect(screen.getByRole('tabpanel')).toHaveTextContent(/Finished Vol\. 1/);
   expect(document.body.textContent).not.toMatch(/\d+\s?%/);
+  await userEvent.click(screen.getAllByRole('tab')[2]!);
+  await waitFor(() => expect(screen.getAllByText(/Tai fills in|e\.g\. chapter/).length).toBeGreaterThan(0));
 });
 test('roving tabindex, wrap, Home/End, heading, url is not a link', async () => {
   render(<Providers><NowLearning /></Providers>);

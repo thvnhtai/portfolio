@@ -213,7 +213,15 @@ export const vi: Copy = {
         where: "Đã đi qua concurrency, context, HTTP server và DI; đang ở phần runtime — GC và pprof. Đang làm một task board kiểu Linear thu gọn (Go net/http, MySQL, React) và hoàn thiện auth OIDC. Tiếp theo: integration test với Testcontainers, rồi load test và tối ưu bằng pprof có số liệu trước và sau.",
         takeaway: "Ở Grab mình viết Go theo pattern có sẵn trong codebase. Một goroutine chạy nền âm thầm làm mất activity log vì dùng request context đã dạy mình hỏi vì sao từng pattern tồn tại." },
       { id: 'ddia', tab: 'Designing Data-Intensive Applications', by: "Martin Kleppmann · O'Reilly", url: '~/notes/ddia',
-        why: 'Cuốn sách đứng sau rất nhiều hệ thống mình từng chạm vào — replication, partitioning, consistency.', learned: null, where: null, takeaway: null },
+        why: 'Cuốn sách đứng sau rất nhiều hệ thống mình từng chạm vào — replication, partitioning, consistency.', learned: [
+          "Với một frontend dev, cuốn này giải thích chuyện gì xảy ra sau khi API trả về 200: vì sao dữ liệu vừa ghi có thể chưa đọc lại được, vì sao retry có thể tạo hai bản ghi, và vì sao thứ tự sự kiện không đáng tin.",
+          "Transaction chỉ an toàn tới mức isolation level cho phép. Hai request read-modify-write vẫn có thể gây lost update hay write skew — và repeatable read mặc định của InnoDB không tự phát hiện lost update như snapshot isolation của PostgreSQL. Với MySQL, mình dùng atomic update, SELECT … FOR UPDATE, hoặc compare-and-set.",
+          "Lock trong database chỉ bảo vệ những gì nằm trong database. Exactly-once thực chất là at-least-once cộng idempotence, và chống trùng phải làm ở tầng hiểu nghiệp vụ, xuyên suốt từ đầu đến cuối.",
+          "Hoá đơn là derived data; system of record nằm ở upstream. Khi nguồn bị sửa sau đó, hai bên sẽ lệch — nên cần đối soát định kỳ thay vì đợi ticket: trust, but verify.",
+          "OFFSET lớn buộc database duyệt rồi bỏ qua nhiều dòng, và mỗi trang đọc một snapshot khác nhau. Keyset pagination theo (created_at, id) seek thẳng vào index và ổn định khi có dòng mới được ghi.",
+        ],
+        where: "Đã đọc hết 12 chương, nhưng không đều: Part I và II đọc kỹ (storage engine, replication, transaction, lỗi của hệ phân tán), chương 11 và 12 đọc lại lần hai. Consensus mình nắm ý chính, chưa đủ tự tin giải thích chi tiết Raft hay Paxos. Mình đọc từng chương, ghi chú bằng lời của mình, và tự tay thử lại — tạo lost update bằng hai session MySQL, viết một storage kiểu Bitcask (append-only log + hash index) bằng Go.",
+        takeaway: "Billing Rule Schedule của mình dùng SKIP LOCKED để hai worker không nhặt cùng một lượt — nhưng worker trigger xong rồi crash trước khi commit thì lượt đó vẫn có thể chạy hai lần. Giờ mình luôn hỏi mỗi cơ chế không bảo vệ khỏi điều gì; nếu làm lại, mình sẽ gửi kèm key gồm schedule_id và thời điểm chạy theo lịch để tầng tạo hoá đơn dedupe." },
     ],
   },
   contact: {

@@ -212,7 +212,15 @@ export const en: Copy = {
         where: "Done with concurrency, context, HTTP servers and DI; now on the runtime — GC and pprof. Building a slimmed-down Linear-style task board (Go net/http, MySQL, React) and finishing its OIDC auth. Next: integration tests with Testcontainers, then a load test and a pprof fix measured before and after.",
         takeaway: "At Grab I wrote Go by following the codebase’s patterns. A background goroutine that silently lost activity logs because it used the request context taught me to ask why each pattern exists." },
       { id: 'ddia', tab: 'Designing Data-Intensive Applications', by: "Martin Kleppmann · O'Reilly", url: '~/notes/ddia',
-        why: 'The book behind a lot of the systems I touched — replication, partitioning, consistency.', learned: null, where: null, takeaway: null },
+        why: 'The book behind a lot of the systems I touched — replication, partitioning, consistency.', learned: [
+          "For a frontend dev, it explains what happens after an API returns 200: why data you just wrote may not read back yet, why a retry can create two records, and why event order can't be trusted.",
+          "A transaction is only as safe as its isolation level. Two read-modify-write requests can still lose an update or hit write skew — and InnoDB's default repeatable read doesn't catch lost updates the way PostgreSQL's snapshot isolation does. On MySQL I reach for an atomic update, SELECT … FOR UPDATE, or a compare-and-set.",
+          "A database lock only protects what lives in the database. Exactly-once is really at-least-once plus idempotence, and dedupe belongs at the layer that understands the business, end to end.",
+          "Invoices are derived data; the system of record is upstream. When the source changes after the fact, the two drift — so reconcile periodically instead of waiting for a ticket: trust, but verify.",
+          "Deep OFFSET makes the database walk and discard rows, and each page reads a different snapshot. Keyset pagination on (created_at, id) seeks straight into the index and stays stable while new rows arrive.",
+        ],
+        where: "Read all 12 chapters, unevenly: Parts I and II closely (storage engines, replication, transactions, the trouble with distributed systems), chapters 11 and 12 twice. Consensus I understand at the level of ideas, not yet Raft or Paxos in detail. I go chapter by chapter, write notes in my own words, and rebuild things by hand — lost updates in two MySQL sessions, a Bitcask-style log plus hash index store in Go.",
+        takeaway: "My Billing Rule Schedule used SKIP LOCKED so two workers never pick the same run — but a worker that triggers and then crashes before committing can still run it twice. Now I ask what each mechanism does not protect against; next time I'd send schedule_id plus the scheduled time as a key so the invoice layer can dedupe." },
     ],
   },
   contact: {

@@ -1,0 +1,38 @@
+.tl { background: #111; color: #f2efe8; }
+.pin { max-width: 1100px; margin: 0 auto; padding: 64px 20px; display: flex; flex-direction: column; gap: 24px; }
+.kick { margin: 0; font-size: 11px; font-weight: 800; letter-spacing: .12em; color: var(--accent, #ff4d00); }
+.year { display: none; font-size: clamp(120px, 20vw, 210px); font-weight: 900; letter-spacing: -.07em; line-height: 1; }
+.digit { display: inline-block; height: 1em; overflow: hidden; color: var(--accent, #ff4d00); }
+.roll { display: block; transition: transform .7s cubic-bezier(.7, 0, .2, 1); }
+.roll span { display: block; height: 1em; }
+.ev { display: flex; flex-direction: column; gap: 28px; }
+.group { display: flex; flex-direction: column; gap: 10px; }
+.yh { font-size: 28px; font-weight: 900; color: var(--accent, #ff4d00); margin: 0; }
+.card { all: unset; box-sizing: border-box; display: block; border: 1.5px solid #333; border-radius: 12px; padding: 14px; width: 100%; max-width: 360px; }
+button.card { cursor: pointer; }
+button.card { position: relative; }
+button.card:hover { border-color: var(--accent, #ff4d00); }
+button.card:focus-visible { outline: 2px solid var(--accent, #ff4d00); outline-offset: 2px; }
+.go { position: absolute; right: 14px; top: 12px; font-style: normal; color: var(--accent, #ff4d00); font-weight: 800; }
+.card small { display: block; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--accent, #ff4d00); }
+.card b { display: block; font-size: 16px; margin: 4px 0 0; }
+.card em { display: block; font-style: normal; font-size: 12px; opacity: .8; }
+.card span { display: block; font-size: 12px; opacity: .65; line-height: 1.45; margin-top: 6px; }
+.ruler { display: none; justify-content: space-between; font-size: 12px; font-weight: 800; }
+.ruler span { opacity: .35; transition: opacity .3s; }
+.ruler span[data-on='true'] { opacity: 1; color: var(--accent, #ff4d00); }
+
+@media (min-width: 721px) and (prefers-reduced-motion: no-preference) {
+  .tl[data-anim='true'] { min-height: 100vh; display: flex; align-items: center; }
+  .tl[data-anim='true'] .pin { display: grid; grid-template-columns: 1fr 380px; grid-template-rows: auto 1fr auto; width: 100%; }
+  .tl[data-anim='true'] .kick { grid-column: 1 / -1; }
+  .tl[data-anim='true'] .year { display: flex; align-self: center; }
+  .tl[data-anim='true'] .ev { display: grid; align-self: center; }
+  .tl[data-anim='true'] .group { grid-area: 1 / 1; pointer-events: none; visibility: hidden; transition: visibility 0s linear .5s; }
+  .tl[data-anim='true'] .group[data-active='true'] { pointer-events: auto; visibility: visible; transition-delay: 0s; }
+  .tl[data-anim='true'] .yh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .tl[data-anim='true'] .card { opacity: 0; transform: translateX(30px); transition: opacity .5s, transform .5s, border-color .2s; }
+  .tl[data-anim='true'] .group[data-active='true'] .card { opacity: 1; transform: none; }
+  .tl[data-anim='true'] .ruler { display: flex; grid-column: 1 / -1; }
+}
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; padding: 0; list-style: none; }

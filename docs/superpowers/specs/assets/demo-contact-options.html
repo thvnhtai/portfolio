@@ -1,0 +1,186 @@
+<style>
+  .hx{display:flex;flex-direction:column;gap:30px}
+  .hx .mockup-body{padding:0}
+  .hx .mockup-header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .pick{flex:none;border:1px solid currentColor;background:transparent;color:inherit;border-radius:99px;padding:4px 12px;font-size:12px;cursor:pointer}
+  .pick.selected{background:#ff4d00;border-color:#ff4d00;color:#111;font-weight:700}
+  .st{height:480px;position:relative;overflow:hidden;border-radius:0 0 10px 10px;font-family:"Helvetica Neue",Arial,sans-serif;user-select:none}
+  .st canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .o{color:#ff4d00}
+  .links{display:flex;gap:10px;flex-wrap:wrap}
+  .links a{font-size:13px;font-weight:800;border:2px solid currentColor;border-radius:99px;padding:9px 16px;text-decoration:none;color:inherit;cursor:pointer;transition:transform .2s,background .2s,color .2s}
+  .links a:hover{transform:translateY(-3px)}
+  .toast{position:absolute;left:50%;bottom:22px;transform:translate(-50%,40px);opacity:0;background:#111;color:#f2efe8;font-size:12px;font-weight:800;padding:8px 14px;border-radius:99px;transition:.3s;z-index:20}
+  .toast.on{transform:translate(-50%,0);opacity:1}
+
+  /* A big footer */
+  .bf{background:#ff4d00;color:#111;padding:30px 28px}
+  .bf small{font-size:11px;font-weight:800;letter-spacing:.12em}
+  .bf .huge{font-size:118px;font-weight:900;letter-spacing:-.06em;line-height:.84;margin:14px 0 22px}
+  .bf .huge span{display:inline-block;transition:transform .3s cubic-bezier(.2,.9,.3,1.5)}
+  .bf .huge span:hover{transform:translateY(-14px) rotate(-6deg);color:#f2efe8}
+  .bf .mail{display:inline-flex;align-items:center;gap:12px;font-size:28px;font-weight:900;letter-spacing:-.03em;cursor:pointer;border-bottom:4px solid #111;padding-bottom:2px}
+  .bf .mail em{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.08em;background:#111;color:#ff4d00;padding:4px 8px;border-radius:6px}
+  .bf .btm{position:absolute;left:28px;right:28px;bottom:24px;display:flex;justify-content:space-between;align-items:flex-end}
+  .bf .links a:hover{background:#111;color:#ff4d00}
+  .bf .mag{position:absolute;right:50px;top:60px;width:150px;height:150px;border-radius:50%;background:#111;color:#ff4d00;display:grid;place-items:center;text-align:center;font-weight:900;font-size:15px;line-height:1.1;cursor:pointer;transition:transform .2s ease-out}
+  .bf .meta{font-size:11px;font-weight:800;letter-spacing:.06em;text-align:right;line-height:1.7}
+
+  /* B pull cord */
+  .pc{background:#111;color:#f2efe8}
+  .pc .ttl{position:absolute;left:28px;top:28px;z-index:2}
+  .pc .ttl small{font-size:11px;font-weight:800;letter-spacing:.12em;color:#ff4d00}
+  .pc .ttl h2{font-size:64px;line-height:.86;font-weight:900;letter-spacing:-.05em;margin:10px 0 0}
+  .pc .ttl p{font-size:13px;opacity:.6;margin-top:14px}
+  .pc .lamp{position:absolute;inset:0;background:radial-gradient(circle at 70% 0%,rgba(255,200,120,.55),rgba(255,140,60,.12) 40%,transparent 65%);opacity:0;transition:opacity .4s;pointer-events:none}
+  .pc.lit .lamp{opacity:1}
+  .pc .card{position:absolute;left:28px;bottom:30px;width:420px;background:#f2efe8;color:#111;border-radius:16px;padding:22px;transform:translateY(130%) rotate(-4deg);transition:transform .6s cubic-bezier(.2,.9,.3,1.3);z-index:3}
+  .pc.lit .card{transform:none}
+  .pc .card b{font-size:24px;letter-spacing:-.02em}
+  .pc .card p{font-size:13px;margin:6px 0 14px;opacity:.7}
+  .pc .card .links a:hover{background:#111;color:#f2efe8}
+  .pc .knob{position:absolute;width:30px;height:46px;margin:-6px 0 0 -15px;border-radius:10px 10px 14px 14px;background:#ff4d00;cursor:grab;z-index:4;box-shadow:inset -4px -4px 0 rgba(0,0,0,.2)}
+  .pc .lbl{position:absolute;z-index:4;font-size:10px;font-weight:800;letter-spacing:.1em;color:#ff4d00;pointer-events:none;white-space:nowrap}
+
+  /* C paper plane */
+  .pp{background:#cfe3ee;color:#111;background-image:linear-gradient(#cfe3ee,#f2efe8)}
+  .pp .ttl{position:absolute;left:28px;top:26px}
+  .pp .ttl small{font-size:11px;font-weight:800;letter-spacing:.12em;color:#ff4d00}
+  .pp .ttl h2{font-size:54px;line-height:.86;font-weight:900;letter-spacing:-.05em;margin:10px 0 0}
+  .pp .paper{position:absolute;left:50%;top:150px;width:440px;margin-left:-60px;background:#fff;border-radius:6px;box-shadow:0 14px 30px rgba(0,0,0,.15);padding:20px;transform-origin:center;transition:all .6s cubic-bezier(.7,0,.2,1)}
+  .pp .paper label{font-size:10px;font-weight:800;letter-spacing:.1em;opacity:.55;display:block;margin:6px 0 3px}
+  .pp .paper input,.pp .paper textarea{width:100%;box-sizing:border-box;border:0;border-bottom:1.5px solid #ddd;font:inherit;font-size:14px;padding:5px 0;outline:none;background:transparent;resize:none}
+  .pp .paper input:focus,.pp .paper textarea:focus{border-color:#ff4d00}
+  .pp .paper button{margin-top:14px;background:#111;color:#fff;border:0;border-radius:99px;padding:10px 18px;font-weight:800;cursor:pointer}
+  .pp .paper.fold{transform:scale(.15) rotate(-20deg);opacity:0;border-radius:2px}
+  .pp .plane{position:absolute;left:58%;top:250px;font-size:46px;opacity:0;pointer-events:none}
+  .pp .plane.fly{animation:fly 1.8s cubic-bezier(.5,0,.6,1) forwards}
+  @keyframes fly{0%{opacity:1;transform:translate(0,0) rotate(0)}40%{transform:translate(-120px,40px) rotate(-20deg)}100%{opacity:1;transform:translate(600px,-420px) rotate(25deg)}}
+  .pp .sent{position:absolute;left:50%;top:200px;transform:translateX(-30%);text-align:center;opacity:0;transition:.4s .9s;font-size:22px;font-weight:900}
+  .pp .sent.on{opacity:1}
+  .pp .alt{position:absolute;left:28px;bottom:24px;font-size:12px;font-weight:700}
+  .pp .alt .links a{font-size:12px;padding:6px 12px}
+  .pp .clouds i{position:absolute;background:#fff;border-radius:99px;opacity:.7;animation:cl 40s linear infinite}
+  @keyframes cl{from{transform:translateX(-200px)}to{transform:translateX(1100px)}}
+
+  /* D scramble email */
+  .se{background:#f2efe8;color:#111;padding:28px}
+  .se small{font-size:11px;font-weight:800;letter-spacing:.12em;color:#ff4d00}
+  .se .q{font-size:30px;font-weight:900;letter-spacing:-.03em;margin:10px 0 30px}
+  .se .em{font-family:ui-monospace,Menlo,monospace;font-size:46px;font-weight:800;letter-spacing:-.03em;cursor:pointer;display:inline-block;border-bottom:4px solid #ff4d00;padding-bottom:4px}
+  .se .em:hover{color:#ff4d00}
+  .se .sub{font-size:12px;font-weight:700;opacity:.55;margin:10px 0 34px}
+  .se .rows{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid #111}
+  .se .rows a{padding:18px 0;border-bottom:2px solid #111;font-size:22px;font-weight:900;letter-spacing:-.02em;text-decoration:none;color:#111;display:flex;justify-content:space-between;padding-right:20px;cursor:pointer;transition:padding .25s,color .25s}
+  .se .rows a:hover{padding-left:14px;color:#ff4d00}
+  .se .rows a span{font-size:11px;font-weight:700;opacity:.5;align-self:center}
+  .se .clock{position:absolute;right:28px;top:28px;text-align:right;font-size:11px;font-weight:800;letter-spacing:.06em}
+  .se .clock b{display:block;font-size:40px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+</style>
+
+<h2>"Liên hệ" — 4 hướng khác nhau</h2>
+<p class="subtitle">Thông tin công khai: email <b>thanhtaiwork04@gmail.com</b>, LinkedIn, GitHub, LeetCode (không có số điện thoại). Site là trang tĩnh, nên "gửi" sẽ mở ứng dụng email của người xem (mailto), không cần server. Thử tương tác rồi bấm "Chọn".</p>
+
+<div class="hx">
+  <div class="mockup">
+    <div class="mockup-header"><span>A · Footer cam khổng lồ — chữ lớn nảy khi rê, nút tròn hút theo chuột, bấm email để copy (kèm pháo giấy)</span><button class="pick" data-choice="A-big-footer" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st bf" id="ca">
+      <small>CONTACT · OPEN TO WORK</small>
+      <div class="huge" id="cah">LET'S BUILD<br>SOMETHING →</div>
+      <div class="mail" data-copy>thanhtaiwork04@gmail.com <em>CLICK TO COPY</em></div>
+      <div class="mag" id="cam" data-copy>SAY<br>HELLO ✉</div>
+      <div class="btm"><div class="links"><a>LinkedIn ↗</a><a>GitHub ↗</a><a>LeetCode ↗</a><a>CV ↓</a></div><div class="meta">HO CHI MINH CITY · <span class="clk"></span><br>© 2026 TAI NGUYEN · BUILT WITH REACT</div></div>
+      <div class="toast">Email copied ✓</div>
+    </div></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header"><span>B · Dây kéo đèn — kéo dây xuống như công tắc đèn; đèn bật sáng và thẻ liên hệ rơi xuống</span><button class="pick" data-choice="B-pull-cord" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st pc" id="cb">
+      <div class="lamp"></div>
+      <div class="ttl"><small>CONTACT</small><h2>Still here?<br>Pull the cord<span class="o">.</span></h2><p>It's a light switch. Go on.</p></div>
+      <div class="knob" id="cbk"></div><div class="lbl" id="cbl">PULL ↓</div>
+      <div class="card"><b>Hi! I'm open to work 👋</b><p>Junior fullstack / frontend roles · based in Ho Chi Minh City.</p><div class="links"><a data-copy>✉ Copy email</a><a>LinkedIn ↗</a><a>GitHub ↗</a><a>LeetCode ↗</a></div></div>
+      <div class="toast">Email copied ✓</div>
+    </div></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header"><span>C · Máy bay giấy — viết lời nhắn, bấm gửi: tờ giấy gấp lại thành máy bay và bay đi (rồi mở ứng dụng email)</span><button class="pick" data-choice="C-paper-plane" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st pp" id="cc">
+      <div class="clouds"><i style="width:120px;height:30px;top:60px"></i><i style="width:80px;height:22px;top:130px;animation-delay:-14s"></i><i style="width:150px;height:34px;top:40px;animation-delay:-26s"></i></div>
+      <div class="ttl"><small>CONTACT</small><h2>Send me<br>a plane<span class="o">.</span></h2></div>
+      <div class="paper" id="ccp"><label>FROM</label><input placeholder="your@email.com"><label>MESSAGE</label><textarea rows="3" placeholder="Hi Tai, we're hiring…"></textarea><button id="ccs">Fold & send ✈</button></div>
+      <div class="plane" id="ccf">✈️</div>
+      <div class="sent" id="cct">Sent! ✈<br><span style="font-size:13px;font-weight:700;opacity:.6">(opens your email app in the real site)</span><br><button style="margin-top:12px;border:0;background:#111;color:#fff;border-radius:99px;padding:7px 14px;font-weight:800;cursor:pointer" id="ccr">Write another</button></div>
+      <div class="alt"><div class="links"><a>LinkedIn ↗</a><a>GitHub ↗</a><a>LeetCode ↗</a></div></div>
+    </div></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header"><span>D · Email giải mã — địa chỉ email "giải mã" từ ký tự ngẫu nhiên khi rê; danh sách liên kết lớn kiểu editorial; đồng hồ giờ Sài Gòn</span><button class="pick" data-choice="D-scramble" onclick="toggleSelect(this)">Chọn</button></div>
+    <div class="mockup-body"><div class="st se" id="cd">
+      <small>CONTACT</small><div class="q">Got a role, a project, or a question?</div>
+      <div class="em" id="cde" data-copy>thanhtaiwork04@gmail.com</div><div class="sub">Hover to decode · click to copy</div>
+      <div class="rows"><a>LinkedIn <span>/in/tai-nt ↗</span></a><a>GitHub <span>/thvnhtai ↗</span></a><a>LeetCode <span>/u/thvnhtai ↗</span></a></div>
+      <div class="clock">IT'S NOW IN HO CHI MINH CITY<b class="clk2"></b><span id="cdr"></span></div>
+      <div class="toast">Email copied ✓</div>
+    </div></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var EMAIL = 'thanhtaiwork04@gmail.com';
+  function toastIn(st){ var t = st.querySelector('.toast'); t.classList.add('on'); setTimeout(function(){ t.classList.remove('on'); }, 1500); }
+  function copy(st){ try { navigator.clipboard.writeText(EMAIL); } catch(e){} toastIn(st); }
+  function confetti(st, x0, y0){ var c = document.createElement('canvas'); st.appendChild(c); var r = st.getBoundingClientRect(); c.width = r.width; c.height = r.height; var x = c.getContext('2d'), P = [];
+    for (var i = 0; i < 90; i++) P.push({x:x0, y:y0, vx:(Math.random()-.5)*14, vy:-Math.random()*12-4, c:['#111','#f2efe8','#fde68a','#16a34a','#6d28d9'][i%5], r:Math.random()*6, s:4+Math.random()*5});
+    var n = 0; (function f(){ x.clearRect(0,0,c.width,c.height); P.forEach(function(p){ p.vy += .35; p.x += p.vx; p.y += p.vy; p.r += .2; x.save(); x.translate(p.x,p.y); x.rotate(p.r); x.fillStyle = p.c; x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); x.restore(); }); if (++n < 110) requestAnimationFrame(f); else c.remove(); })(); }
+  function tick(){ var t = new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit'}); document.querySelectorAll('.clk').forEach(function(e){ e.textContent = t; });
+    var t2 = new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit',second:'2-digit'}); document.querySelectorAll('.clk2').forEach(function(e){ e.textContent = t2; });
+    var h = +new Date().toLocaleString('en-GB',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',hour12:false}); var r = document.getElementById('cdr'); if (r) r.textContent = (h >= 8 && h < 23) ? '● Probably awake' : '☾ Probably asleep — reply tomorrow'; }
+  tick(); setInterval(tick, 1000);
+
+  /* A */
+  (function(){
+    var st = document.getElementById('ca'), h = document.getElementById('cah'), mag = document.getElementById('cam');
+    h.innerHTML = h.innerHTML.split('<br>').map(function(line){ return line.split('').map(function(ch){ return ch === ' ' ? ' ' : '<span>'+ch+'</span>'; }).join(''); }).join('<br>');
+    st.querySelectorAll('[data-copy]').forEach(function(el){ el.onclick = function(e){ var r = st.getBoundingClientRect(); copy(st); confetti(st, e.clientX - r.left, e.clientY - r.top); }; });
+    st.addEventListener('mousemove', function(e){ var m = mag.getBoundingClientRect(), dx = e.clientX - (m.left + m.width/2), dy = e.clientY - (m.top + m.height/2); mag.style.transform = Math.hypot(dx,dy) < 160 ? 'translate('+dx*.3+'px,'+dy*.3+'px)' : ''; });
+    st.addEventListener('mouseleave', function(){ mag.style.transform = ''; });
+  })();
+
+  /* B pull cord */
+  (function(){
+    var st = document.getElementById('cb'), k = document.getElementById('cbk'), lbl = document.getElementById('cbl');
+    var c = document.createElement('canvas'); st.insertBefore(c, st.firstChild); var r = st.getBoundingClientRect(), d = devicePixelRatio || 1; c.width = r.width*d; c.height = r.height*d; var x = c.getContext('2d'); x.setTransform(d,0,0,d,0,0);
+    var ax = r.width*0.72, rest = 200, pos = {x:ax, y:rest}, vel = {x:0, y:0}, drag = false, lit = false, maxPull = 300;
+    k.addEventListener('pointerdown', function(e){ drag = true; k.setPointerCapture(e.pointerId); k.style.cursor = 'grabbing'; });
+    k.addEventListener('pointermove', function(e){ if (!drag) return; var rr = st.getBoundingClientRect(); pos.x = e.clientX - rr.left; pos.y = Math.max(60, Math.min(maxPull, e.clientY - rr.top)); });
+    k.addEventListener('pointerup', function(){ drag = false; k.style.cursor = 'grab'; if (pos.y > rest + 50){ lit = !lit; st.classList.toggle('lit', lit); lbl.textContent = lit ? 'PULL TO TURN OFF' : 'PULL ↓'; } });
+    st.querySelectorAll('[data-copy]').forEach(function(el){ el.onclick = function(){ copy(st); }; });
+    (function f(){ if (!drag){ vel.x += (ax - pos.x)*.08; vel.y += (rest - pos.y)*.08; vel.x *= .86; vel.y *= .86; pos.x += vel.x; pos.y += vel.y; }
+      x.clearRect(0,0,r.width,r.height);
+      x.fillStyle = lit ? '#ffd28a' : '#333'; x.beginPath(); x.ellipse(ax, 0, 70, 26, 0, 0, Math.PI); x.fill();
+      x.strokeStyle = '#bbb'; x.lineWidth = 2; x.beginPath(); x.moveTo(ax, 20); x.quadraticCurveTo((ax + pos.x)/2, (20 + pos.y)/2 + 10, pos.x, pos.y); x.stroke();
+      k.style.left = pos.x+'px'; k.style.top = pos.y+'px'; lbl.style.left = (pos.x + 22)+'px'; lbl.style.top = (pos.y + 6)+'px';
+      requestAnimationFrame(f); })();
+  })();
+
+  /* C paper plane */
+  (function(){
+    var p = document.getElementById('ccp'), pl = document.getElementById('ccf'), t = document.getElementById('cct');
+    document.getElementById('ccs').onclick = function(){ p.classList.add('fold'); setTimeout(function(){ pl.classList.remove('fly'); void pl.offsetWidth; pl.classList.add('fly'); }, 350); t.classList.add('on'); };
+    document.getElementById('ccr').onclick = function(){ p.classList.remove('fold'); pl.classList.remove('fly'); t.classList.remove('on'); };
+  })();
+
+  /* D scramble */
+  (function(){
+    var st = document.getElementById('cd'), el = document.getElementById('cde'), chars = '!<>-_\\/[]{}=+*^?#01abcdef', busy = false;
+    function scramble(){ if (busy) return; busy = true; var f = 0; var iv = setInterval(function(){ el.textContent = EMAIL.split('').map(function(c, i){ return i < f/2 ? c : (c === '@' || c === '.' ? c : chars[Math.floor(Math.random()*chars.length)]); }).join(''); if (++f > EMAIL.length*2){ clearInterval(iv); el.textContent = EMAIL; busy = false; } }, 28); }
+    el.addEventListener('mouseenter', scramble); el.onclick = function(){ copy(st); };
+    var io = new IntersectionObserver(function(es){ if (es[0].isIntersecting) scramble(); }, {threshold:.5}); io.observe(st);
+  })();
+})();
+</script>

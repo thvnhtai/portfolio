@@ -1,0 +1,18 @@
+@import '@fontsource/inter-tight/500.css';
+@import '@fontsource/inter-tight/700.css';
+@import '@fontsource/inter-tight/900.css';
+@import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/jetbrains-mono/800.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+[data-i18n] { transition: opacity .22s, filter .22s; }
+.swapping [data-i18n] { opacity: 0; filter: blur(3px); }

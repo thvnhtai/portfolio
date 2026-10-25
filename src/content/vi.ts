@@ -2,7 +2,7 @@ import type { Copy } from './types';
 
 // Vietnamese draft — Tai to review. Brand headline, company/tech names and commit messages stay English.
 export const vi: Copy = {
-  nav: { work: 'Dự án', contact: 'Liên hệ', openPalette: 'Mở bảng lệnh', language: 'Ngôn ngữ', main: 'Chính' },
+  nav: { work: 'Dự án', how: 'Cách làm việc', career: 'Hành trình', skills: 'Kỹ năng', contact: 'Liên hệ', openPalette: 'Mở bảng lệnh', language: 'Ngôn ngữ', main: 'Chính' },
   hero: {
     bio: 'Chào bạn, mình là Tài — kỹ sư fullstack thiên về frontend. Ở Grab, mình xây dựng trọn vẹn các nền tảng nội bộ — giao diện React/TypeScript, dịch vụ Go và cả pipeline triển khai phía sau.',
     cv: 'Tải CV ↓', touch: 'Liên hệ với mình →', based: 'Sống tại', city: 'TP. Hồ Chí Minh', prev: 'Từng làm tại',

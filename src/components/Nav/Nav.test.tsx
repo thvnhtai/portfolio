@@ -79,3 +79,17 @@ test('useReducedMotion reflects the media query', () => {
   render(<Probe />);
   expect(screen.getByText('true')).toBeInTheDocument();
 });
+
+test('highlights the section crossing the middle of the viewport', () => {
+  let cb: IntersectionObserverCallback = () => {};
+  vi.stubGlobal('IntersectionObserver', class { constructor(c: IntersectionObserverCallback) { cb = c; } observe() {} disconnect() {} });
+  const main = document.createElement('main');
+  main.innerHTML = '<section id="work"></section><section id="skills"></section>';
+  document.body.appendChild(main);
+  render(<Providers><Nav onOpenPalette={() => {}} onLogoClick={() => {}} /></Providers>);
+  act(() => cb([{ isIntersecting: true, target: main.querySelector('#skills')! } as unknown as IntersectionObserverEntry], {} as IntersectionObserver));
+  expect(screen.getByRole('button', { name: 'Skills' })).toHaveAttribute('aria-current', 'true');
+  expect(screen.getByRole('button', { name: 'Work' })).not.toHaveAttribute('aria-current');
+  main.remove();
+  vi.unstubAllGlobals();
+});

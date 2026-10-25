@@ -31,7 +31,7 @@ export type LearningTopic = {
 };
 
 export type Copy = {
-  nav: { work: string; contact: string; openPalette: string; language: string; main: string };
+  nav: { work: string; how: string; career: string; skills: string; contact: string; openPalette: string; language: string; main: string };
   hero: { bio: string; cv: string; touch: string; based: string; city: string; prev: string; edu: string; eduValue: string; status: string; open: string; badgeHint: string; badgeHintTouch: string };
   works: { heading: string; intro: string; tip: string };
   caseUi: { case: string; back: string; product: string; note: string; problem: string; problemH: string; approach: string; approachH: string; built: string; builtH: string; arch: string; archH: string; outcome: string; outcomeH: string; stack: string; learned: string; next: string; repo: string };

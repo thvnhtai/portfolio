@@ -1,7 +1,7 @@
 import type { Copy } from './types';
 
 export const en: Copy = {
-  nav: { work: 'Work', contact: 'Contact', openPalette: 'Open command palette', language: 'Language', main: 'Main' },
+  nav: { work: 'Work', how: 'How I work', career: 'Career', skills: 'Skills', contact: 'Contact', openPalette: 'Open command palette', language: 'Language', main: 'Main' },
   hero: {
     bio: "Hi, I'm Tai — a fullstack engineer who leans frontend. At Grab I shipped internal platforms end to end — React/TypeScript UIs, Go services, and the pipelines behind them.",
     cv: 'Download CV ↓', touch: 'Get in touch →', based: 'Based in', city: 'Ho Chi Minh City', prev: 'Previously',

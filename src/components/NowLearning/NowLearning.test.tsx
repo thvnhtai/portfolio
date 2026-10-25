@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, test, vi } from 'vitest';
 import { Providers, mockReducedMotion } from '../../test-utils';
@@ -13,13 +13,23 @@ test('arrow keys move between tabs and show the panel', async () => {
   expect(screen.getAllByRole('tab')[1]).toHaveAttribute('aria-selected', 'true');
   await waitFor(() => expect(screen.getByRole('tabpanel')).toHaveTextContent(/I wrote Go services/));
 });
-test('every topic shows its notes, no placeholders, no percentages', async () => {
+test('panel shows progress, takeaway and concept links; no percentages', async () => {
   render(<Providers><NowLearning /></Providers>);
-  expect(screen.getByRole('tabpanel')).toHaveTextContent(/Finished Vol\. 1/);
+  const panel = () => screen.getByRole('tabpanel');
+  expect(panel()).toHaveTextContent(/Vol\. 1 · 16 chapters/);
+  expect(panel()).toHaveTextContent(/runs exactly once/);
+  expect(within(panel()).getAllByText(/— done/).length).toBeGreaterThanOrEqual(16);
   expect(document.body.textContent).not.toMatch(/\d+\s?%/);
   await userEvent.click(screen.getAllByRole('tab')[2]!);
-  await waitFor(() => expect(screen.getByRole('tabpanel')).toHaveTextContent(/Read all 12 chapters/));
-  expect(screen.queryByText(/Tai fills in|e\.g\. chapter/)).toBeNull();
+  await waitFor(() => expect(panel()).toHaveTextContent(/Rebuilt by hand/));
+  expect(within(panel()).getByRole('link', { name: /Keyset pagination/ })).toHaveAttribute('href', '#/work/zen-ledger-portal');
+});
+test('a concept link opens its case study', async () => {
+  window.history.replaceState(null, '', '/');
+  render(<Providers><NowLearning /></Providers>);
+  await userEvent.click(screen.getByRole('link', { name: /Run exactly once/ }));
+  expect(window.location.hash).toBe('#/work/invoicing-portal');
+  window.history.replaceState(null, '', '/');
 });
 test('roving tabindex, wrap, Home/End, heading, url is not a link', async () => {
   render(<Providers><NowLearning /></Providers>);
@@ -34,7 +44,7 @@ test('roving tabindex, wrap, Home/End, heading, url is not a link', async () => 
   expect(tabs()[0]).toHaveAttribute('aria-selected', 'true');
   await userEvent.keyboard('{End}');
   expect(tabs()[2]).toHaveAttribute('aria-selected', 'true');
-  expect(screen.queryByRole('link')).toBeNull();
+  expect(screen.getByText(/^~\/notes\//).closest('a')).toBeNull();
 });
 test('panel swaps after 0.6s; rapid switches cancel the previous', () => {
   vi.useFakeTimers();

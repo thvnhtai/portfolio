@@ -25,9 +25,12 @@ export type HowStep = {
   hash: string; branch: 'main' | 'feature'; commit: string; merge?: boolean; evidence: string[];
 };
 
+export type StepState = 'done' | 'now' | 'next' | 'light';
 export type LearningTopic = {
   id: 'system-design' | 'go' | 'ddia'; tab: string; by: string; url: string; why: string;
-  learned: string[] | null; where: string | null; takeaway: string | null;
+  progress: { label: string; note: string; steps: [name: string, state: StepState][] }[];
+  links: { concept: string; lesson: string; slug: CaseSlug; where: string }[];
+  takeaway: string;
 };
 
 export type Copy = {
@@ -40,7 +43,7 @@ export type Copy = {
   timeline: { kicker: string; cards: Record<TimelineEvent['id'], { title: string; sub: string; body: string }> };
   skills: { title: string; listLabel: string; groups: Record<Skill['group'], string> };
   leetcode: { kicker: string; solved: string; ranking: string; streak: string; activeDays: string; lastYear: string; contest: string; easy: string; medium: string; hard: string; of: string; profile: string; unavailable: string };
-  learning: { title: string; placeholders: { learned: string; where: string; takeaway: string }; topics: LearningTopic[] };
+  learning: { title: string; legend: Record<StepState, string>; linksLabel: string; takeawayLabel: string; topics: LearningTopic[] };
   contact: { kicker: string; prompt: string; hint: string; nowIn: string; awake: string; asleep: string };
   palette: { placeholder: string; empty: string; groups: { navigate: string; projects: string; actions: string; links: string }; copyEmail: string; downloadCv: string; switchLang: string; sections: Record<SectionId, string>; footer: { move: string; select: string; close: string } };
   preloader: { greeting: string; skipHint: string };

@@ -9,6 +9,11 @@ export function parseHash(hash: string): Route {
   return c ? { kind: 'case', slug: c.slug } : { kind: 'home' };
 }
 
+// Where the case-study circle reveal starts from (read by CaseStudy).
+export function storeCaseOrigin(o: { x: number; y: number }): void {
+  try { sessionStorage.setItem('caseOrigin', JSON.stringify(o)); } catch { /* storage unavailable */ }
+}
+
 export const caseHash = (slug: CaseSlug): string => `#/work/${slug}`;
 
 export function scrollToSection(id: SectionId): void {

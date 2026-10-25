@@ -5,13 +5,10 @@ import { useLang } from '../../i18n/LangProvider';
 import { useInView } from '../../hooks/useInView';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { useRoute } from '../../hooks/useRoute';
+import { storeCaseOrigin } from '../../lib/route';
 import { KineticText } from '../KineticText/KineticText';
 import type { City } from './CityCanvas';
 import s from './Works.module.css';
-
-function storeOrigin(o: { x: number; y: number }) {
-  try { sessionStorage.setItem('caseOrigin', JSON.stringify(o)); } catch { /* storage unavailable */ }
-}
 
 export function Works() {
   const { t } = useLang();
@@ -41,7 +38,7 @@ export function Works() {
     setTimeout(() => { busy.current = false; }, 1500);
     const city = cityRef.current;
     const origin = city?.origin(slug) ?? legendCentre;
-    if (origin) storeOrigin(origin);
+    if (origin) storeCaseOrigin(origin);
     if (city && city.origin(slug) && !reduceRef.current) void city.zoomTo(slug).then(() => openRef.current(slug));
     else openRef.current(slug);
   };

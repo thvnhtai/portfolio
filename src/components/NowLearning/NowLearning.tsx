@@ -1,12 +1,20 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
+import { CASES } from '../../content/cases';
+import type { LearningTopic, StepState } from '../../content/types';
 import { useLang } from '../../i18n/LangProvider';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { useRoute } from '../../hooks/useRoute';
+import { storeCaseOrigin } from '../../lib/route';
 import s from './NowLearning.module.css';
+
+const DENSE = 8; // more steps than this render as a thin bar (chapters) instead of named chips
+const STATES: StepState[] = ['done', 'now', 'next', 'light'];
 
 export function NowLearning() {
   const { t } = useLang();
   const reduce = useReducedMotion();
-  const { topics, placeholders: ph } = t.learning;
+  const { openCase } = useRoute();
+  const { topics, legend } = t.learning;
   const [active, setActive] = useState(0);
   const [shown, setShown] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -33,8 +41,7 @@ export function NowLearning() {
   };
   const topic = topics[shown]!;
   const urlTopic = topics[active]!;
-  const field = (text: string | null, placeholder: string) =>
-    text ? <p data-i18n>{text}</p> : <p className={s.ph} data-i18n>{placeholder}</p>;
+  const used = (tp: LearningTopic) => STATES.filter((st) => tp.progress.some((r) => r.steps.some(([, x]) => x === st)));
 
   return (
     <div className={s.root}>
@@ -55,17 +62,51 @@ export function NowLearning() {
         <div className={s.bar} aria-hidden="true">{loading && <i className={s.fill} />}</div>
         <div role="tabpanel" id="learn-panel" aria-labelledby={`learn-tab-${topic.id}`} tabIndex={0}
           className={s.page}>
-          <div>
+          <div className={s.head}>
             <h3 data-i18n>{topic.tab}</h3>
             <p className={s.by} data-i18n>{topic.by}</p>
             <p data-i18n>{topic.why}</p>
+            <figure className={s.quote}>
+              <figcaption data-i18n>{t.learning.takeawayLabel}</figcaption>
+              <blockquote data-i18n>{topic.takeaway}</blockquote>
+            </figure>
           </div>
-          <div className={loading ? s.fade : undefined}>
-            {topic.learned
-              ? <ul>{topic.learned.map((l) => <li key={l} data-i18n>{l}</li>)}</ul>
-              : field(null, ph.learned)}
-            {field(topic.where, ph.where)}
-            {field(topic.takeaway, ph.takeaway)}
+          <div className={`${s.prog} ${loading ? s.fade : ''}`} key={`p-${topic.id}`}>
+            <ul className={s.legend} aria-hidden="true">
+              {used(topic).map((st) => <li key={st}><i className={s[st]} />{legend[st]}</li>)}
+            </ul>
+            {topic.progress.map((row) => (
+              <div key={row.label} className={s.row}>
+                <b data-i18n>{row.label}</b>
+                <ol className={row.steps.length > DENSE ? s.bars : s.chips}>
+                  {row.steps.map(([name, st], i) => (
+                    <li key={name} className={s[st]} title={name} style={{ '--i': i } as CSSProperties}>
+                      <span className={row.steps.length > DENSE ? s.sr : undefined} data-i18n>{name}</span>
+                      <span className={s.sr}>{` — ${legend[st]}`}</span>
+                    </li>
+                  ))}
+                </ol>
+                <p className={s.note} data-i18n>{row.note}</p>
+              </div>
+            ))}
+          </div>
+          <div className={`${s.links} ${loading ? s.fade : ''}`}>
+            <p className={s.lbl} data-i18n>{t.learning.linksLabel}</p>
+            <ul>
+              {topic.links.map((l) => {
+                const c = CASES.find((x) => x.slug === l.slug)!;
+                return (
+                  <li key={l.concept}>
+                    <a href={`#/work/${l.slug}`} style={{ '--pc': c.color === '#111111' ? '#ff4d00' : c.color } as CSSProperties}
+                      onClick={(e) => { e.preventDefault(); storeCaseOrigin({ x: e.clientX, y: e.clientY }); openCase(l.slug); }}>
+                      <span className={s.concept}><span data-i18n>{l.concept}</span><span className={s.to} aria-hidden="true">→</span></span>
+                      <span className={s.where}><i aria-hidden="true" />{c.name} · <span data-i18n>{l.where}</span></span>
+                      <span className={s.lesson} data-i18n>{l.lesson}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </div>
       </div>
